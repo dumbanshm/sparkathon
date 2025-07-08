@@ -11,7 +11,7 @@ A comprehensive system for reducing waste in retail environments through intelli
 - **Comprehensive Analytics**: Provides insights into product risk levels and waste reduction strategies
 
 ## Installation
-
+//source venv/bin/activate
 1. Install required dependencies:
 ```bash
 pip install -r requirements.txt

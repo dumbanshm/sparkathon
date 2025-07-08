@@ -418,6 +418,7 @@ def run_system(users_df, products_df, transactions_df):
     print("\nExample usage:")
     print("  recommendations = system.get_hybrid_recommendations('U0001', n_recommendations=10)")
     
+    
     return system, products_enhanced
 
 # Example usage when data is already loaded
@@ -441,6 +442,21 @@ if __name__ == "__main__":
         
         # Run the system
         system, products_enhanced = run_system(users_df, products_df, transactions_df)
+
+        # Try to pickle the model and provide clear feedback
+        import pickle
+        import os
+        try:
+            with open('model.pkl', 'wb') as f:
+                pickle.dump(system, f)
+            print("Model pickled and saved as model.pkl in:", os.getcwd())
+        except Exception as e:
+            print("Failed to pickle model:", e)
+            import traceback
+            traceback.print_exc()
+        with open('products_enhanced.pkl', 'wb') as f:
+            pickle.dump(products_enhanced, f)
+            print("Products enhanced pickled and saved as products_enhanced.pkl")
         
     except FileNotFoundError as e:
         print(f"Error: Could not find data files. {e}")
