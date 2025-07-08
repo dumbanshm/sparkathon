@@ -178,6 +178,58 @@ class UnifiedRecommendationSystem:
         self.product_features = None
         self.threshold_calculator = DynamicThresholdCalculator(products_df, transactions_df)
         self.threshold_calculator.calculate_category_baseline_thresholds()
+        
+        # Preprocess data to add calculated features
+        self.preprocess_data()
+    def preprocess_data(self):
+        current_date = pd.Timestamp.now()
+        
+        # Ensure date columns are in datetime format
+        if not pd.api.types.is_datetime64_any_dtype(self.products_df['expiry_date']):
+            self.products_df['expiry_date'] = pd.to_datetime(self.products_df['expiry_date'])
+        if not pd.api.types.is_datetime64_any_dtype(self.products_df['packaging_date']):
+            self.products_df['packaging_date'] = pd.to_datetime(self.products_df['packaging_date'])
+        if not pd.api.types.is_datetime64_any_dtype(self.transactions_df['purchase_date']):
+            self.transactions_df['purchase_date'] = pd.to_datetime(self.transactions_df['purchase_date'])
+
+        # Add days until expiry for each product
+        self.products_df['days_until_expiry'] = (self.products_df['expiry_date'] - current_date).dt.days
+        self.products_df['total_shelf_life'] = (self.products_df['expiry_date'] - self.products_df['packaging_date']).dt.days
+        self.products_df['shelf_life_remaining_pct'] = self.products_df['days_until_expiry'] / self.products_df['total_shelf_life'] * 100
+
+        # Calculate sales metrics for each product
+        sales_metrics = self.transactions_df.groupby('product_id').agg({
+            'quantity': ['sum', 'mean', 'count'],
+            'purchase_date': ['min', 'max'],
+            'discount_percent': 'mean',
+            'user_engaged_with_deal': 'mean'
+        }).reset_index()
+
+        # Flatten column names
+        sales_metrics.columns = ['product_id', 'total_quantity_sold', 'avg_quantity_per_sale', 
+                                'number_of_sales', 'first_sale_date', 'last_sale_date',
+                                'avg_discount_given', 'avg_user_engagement']
+
+        # Calculate days since last sale
+        sales_metrics['days_since_last_sale'] = (current_date - sales_metrics['last_sale_date']).dt.days
+
+        # Calculate sales velocity (units sold per day)
+        sales_metrics['days_on_market'] = (sales_metrics['last_sale_date'] - sales_metrics['first_sale_date']).dt.days + 1
+        sales_metrics['sales_velocity'] = sales_metrics['total_quantity_sold'] / sales_metrics['days_on_market']
+
+        # Merge sales metrics with products
+        self.products_df = self.products_df.merge(sales_metrics, on='product_id', how='left')
+
+        # Fill NaN values for products with no sales
+        self.products_df['total_quantity_sold'].fillna(0, inplace=True)
+        self.products_df['number_of_sales'].fillna(0, inplace=True)
+        self.products_df['sales_velocity'].fillna(0, inplace=True)
+        self.products_df['days_since_last_sale'].fillna(999, inplace=True)
+        
+        # Calculate dead stock risk for each product using the threshold calculator
+        self.products_df['is_dead_stock_risk'] = self.products_df.apply(
+            lambda row: calculate_dead_stock_risk_dynamic(row, self.threshold_calculator), axis=1
+        )
     def prepare_content_features(self):
         products = self.products_df.copy()
         products['content_text'] = (

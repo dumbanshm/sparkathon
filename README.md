@@ -1,52 +1,55 @@
-# Waste Reduction System
+# Unified Waste Reduction System
 
-A unified waste reduction system that combines content-based and collaborative filtering recommendations with dynamic threshold calculations for dead stock prediction.
+A comprehensive system for reducing waste in retail environments through intelligent product recommendations and dynamic dead stock prediction.
 
-## 🚀 Quick Start with Gitpod
+## Features
 
-Click the button below to start a ready-to-code development environment:
+- **Hybrid Recommendation System**: Combines content-based and collaborative filtering approaches
+- **Dynamic Threshold Calculation**: Adapts dead stock thresholds based on product category, sales velocity, pricing, and seasonality
+- **Dietary & Allergy Filtering**: Ensures recommendations respect user dietary preferences and allergies
+- **Urgency-Based Scoring**: Prioritizes products nearing expiry
+- **Comprehensive Analytics**: Provides insights into product risk levels and waste reduction strategies
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/yourusername/yourrepo)
+## Installation
 
-## 📋 Prerequisites
-
-- Python 3.10 or higher
-- pip package manager
-
-## 🛠️ Local Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/yourrepo.git
-cd yourrepo
-```
-
-2. Install dependencies:
+1. Install required dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-## 📁 Project Structure
+2. Ensure your datasets are in the `datasets/` folder:
+   - `fake_users.csv`
+   - `fake_products.csv`
+   - `fake_transactions.csv`
 
-- `unified_waste_reduction_system.py` - Main system implementation
-- `waste_reduction_system.ipynb` - Jupyter notebook with examples
-- `datasets/` - Data files directory
-- `models/` - Saved model files
-- `scripts/` - Utility scripts
+## Usage
 
-## 🎯 Features
+### Quick Start
 
-- **Dynamic Threshold Calculation**: Adaptive thresholds for dead stock prediction based on product categories, sales velocity, pricing, and seasonality
-- **Hybrid Recommendation System**: Combines content-based and collaborative filtering approaches
-- **Dietary/Allergy Filtering**: Ensures recommendations respect user dietary preferences and allergies
-- **Urgency Boosting**: Prioritizes products approaching expiration dates
+Run the driver code to see the system in action:
 
-## 💻 Usage
+```bash
+python run_waste_reduction_system.py
+```
 
-### Basic Example
+This will:
+1. Load and analyze the datasets
+2. Initialize the recommendation system
+3. Build content and collaborative filtering models
+4. Perform dead stock risk analysis
+5. Generate sample recommendations for users
+6. Display waste reduction strategies
+
+### Programmatic Usage
 
 ```python
 from unified_waste_reduction_system import UnifiedRecommendationSystem
+import pandas as pd
+
+# Load your data
+users_df = pd.read_csv('datasets/fake_users.csv')
+products_df = pd.read_csv('datasets/fake_products.csv')
+transactions_df = pd.read_csv('datasets/fake_transactions.csv')
 
 # Initialize the system
 system = UnifiedRecommendationSystem(users_df, products_df, transactions_df)
@@ -56,28 +59,56 @@ system.build_content_similarity_matrix()
 system.build_collaborative_filtering_model()
 
 # Get recommendations for a user
-recommendations = system.get_hybrid_recommendations(user_id='U0001', n_recommendations=5)
-print(recommendations)
+recommendations = system.get_hybrid_recommendations(
+    user_id='U0001',
+    n_recommendations=10,
+    content_weight=0.4,
+    collaborative_weight=0.6
+)
 ```
 
-### Running the Jupyter Notebook
+## System Components
 
-```bash
-jupyter notebook waste_reduction_system.ipynb
-```
+### 1. Dynamic Threshold Calculator
+- Calculates category-based baseline thresholds
+- Adjusts thresholds based on:
+  - Sales velocity
+  - Product pricing
+  - Current discount levels
+  - Seasonal factors
 
-## 📦 Dependencies
+### 2. Recommendation Engine
+- **Content-Based**: Finds similar products based on features
+- **Collaborative Filtering**: Uses user purchase patterns
+- **Hybrid Approach**: Combines both methods for best results
 
-See `requirements.txt` for a full list of dependencies. Main packages include:
-- pandas & numpy for data processing
-- scikit-learn for machine learning
-- scipy for scientific computing
-- jupyter for interactive notebooks
+### 3. Dead Stock Risk Analysis
+- Identifies products at risk of becoming dead stock
+- Provides actionable insights for inventory management
+- Suggests discount strategies
 
-## 🤝 Contributing
+## Output Example
 
-Feel free to submit issues, fork the repository, and create pull requests for any improvements.
+The driver code provides comprehensive output including:
 
-## 📄 License
+1. **Data Analysis**: Overview of users, products, and transactions
+2. **Dead Stock Risk Analysis**: Products at risk with dynamic thresholds
+3. **Personalized Recommendations**: Tailored suggestions for each user
+4. **Waste Reduction Strategies**: Actionable insights for reducing waste
 
-This project is licensed under the MIT License. 
+## Customization
+
+You can customize the system behavior by adjusting:
+
+- Recommendation weights (content vs collaborative)
+- Number of recommendations
+- Threshold calculation parameters
+- Urgency boost factors
+
+## Data Requirements
+
+The system expects CSV files with the following structure:
+
+- **users.csv**: user_id, diet_type, allergies
+- **products.csv**: product_id, name, category, price_mrp, expiry_date, packaging_date, diet_type, allergens, etc.
+- **transactions.csv**: user_id, product_id, quantity, purchase_date, discount_percent, user_engaged_with_deal 
