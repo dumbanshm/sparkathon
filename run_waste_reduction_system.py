@@ -164,9 +164,11 @@ def demonstrate_recommendations(system, users_df):
             # Content-based recommendations
             print("\n2. CONTENT-BASED RECOMMENDATIONS (Similar to your purchases):")
             last_product = user_products[-1]
-            product_name = system.products_df[
-                system.products_df['product_id'] == last_product
-            ]['name'].iloc[0]
+            product_row = system.all_products_df[system.all_products_df['product_id'] == last_product]
+            if not product_row.empty:
+                product_name = product_row['name'].iloc[0]
+            else:
+                product_name = "Unknown Product"
             print(f"   Based on your purchase of: {product_name}")
             
             content_recs = system.get_content_based_recommendations(

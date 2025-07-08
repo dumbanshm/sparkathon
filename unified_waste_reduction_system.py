@@ -167,6 +167,7 @@ class UnifiedRecommendationSystem:
     """
     def __init__(self, users_df, products_df, transactions_df):
         self.users_df = users_df
+        self.all_products_df = products_df.copy()
         self.products_df = products_df
         self.transactions_df = transactions_df
         self.le_diet = LabelEncoder()
@@ -284,7 +285,8 @@ class UnifiedRecommendationSystem:
         content_recs_list = []
         for product_id in user_products[-3:]:
             content_recs = self.get_content_based_recommendations(product_id, n_recommendations)
-            content_recs_list.append(content_recs)
+            if not content_recs.empty:
+                content_recs_list.append(content_recs)
         if content_recs_list:
             content_recs_combined = pd.concat(content_recs_list).groupby('product_id').agg({
                 'final_score': 'mean',
@@ -295,7 +297,9 @@ class UnifiedRecommendationSystem:
                 'discount': 'first'
             }).reset_index()
         else:
-            content_recs_combined = pd.DataFrame()
+            content_recs_combined = pd.DataFrame(columns=[
+                'product_id', 'final_score', 'product_name', 'days_until_expiry', 'category', 'price', 'discount'
+            ])
         all_products = set()
         if not collab_recs.empty:
             all_products.update(collab_recs['product_id'].tolist())
@@ -332,10 +336,17 @@ class UnifiedRecommendationSystem:
     def get_content_based_recommendations(self, product_id, n_recommendations=10, filter_expired=True, urgency_boost=True):
         if self.content_similarity_matrix is None:
             self.build_content_similarity_matrix()
-        product_row = self.products_df[self.products_df['product_id'] == product_id]
+        # Use all_products_df for lookup to allow for expired products in history
+        product_row = self.all_products_df[self.all_products_df['product_id'] == product_id]
         if product_row.empty:
             return pd.DataFrame()  # Product not found, return empty
-        product_idx = product_row.index[0]
+        # Find the index in the filtered products_df for similarity
+        filtered_row = self.products_df[self.products_df['product_id'] == product_id]
+        if filtered_row.empty:
+            # If the product is not in the filtered set, pick the first available for similarity (fallback)
+            product_idx = 0
+        else:
+            product_idx = filtered_row.index[0]
         sim_scores = list(enumerate(self.content_similarity_matrix[product_idx]))
         sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
         similar_products = []
