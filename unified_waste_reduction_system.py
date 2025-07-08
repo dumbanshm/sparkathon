@@ -403,9 +403,21 @@ class UnifiedRecommendationSystem:
             expiring_products['unique_buyers'].fillna(0) * 0.3 +
             expiring_products['urgency_score'] * 0.3
         )
+        
+        # Add is_dead_stock_risk flag if not already present
+        if 'is_dead_stock_risk' not in expiring_products.columns:
+            expiring_products['is_dead_stock_risk'] = expiring_products.apply(
+                lambda row: calculate_dead_stock_risk_dynamic(row, self.threshold_calculator), axis=1
+            )
+        
         return expiring_products.nlargest(n_recommendations, 'recommendation_score')[[
-            'product_id', 'name', 'category', 'days_until_expiry', 'price_mrp', 'current_discount_percent', 'recommendation_score'
-        ]].rename(columns={'name': 'product_name'})
+            'product_id', 'name', 'category', 'days_until_expiry', 'price_mrp', 'current_discount_percent', 'recommendation_score', 'is_dead_stock_risk'
+        ]].rename(columns={
+            'name': 'product_name',
+            'recommendation_score': 'hybrid_score',
+            'price_mrp': 'price',
+            'current_discount_percent': 'discount'
+        })
 
 # --- Example Usage ---
 if __name__ == "__main__":

@@ -121,8 +121,15 @@ def demonstrate_recommendations(system, users_df):
         if not hybrid_recs.empty:
             for idx, rec in hybrid_recs.iterrows():
                 print(f"   - {rec['product_name']} ({rec['category']})")
-                print(f"     Score: {rec['hybrid_score']:.3f}, Days until expiry: {rec['days_until_expiry']}, "
-                      f"Price: ₹{rec['price']}, Discount: {rec['discount']}%")
+                # Handle both hybrid_score and recommendation_score columns
+                score_col = 'hybrid_score' if 'hybrid_score' in rec else 'recommendation_score'
+                score = rec[score_col] if score_col in rec else 0
+                price_col = 'price' if 'price' in rec else 'price_mrp'
+                price = rec[price_col] if price_col in rec else 0
+                discount_col = 'discount' if 'discount' in rec else 'current_discount_percent'
+                discount = rec[discount_col] if discount_col in rec else 0
+                print(f"     Score: {score:.3f}, Days until expiry: {rec['days_until_expiry']}, "
+                      f"Price: ₹{price}, Discount: {discount}%")
                 if rec.get('is_dead_stock_risk', 0) == 1:
                     print(f"     ⚠️  AT RISK OF BECOMING DEAD STOCK")
         else:
@@ -187,6 +194,185 @@ def demonstrate_waste_reduction_strategies(products_enhanced, threshold_calculat
         if len(at_risk) > 0:
             print(f"   - Avg days to expiry for at-risk: {at_risk['days_until_expiry'].mean():.1f}")
 
+def test_all_users_recommendations(system, users_df, n_recommendations=5):
+    """Test recommendation system for all users to find corner cases and debug issues"""
+    print("\n" + "="*50)
+    print("COMPREHENSIVE RECOMMENDATION TESTING")
+    print("="*50)
+    
+    # Track different types of issues
+    issues = {
+        'no_recommendations': [],
+        'errors': [],
+        'no_purchase_history': [],
+        'all_expired': [],
+        'insufficient_recommendations': [],
+        'diet_allergy_conflicts': []
+    }
+    
+    success_count = 0
+    total_users = len(users_df)
+    
+    print(f"\nTesting recommendations for all {total_users} users...")
+    print("-" * 50)
+    
+    for idx, (_, user) in enumerate(users_df.iterrows()):
+        user_id = user['user_id']
+        
+        try:
+            # Check if user has purchase history
+            user_purchases = system.transactions_df[
+                system.transactions_df['user_id'] == user_id
+            ]
+            
+            if len(user_purchases) == 0:
+                issues['no_purchase_history'].append({
+                    'user_id': user_id,
+                    'diet': user['diet_type'],
+                    'allergies': user['allergies']
+                })
+            
+            # Get recommendations
+            recommendations = system.get_hybrid_recommendations(
+                user_id, 
+                n_recommendations=n_recommendations
+            )
+            
+            # Check various edge cases
+            if recommendations.empty:
+                issues['no_recommendations'].append({
+                    'user_id': user_id,
+                    'diet': user['diet_type'],
+                    'allergies': user['allergies'],
+                    'purchase_count': len(user_purchases)
+                })
+            elif len(recommendations) < n_recommendations:
+                issues['insufficient_recommendations'].append({
+                    'user_id': user_id,
+                    'requested': n_recommendations,
+                    'received': len(recommendations),
+                    'diet': user['diet_type'],
+                    'allergies': user['allergies']
+                })
+            else:
+                # Check if all recommended products are close to expiry
+                avg_days_to_expiry = recommendations['days_until_expiry'].mean()
+                if avg_days_to_expiry < 7:
+                    issues['all_expired'].append({
+                        'user_id': user_id,
+                        'avg_days_to_expiry': avg_days_to_expiry,
+                        'products': recommendations[['product_name', 'days_until_expiry']].to_dict('records')
+                    })
+                
+                success_count += 1
+            
+            # Progress indicator
+            if (idx + 1) % 50 == 0:
+                print(f"Processed {idx + 1}/{total_users} users...")
+                
+        except Exception as e:
+            issues['errors'].append({
+                'user_id': user_id,
+                'error': str(e),
+                'error_type': type(e).__name__
+            })
+    
+    # Print comprehensive report
+    print("\n" + "="*50)
+    print("TESTING RESULTS SUMMARY")
+    print("="*50)
+    
+    print(f"\nOverall Statistics:")
+    print(f"- Total users tested: {total_users}")
+    print(f"- Successful recommendations: {success_count} ({success_count/total_users*100:.1f}%)")
+    print(f"- Users with issues: {total_users - success_count} ({(total_users - success_count)/total_users*100:.1f}%)")
+    
+    # Detailed issue breakdown
+    print("\nIssue Breakdown:")
+    
+    if issues['no_purchase_history']:
+        print(f"\n1. Users with NO PURCHASE HISTORY: {len(issues['no_purchase_history'])}")
+        diet_breakdown = pd.DataFrame(issues['no_purchase_history'])['diet'].value_counts()
+        print("   Diet type distribution:")
+        for diet, count in diet_breakdown.items():
+            print(f"   - {diet}: {count}")
+    
+    if issues['no_recommendations']:
+        print(f"\n2. Users with NO RECOMMENDATIONS: {len(issues['no_recommendations'])}")
+        for case in issues['no_recommendations'][:3]:
+            print(f"   - User {case['user_id']}: {case['diet']} diet, allergies: {case['allergies']}")
+    
+    if issues['insufficient_recommendations']:
+        print(f"\n3. Users with INSUFFICIENT RECOMMENDATIONS: {len(issues['insufficient_recommendations'])}")
+        for case in issues['insufficient_recommendations'][:3]:
+            print(f"   - User {case['user_id']}: Got {case['received']}/{case['requested']} recommendations")
+    
+    if issues['all_expired']:
+        print(f"\n4. Users getting mostly EXPIRED/EXPIRING products: {len(issues['all_expired'])}")
+        for case in issues['all_expired'][:2]:
+            print(f"   - User {case['user_id']}: Avg days to expiry = {case['avg_days_to_expiry']:.1f}")
+    
+    if issues['errors']:
+        print(f"\n5. ERRORS encountered: {len(issues['errors'])}")
+        error_types = pd.DataFrame(issues['errors'])['error_type'].value_counts()
+        for error_type, count in error_types.items():
+            print(f"   - {error_type}: {count} occurrences")
+    
+    # Test specific corner cases
+    print("\n" + "="*50)
+    print("SPECIFIC CORNER CASE TESTING")
+    print("="*50)
+    
+    # Test 1: User with strict allergies
+    print("\n1. Testing user with multiple allergies:")
+    strict_allergy_users = users_df[
+        users_df['allergies'].apply(lambda x: len(str(x).split(',')) > 2 if pd.notna(x) else False)
+    ]
+    if not strict_allergy_users.empty:
+        test_user = strict_allergy_users.iloc[0]
+        print(f"   User {test_user['user_id']}: Allergies = {test_user['allergies']}")
+        try:
+            recs = system.get_hybrid_recommendations(test_user['user_id'], n_recommendations=10)
+            print(f"   - Got {len(recs)} recommendations")
+            if not recs.empty:
+                print(f"   - Categories: {recs['category'].value_counts().to_dict()}")
+        except Exception as e:
+            print(f"   - ERROR: {e}")
+    
+    # Test 2: Vegan users
+    print("\n2. Testing vegan users:")
+    vegan_users = users_df[users_df['diet_type'] == 'vegan']
+    if not vegan_users.empty:
+        vegan_success = 0
+        for _, vegan in vegan_users.iterrows():
+            try:
+                recs = system.get_hybrid_recommendations(vegan['user_id'], n_recommendations=5)
+                if not recs.empty:
+                    vegan_success += 1
+            except:
+                pass
+        print(f"   - {vegan_success}/{len(vegan_users)} vegan users got recommendations")
+    
+    # Test 3: Products with high dead stock risk
+    print("\n3. Dead stock recommendation distribution:")
+    dead_stock_count = 0
+    total_recs = 0
+    
+    sample_users = users_df.sample(min(20, len(users_df)))
+    for _, user in sample_users.iterrows():
+        try:
+            recs = system.get_hybrid_recommendations(user['user_id'], n_recommendations=5)
+            if not recs.empty:
+                dead_stock_count += recs['is_dead_stock_risk'].sum()
+                total_recs += len(recs)
+        except:
+            pass
+    
+    if total_recs > 0:
+        print(f"   - {dead_stock_count}/{total_recs} ({dead_stock_count/total_recs*100:.1f}%) recommendations are dead stock risk items")
+    
+    return issues
+
 def run_system(users_df, products_df, transactions_df):
     """Main function to run the unified waste reduction system"""
     print("="*50)
@@ -221,6 +407,9 @@ def run_system(users_df, products_df, transactions_df):
     # Show waste reduction strategies
     demonstrate_waste_reduction_strategies(products_enhanced, system.threshold_calculator)
     
+    # Test all users' recommendations
+    issues = test_all_users_recommendations(system, users_df)
+    
     print("\n" + "="*50)
     print("SYSTEM READY FOR USE")
     print("="*50)
@@ -233,7 +422,33 @@ def run_system(users_df, products_df, transactions_df):
 
 # Example usage when data is already loaded
 if __name__ == "__main__":
-    # Assuming users_df, products_df, and transactions_df are already loaded
-    # You would call: system, products_enhanced = run_system(users_df, products_df, transactions_df)
-    print("To run the system, ensure you have loaded your data and call:")
-    print("system, products_enhanced = run_system(users_df, products_df, transactions_df)") 
+    print("Loading data files...")
+    
+    try:
+        # Load the data from CSV files
+        users_df = pd.read_csv('datasets/fake_users.csv')
+        products_df = pd.read_csv('datasets/fake_products.csv')
+        transactions_df = pd.read_csv('datasets/fake_transactions.csv')
+        
+        # Convert date columns to datetime
+        products_df['expiry_date'] = pd.to_datetime(products_df['expiry_date'])
+        transactions_df['purchase_date'] = pd.to_datetime(transactions_df['purchase_date'])
+        
+        print("Data loaded successfully!")
+        print(f"- Users: {len(users_df)} records")
+        print(f"- Products: {len(products_df)} records")
+        print(f"- Transactions: {len(transactions_df)} records")
+        
+        # Run the system
+        system, products_enhanced = run_system(users_df, products_df, transactions_df)
+        
+    except FileNotFoundError as e:
+        print(f"Error: Could not find data files. {e}")
+        print("Please ensure the following files exist:")
+        print("- datasets/fake_users.csv")
+        print("- datasets/fake_products.csv")
+        print("- datasets/fake_transactions.csv")
+    except Exception as e:
+        print(f"Error loading or processing data: {e}")
+        import traceback
+        traceback.print_exc() 
