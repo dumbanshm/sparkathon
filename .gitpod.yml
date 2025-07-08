@@ -1,0 +1,41 @@
+# This configuration file sets up the Gitpod workspace
+# for the waste reduction system project
+
+# List of tasks that run on workspace startup
+tasks:
+  - name: Install Python Dependencies
+    init: |
+      echo "🚀 Setting up Python environment..."
+      pip install --upgrade pip
+      pip install -r requirements.txt
+      echo "✅ Python dependencies installed successfully!"
+    command: |
+      echo "👋 Welcome to the Waste Reduction System workspace!"
+      echo "📦 All Python dependencies have been installed."
+      echo ""
+      echo "You can now run:"
+      echo "  - python unified_waste_reduction_system.py"
+      echo "  - jupyter notebook waste_reduction_system.ipynb"
+      echo ""
+      python --version
+
+# Configure the Python version (optional)
+# image: gitpod/workspace-python-3.11
+
+# VS Code extensions that will be installed automatically
+vscode:
+  extensions:
+    - ms-python.python
+    - ms-python.vscode-pylance
+    - ms-toolsai.jupyter
+    - ms-toolsai.jupyter-keymap
+    - ms-toolsai.jupyter-renderers
+
+# Ports configuration (if you need to expose any services)
+ports:
+  - port: 8888
+    description: Jupyter Notebook
+    onOpen: notify
+  - port: 8080
+    description: Web Application
+    onOpen: notify 
