@@ -349,6 +349,10 @@ class UnifiedRecommendationSystem:
                 'discount': product['current_discount_percent'],
                 'is_dead_stock_risk': product.get('is_dead_stock_risk', 0)
             })
+            # Add small boost for at-risk products (discount already given)
+            if product.get('is_dead_stock_risk', 0) == 1:
+                at_risk_boost = 0.15  # 15% additional boost
+                hybrid_scores[-1]['hybrid_score'] += at_risk_boost
         hybrid_df = pd.DataFrame(hybrid_scores)
         return hybrid_df.nlargest(n_recommendations, 'hybrid_score')
     def get_content_based_recommendations(self, product_id, n_recommendations=10, filter_expired=True, urgency_boost=True):
