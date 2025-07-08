@@ -197,6 +197,9 @@ class UnifiedRecommendationSystem:
         self.products_df['total_shelf_life'] = (self.products_df['expiry_date'] - self.products_df['packaging_date']).dt.days
         self.products_df['shelf_life_remaining_pct'] = self.products_df['days_until_expiry'] / self.products_df['total_shelf_life'] * 100
 
+        # Remove already expired products
+        self.products_df = self.products_df[self.products_df['days_until_expiry'] > 0].copy()
+
         # Calculate sales metrics for each product
         sales_metrics = self.transactions_df.groupby('product_id').agg({
             'quantity': ['sum', 'mean', 'count'],
@@ -308,7 +311,10 @@ class UnifiedRecommendationSystem:
             if not content_recs_combined.empty and product_id in content_recs_combined['product_id'].values:
                 content_score = content_recs_combined[content_recs_combined['product_id'] == product_id]['final_score'].iloc[0]
                 score += content_weight * content_score
-            product = self.products_df[self.products_df['product_id'] == product_id].iloc[0].to_dict()
+            product_row = self.products_df[self.products_df['product_id'] == product_id]
+            if product_row.empty:
+                continue  # Skip if product not found (e.g., filtered out as expired)
+            product = product_row.iloc[0].to_dict()
             if not is_compatible_diet_allergy(user, product):
                 continue
             hybrid_scores.append({
@@ -326,7 +332,10 @@ class UnifiedRecommendationSystem:
     def get_content_based_recommendations(self, product_id, n_recommendations=10, filter_expired=True, urgency_boost=True):
         if self.content_similarity_matrix is None:
             self.build_content_similarity_matrix()
-        product_idx = self.products_df[self.products_df['product_id'] == product_id].index[0]
+        product_row = self.products_df[self.products_df['product_id'] == product_id]
+        if product_row.empty:
+            return pd.DataFrame()  # Product not found, return empty
+        product_idx = product_row.index[0]
         sim_scores = list(enumerate(self.content_similarity_matrix[product_idx]))
         sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
         similar_products = []
@@ -367,7 +376,10 @@ class UnifiedRecommendationSystem:
             product_id = product_ids[idx]
             if filter_purchased and self.user_item_matrix.iloc[user_idx, idx] > 0:
                 continue
-            product = self.products_df[self.products_df['product_id'] == product_id].iloc[0].to_dict()
+            product_row = self.products_df[self.products_df['product_id'] == product_id]
+            if product_row.empty:
+                continue  # Skip if product not found (e.g., filtered out as expired)
+            product = product_row.iloc[0].to_dict()
             if product['days_until_expiry'] <= 0:
                 continue
             if not is_compatible_diet_allergy(user, product):

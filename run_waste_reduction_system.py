@@ -50,7 +50,10 @@ def calculate_dead_stock_analysis(products_df, transactions_df, threshold_calcul
     # Calculate sales velocity for each product
     current_date = pd.Timestamp.now()
     products_df['days_until_expiry'] = (products_df['expiry_date'] - current_date).dt.days
-    
+
+    # Remove already expired products
+    products_df = products_df[products_df['days_until_expiry'] > 0].copy()
+
     sales_velocity = transactions_df.groupby('product_id').agg({
         'quantity': 'sum',
         'purchase_date': ['min', 'max']
@@ -73,8 +76,25 @@ def calculate_dead_stock_analysis(products_df, transactions_df, threshold_calcul
     # Get thresholds for all products
     threshold_df = threshold_calculator.calculate_all_thresholds()
     
+    # Debug: Check for expired products before analysis
+    expired_debug = products_enhanced[products_enhanced['days_until_expiry'] <= 0]
+    if not expired_debug.empty:
+        print("[DEBUG] EXPIRED PRODUCTS FOUND IN products_enhanced BEFORE ANALYSIS:")
+        print(expired_debug[['product_id', 'name', 'category', 'days_until_expiry']])
+        raise ValueError("Expired products present in products_enhanced before analysis!")
+
     # Analysis
-    at_risk_products = products_enhanced[products_enhanced['is_dead_stock_risk'] == 1]
+    # Filter out expired products from at_risk_products and products_enhanced
+    at_risk_products = products_enhanced[(products_enhanced['is_dead_stock_risk'] == 1) & (products_enhanced['days_until_expiry'] > 0)]
+    products_enhanced = products_enhanced[products_enhanced['days_until_expiry'] > 0].copy()
+
+    # Debug: Check for expired products in at_risk_products
+    expired_risk_debug = at_risk_products[at_risk_products['days_until_expiry'] <= 0]
+    if not expired_risk_debug.empty:
+        print("[DEBUG] EXPIRED PRODUCTS FOUND IN at_risk_products:")
+        print(expired_risk_debug[['product_id', 'name', 'category', 'days_until_expiry']])
+        raise ValueError("Expired products present in at_risk_products!")
+
     print(f"\nTotal products at risk: {len(at_risk_products)} ({len(at_risk_products)/len(products_enhanced)*100:.1f}%)")
     
     print("\nRisk by Category:")
@@ -165,6 +185,15 @@ def demonstrate_waste_reduction_strategies(products_enhanced, threshold_calculat
     print("WASTE REDUCTION STRATEGIES")
     print("="*50)
     
+    # Debug: Check for expired products before analysis
+    expired_debug = products_enhanced[products_enhanced['days_until_expiry'] <= 0]
+    if not expired_debug.empty:
+        print("[DEBUG] EXPIRED PRODUCTS FOUND IN products_enhanced BEFORE STRATEGY ANALYSIS:")
+        print(expired_debug[['product_id', 'name', 'category', 'days_until_expiry']])
+        raise ValueError("Expired products present in products_enhanced before strategy analysis!")
+
+    # Filter out expired products before analysis
+    products_enhanced = products_enhanced[products_enhanced['days_until_expiry'] > 0].copy()
     # Products needing immediate action
     urgent_products = products_enhanced[
         (products_enhanced['days_until_expiry'] > 0) & 
