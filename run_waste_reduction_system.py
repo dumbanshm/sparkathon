@@ -121,15 +121,8 @@ def demonstrate_recommendations(system, users_df):
         if not hybrid_recs.empty:
             for idx, rec in hybrid_recs.iterrows():
                 print(f"   - {rec['product_name']} ({rec['category']})")
-                # Handle both hybrid_score and recommendation_score columns
-                score_col = 'hybrid_score' if 'hybrid_score' in rec else 'recommendation_score'
-                score = rec[score_col] if score_col in rec else 0
-                price_col = 'price' if 'price' in rec else 'price_mrp'
-                price = rec[price_col] if price_col in rec else 0
-                discount_col = 'discount' if 'discount' in rec else 'current_discount_percent'
-                discount = rec[discount_col] if discount_col in rec else 0
-                print(f"     Score: {score:.3f}, Days until expiry: {rec['days_until_expiry']}, "
-                      f"Price: ₹{price}, Discount: {discount}%")
+                print(f"     Score: {rec['hybrid_score']:.3f}, Days until expiry: {rec['days_until_expiry']}, "
+                      f"Price: ₹{rec['price']}, Discount: {rec['discount']}%")
                 if rec.get('is_dead_stock_risk', 0) == 1:
                     print(f"     ⚠️  AT RISK OF BECOMING DEAD STOCK")
         else:

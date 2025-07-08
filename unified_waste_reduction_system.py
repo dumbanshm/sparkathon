@@ -276,7 +276,7 @@ class UnifiedRecommendationSystem:
             self.transactions_df['user_id'] == user_id
         ]['product_id'].unique()
         if len(user_products) == 0:
-            return self.get_popular_expiring_products(n_recommendations)
+            return self.get_popular_expiring_products(n_recommendations, user_id=user_id)
         collab_recs = self.get_collaborative_recommendations(user_id, n_recommendations * 2)
         content_recs_list = []
         for product_id in user_products[-3:]:
@@ -356,7 +356,7 @@ class UnifiedRecommendationSystem:
         if self.user_factors is None:
             self.build_collaborative_filtering_model()
         if user_id not in self.user_item_matrix.index:
-            return self.get_popular_expiring_products(n_recommendations)
+            return self.get_popular_expiring_products(n_recommendations, user_id=user_id)
         user_idx = self.user_item_matrix.index.get_loc(user_id)
         user_vector = self.user_factors[user_idx]
         predicted_ratings = np.dot(user_vector, self.item_factors.T)
@@ -389,7 +389,7 @@ class UnifiedRecommendationSystem:
             recommendations.append(recommendation)
         recommendations_df = pd.DataFrame(recommendations)
         return recommendations_df.nlargest(n_recommendations, 'final_score')
-    def get_popular_expiring_products(self, n_recommendations=10):
+    def get_popular_expiring_products(self, n_recommendations=10, user_id=None):
         expiring_products = self.products_df[(self.products_df['days_until_expiry'] > 0) & (self.products_df['days_until_expiry'] <= 30)].copy()
         product_popularity = self.transactions_df.groupby('product_id').agg({
             'quantity': 'sum',
@@ -409,6 +409,22 @@ class UnifiedRecommendationSystem:
             expiring_products['is_dead_stock_risk'] = expiring_products.apply(
                 lambda row: calculate_dead_stock_risk_dynamic(row, self.threshold_calculator), axis=1
             )
+        
+        # Apply diet/allergy filtering if user_id is provided
+        if user_id is not None and user_id in self.users_df['user_id'].values:
+            user = self.users_df[self.users_df['user_id'] == user_id].iloc[0].to_dict()
+            valid_products = []
+            for _, product in expiring_products.iterrows():
+                if is_compatible_diet_allergy(user, product.to_dict()):
+                    valid_products.append(product['product_id'])
+            expiring_products = expiring_products[expiring_products['product_id'].isin(valid_products)]
+        
+        # Ensure we have enough products
+        if len(expiring_products) == 0:
+            # Return empty DataFrame with correct columns
+            return pd.DataFrame(columns=['product_id', 'product_name', 'hybrid_score', 
+                                        'days_until_expiry', 'category', 'price', 
+                                        'discount', 'is_dead_stock_risk'])
         
         return expiring_products.nlargest(n_recommendations, 'recommendation_score')[[
             'product_id', 'name', 'category', 'days_until_expiry', 'price_mrp', 'current_discount_percent', 'recommendation_score', 'is_dead_stock_risk'
