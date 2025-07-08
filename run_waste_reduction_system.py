@@ -11,38 +11,6 @@ from unified_waste_reduction_system import (
     calculate_dead_stock_risk_dynamic
 )
 
-def load_datasets():
-    """Load all required datasets"""
-    print("Loading datasets...")
-    try:
-        users_df = pd.read_csv('datasets/fake_users.csv')
-        products_df = pd.read_csv('datasets/fake_products.csv')
-        transactions_df = pd.read_csv('datasets/fake_transactions.csv')
-        
-        # Convert date columns to datetime
-        date_columns = {
-            'products_df': ['packaging_date', 'expiry_date'],
-            'transactions_df': ['purchase_date']
-        }
-        
-        for col in date_columns['products_df']:
-            if col in products_df.columns:
-                products_df[col] = pd.to_datetime(products_df[col])
-        
-        for col in date_columns['transactions_df']:
-            if col in transactions_df.columns:
-                transactions_df[col] = pd.to_datetime(transactions_df[col])
-        
-        print(f"✓ Loaded {len(users_df)} users")
-        print(f"✓ Loaded {len(products_df)} products")
-        print(f"✓ Loaded {len(transactions_df)} transactions")
-        
-        return users_df, products_df, transactions_df
-    
-    except Exception as e:
-        print(f"Error loading datasets: {e}")
-        return None, None, None
-
 def analyze_data(users_df, products_df, transactions_df):
     """Basic data analysis"""
     print("\n" + "="*50)
@@ -216,19 +184,14 @@ def demonstrate_waste_reduction_strategies(products_enhanced, threshold_calculat
         print(f"\n   {category}:")
         print(f"   - Base threshold: {threshold} days")
         print(f"   - Products at risk: {len(at_risk)}/{len(category_products)}")
-        print(f"   - Avg days to expiry for at-risk: {at_risk['days_until_expiry'].mean():.1f}")
+        if len(at_risk) > 0:
+            print(f"   - Avg days to expiry for at-risk: {at_risk['days_until_expiry'].mean():.1f}")
 
-def main():
-    """Main driver function"""
+def run_system(users_df, products_df, transactions_df):
+    """Main function to run the unified waste reduction system"""
     print("="*50)
     print("UNIFIED WASTE REDUCTION SYSTEM")
     print("="*50)
-    
-    # Load datasets
-    users_df, products_df, transactions_df = load_datasets()
-    if users_df is None:
-        print("Failed to load datasets. Exiting.")
-        return
     
     # Basic data analysis
     analyze_data(users_df, products_df, transactions_df)
@@ -236,9 +199,6 @@ def main():
     # Initialize the unified recommendation system
     print("\nInitializing Unified Recommendation System...")
     system = UnifiedRecommendationSystem(users_df, products_df, transactions_df)
-    
-    # Preprocess data
-    system.preprocess_data()
     
     # Build models
     print("Building content similarity matrix...")
@@ -271,5 +231,9 @@ def main():
     
     return system, products_enhanced
 
+# Example usage when data is already loaded
 if __name__ == "__main__":
-    system, products_enhanced = main() 
+    # Assuming users_df, products_df, and transactions_df are already loaded
+    # You would call: system, products_enhanced = run_system(users_df, products_df, transactions_df)
+    print("To run the system, ensure you have loaded your data and call:")
+    print("system, products_enhanced = run_system(users_df, products_df, transactions_df)") 
