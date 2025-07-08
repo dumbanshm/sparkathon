@@ -182,6 +182,24 @@ class UnifiedRecommendationSystem:
         
         # Preprocess data to add calculated features
         self.preprocess_data()
+    def update_discounts_for_at_risk_products(self):
+        # Update current_discount_percent for at-risk products
+        for idx, row in self.products_df.iterrows():
+            if row.get('is_dead_stock_risk', 0) == 1:
+                threshold = self.threshold_calculator.get_threshold(row['product_id'])
+                days_left = row['days_until_expiry']
+                base_discount = row['current_discount_percent']
+                if days_left <= threshold:
+                    urgency_factor = (threshold - days_left) / threshold
+                    # Calculate additional discount (up to 50% total, in 2.5% steps)
+                    add_discount = urgency_factor * (50 - base_discount)
+                    # Round to nearest 2.5%
+                    add_discount = round(add_discount / 2.5) * 2.5
+                    new_discount = min(50, base_discount + add_discount)
+                    # Only update if new_discount > base_discount
+                    if new_discount > base_discount:
+                        self.products_df.at[idx, 'current_discount_percent'] = new_discount
+
     def preprocess_data(self):
         current_date = pd.Timestamp.now()
         
