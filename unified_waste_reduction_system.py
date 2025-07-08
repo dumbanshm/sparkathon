@@ -119,6 +119,164 @@ class DynamicThresholdCalculator:
             self.product_thresholds[product_id] = threshold_info['dynamic_threshold']
             return threshold_info['dynamic_threshold']
 
+class DynamicPricingEngine:
+    """
+    Calculates dynamic discounts and urgency scores based on multiple factors
+    """
+    def __init__(self, products_df, transactions_df, threshold_calculator):
+        self.products_df = products_df
+        self.transactions_df = transactions_df
+        self.threshold_calculator = threshold_calculator
+        
+    def calculate_dynamic_urgency_score(self, product_row):
+        """Calculate dynamic urgency score based on multiple factors"""
+        days_until_expiry = product_row['days_until_expiry']
+        
+        # Base urgency from expiry
+        if days_until_expiry <= 0:
+            return 1.0  # Maximum urgency for expired products
+        
+        # Get dynamic threshold for this product
+        threshold = self.threshold_calculator.get_threshold(product_row['product_id'])
+        
+        # Calculate base urgency (0 to 1)
+        if days_until_expiry <= threshold:
+            # Use exponential decay for urgency
+            base_urgency = 1 - np.exp(-2 * (threshold - days_until_expiry) / threshold)
+        else:
+            base_urgency = 0
+        
+        # Factor 1: Sales velocity impact
+        sales_velocity = product_row.get('sales_velocity', 0)
+        if sales_velocity < 0.1:  # Very slow moving
+            velocity_multiplier = 1.5
+        elif sales_velocity < 0.5:  # Slow moving
+            velocity_multiplier = 1.2
+        else:  # Normal or fast moving
+            velocity_multiplier = 1.0
+        
+        # Factor 2: Current discount effectiveness
+        current_discount = product_row.get('current_discount_percent', 0)
+        if current_discount > 0:
+            # Check if current discount is working
+            avg_engagement = product_row.get('avg_user_engagement', 0)
+            if avg_engagement < 0.3:  # Low engagement despite discount
+                discount_multiplier = 1.3
+            else:
+                discount_multiplier = 1.0
+        else:
+            discount_multiplier = 1.1  # Slight boost if no discount yet
+        
+        # Factor 3: Dead stock risk
+        is_dead_stock = product_row.get('is_dead_stock_risk', 0)
+        dead_stock_multiplier = 1.5 if is_dead_stock else 1.0
+        
+        # Factor 4: Category-specific urgency
+        category = product_row['category']
+        category_multipliers = {
+            'Dairy': 1.3,      # High perishability
+            'Meat': 1.3,       # High perishability
+            'Beverages': 1.1,  # Moderate
+            'Snacks': 0.9,     # Lower perishability
+            'Biscuits': 0.9,   # Lower perishability
+        }
+        category_multiplier = category_multipliers.get(category, 1.0)
+        
+        # Calculate final urgency score
+        final_urgency = base_urgency * velocity_multiplier * discount_multiplier * dead_stock_multiplier * category_multiplier
+        
+        # Cap at 1.0
+        return min(final_urgency, 1.0)
+    
+    def calculate_dynamic_discount(self, product_row):
+        """Calculate recommended discount based on multiple factors"""
+        current_discount = product_row.get('current_discount_percent', 0)
+        days_until_expiry = product_row['days_until_expiry']
+        urgency_score = self.calculate_dynamic_urgency_score(product_row)
+        
+        # Base discount calculation
+        if urgency_score >= 0.8:  # Very urgent
+            base_discount_target = 50
+        elif urgency_score >= 0.6:  # Urgent
+            base_discount_target = 40
+        elif urgency_score >= 0.4:  # Moderate urgency
+            base_discount_target = 30
+        elif urgency_score >= 0.2:  # Low urgency
+            base_discount_target = 20
+        else:
+            base_discount_target = 10
+        
+        # Adjust based on price point
+        price = product_row['price_mrp']
+        if price > 400:  # High-value items
+            # More conservative discounting
+            price_adjustment = 0.8
+        elif price < 100:  # Low-value items
+            # More aggressive discounting
+            price_adjustment = 1.2
+        else:
+            price_adjustment = 1.0
+        
+        # Adjust based on sales performance
+        sales_velocity = product_row.get('sales_velocity', 0)
+        if sales_velocity == 0 and days_until_expiry < 14:
+            # No sales and expiring soon - max discount
+            velocity_adjustment = 1.5
+        elif sales_velocity < 0.5:
+            velocity_adjustment = 1.2
+        else:
+            velocity_adjustment = 1.0
+        
+        # Calculate recommended discount
+        recommended_discount = base_discount_target * price_adjustment * velocity_adjustment
+        
+        # Ensure progressive discounting (don't reduce discount)
+        recommended_discount = max(recommended_discount, current_discount)
+        
+        # Cap at reasonable limits
+        max_discount = 70 if urgency_score > 0.8 else 50
+        recommended_discount = min(recommended_discount, max_discount)
+        
+        # Round to nearest 5%
+        recommended_discount = round(recommended_discount / 5) * 5
+        
+        return {
+            'current_discount': current_discount,
+            'recommended_discount': recommended_discount,
+            'discount_increase': recommended_discount - current_discount,
+            'urgency_score': urgency_score,
+            'reasoning': self._get_discount_reasoning(product_row, urgency_score, recommended_discount)
+        }
+    
+    def _get_discount_reasoning(self, product_row, urgency_score, recommended_discount):
+        """Generate human-readable reasoning for the discount recommendation"""
+        reasons = []
+        
+        if product_row['days_until_expiry'] <= 7:
+            reasons.append("Critical expiry window")
+        elif product_row['days_until_expiry'] <= 14:
+            reasons.append("Approaching expiry")
+        
+        if product_row.get('sales_velocity', 0) < 0.5:
+            reasons.append("Low sales velocity")
+        
+        if product_row.get('is_dead_stock_risk', 0):
+            reasons.append("High dead stock risk")
+        
+        if urgency_score > 0.7:
+            reasons.append("High urgency score")
+        
+        return ", ".join(reasons) if reasons else "Standard pricing optimization"
+    
+    def apply_dynamic_pricing_to_recommendations(self, recommendations_df):
+        """Apply dynamic urgency scores to recommendation dataframe"""
+        recommendations_df['dynamic_urgency'] = recommendations_df.apply(
+            lambda row: self.calculate_dynamic_urgency_score(
+                self.products_df[self.products_df['product_id'] == row['product_id']].iloc[0]
+            ), axis=1
+        )
+        return recommendations_df
+
 def calculate_dead_stock_risk_dynamic(row, threshold_calculator):
     threshold = threshold_calculator.get_threshold(row['product_id'])
     if row['days_until_expiry'] <= 0:
@@ -181,6 +339,11 @@ class UnifiedRecommendationSystem:
         
         # Preprocess data to add calculated features
         self.preprocess_data()
+        
+        # Initialize dynamic pricing engine
+        self.pricing_engine = DynamicPricingEngine(
+            self.products_df, self.transactions_df, self.threshold_calculator
+        )
     def preprocess_data(self):
         current_date = pd.Timestamp.now()
         
@@ -311,10 +474,18 @@ class UnifiedRecommendationSystem:
             product = self.products_df[self.products_df['product_id'] == product_id].iloc[0].to_dict()
             if not is_compatible_diet_allergy(user, product):
                 continue
+            # Calculate dynamic urgency for this product
+            urgency_score = self.pricing_engine.calculate_dynamic_urgency_score(product)
+            
+            # Apply urgency boost to hybrid score
+            score_with_urgency = score * (1 + urgency_score * 0.5)  # Up to 50% boost
+            
             hybrid_scores.append({
                 'product_id': product_id,
                 'product_name': product['name'],
-                'hybrid_score': score,
+                'hybrid_score': score_with_urgency,
+                'base_score': score,
+                'urgency_score': urgency_score,
                 'days_until_expiry': product['days_until_expiry'],
                 'category': product['category'],
                 'price': product['price_mrp'],
@@ -343,11 +514,15 @@ class UnifiedRecommendationSystem:
                 'price': product['price_mrp'],
                 'discount': product['current_discount_percent']
             }
-            if urgency_boost and product['days_until_expiry'] <= 30:
-                urgency_factor = 1 + (30 - product['days_until_expiry']) / 30 * 0.5
+            if urgency_boost:
+                # Use dynamic urgency scoring
+                urgency_score = self.pricing_engine.calculate_dynamic_urgency_score(product)
+                urgency_factor = 1 + urgency_score  # Can boost up to 2x for max urgency
                 recommendation['final_score'] = score * urgency_factor
+                recommendation['urgency_score'] = urgency_score
             else:
                 recommendation['final_score'] = score
+                recommendation['urgency_score'] = 0
             similar_products.append(recommendation)
             if len(similar_products) >= n_recommendations:
                 break
@@ -381,11 +556,15 @@ class UnifiedRecommendationSystem:
                 'price': product['price_mrp'],
                 'discount': product['current_discount_percent']
             }
-            if focus_on_expiring and product['days_until_expiry'] <= 30:
-                urgency_factor = 1 + (30 - product['days_until_expiry']) / 30 * 0.5
+            if focus_on_expiring:
+                # Use dynamic urgency scoring
+                urgency_score = self.pricing_engine.calculate_dynamic_urgency_score(product)
+                urgency_factor = 1 + urgency_score  # Can boost up to 2x for max urgency
                 recommendation['final_score'] = rating * urgency_factor
+                recommendation['urgency_score'] = urgency_score
             else:
                 recommendation['final_score'] = rating
+                recommendation['urgency_score'] = 0
             recommendations.append(recommendation)
         recommendations_df = pd.DataFrame(recommendations)
         return recommendations_df.nlargest(n_recommendations, 'final_score')
@@ -397,11 +576,15 @@ class UnifiedRecommendationSystem:
         }).rename(columns={'user_id': 'unique_buyers'})
         expiring_products = expiring_products.merge(
             product_popularity, left_on='product_id', right_index=True, how='left')
-        expiring_products['urgency_score'] = (30 - expiring_products['days_until_expiry']) / 30
+        # Calculate dynamic urgency scores
+        expiring_products['urgency_score'] = expiring_products.apply(
+            lambda row: self.pricing_engine.calculate_dynamic_urgency_score(row), axis=1
+        )
+        
         expiring_products['recommendation_score'] = (
-            expiring_products['quantity'].fillna(0) * 0.4 +
-            expiring_products['unique_buyers'].fillna(0) * 0.3 +
-            expiring_products['urgency_score'] * 0.3
+            expiring_products['quantity'].fillna(0) * 0.3 +
+            expiring_products['unique_buyers'].fillna(0) * 0.2 +
+            expiring_products['urgency_score'] * 0.5  # Higher weight for dynamic urgency
         )
         
         # Add is_dead_stock_risk flag if not already present
@@ -426,14 +609,55 @@ class UnifiedRecommendationSystem:
                                         'days_until_expiry', 'category', 'price', 
                                         'discount', 'is_dead_stock_risk'])
         
-        return expiring_products.nlargest(n_recommendations, 'recommendation_score')[[
-            'product_id', 'name', 'category', 'days_until_expiry', 'price_mrp', 'current_discount_percent', 'recommendation_score', 'is_dead_stock_risk'
+        result = expiring_products.nlargest(n_recommendations, 'recommendation_score')[[
+            'product_id', 'name', 'category', 'days_until_expiry', 'price_mrp', 
+            'current_discount_percent', 'recommendation_score', 'is_dead_stock_risk', 'urgency_score'
         ]].rename(columns={
             'name': 'product_name',
             'recommendation_score': 'hybrid_score',
             'price_mrp': 'price',
             'current_discount_percent': 'discount'
         })
+        
+        return result
+    
+    def get_dynamic_pricing_recommendations(self, min_urgency=0.3, limit=20):
+        """Get products with dynamic pricing recommendations"""
+        pricing_recommendations = []
+        
+        # Focus on products that are not yet expired but at risk
+        at_risk_products = self.products_df[
+            (self.products_df['days_until_expiry'] > 0) & 
+            (self.products_df['days_until_expiry'] <= 60)
+        ]
+        
+        for _, product in at_risk_products.iterrows():
+            urgency_score = self.pricing_engine.calculate_dynamic_urgency_score(product)
+            
+            if urgency_score >= min_urgency:
+                discount_info = self.pricing_engine.calculate_dynamic_discount(product)
+                
+                pricing_recommendations.append({
+                    'product_id': product['product_id'],
+                    'product_name': product['name'],
+                    'category': product['category'],
+                    'days_until_expiry': product['days_until_expiry'],
+                    'current_discount': discount_info['current_discount'],
+                    'recommended_discount': discount_info['recommended_discount'],
+                    'discount_increase': discount_info['discount_increase'],
+                    'urgency_score': discount_info['urgency_score'],
+                    'reasoning': discount_info['reasoning'],
+                    'current_price': product['price_mrp'] * (1 - product['current_discount_percent']/100),
+                    'recommended_price': product['price_mrp'] * (1 - discount_info['recommended_discount']/100),
+                    'potential_savings': product['price_mrp'] * discount_info['discount_increase']/100
+                })
+        
+        # Sort by urgency score and return top recommendations
+        pricing_df = pd.DataFrame(pricing_recommendations)
+        if not pricing_df.empty:
+            pricing_df = pricing_df.sort_values('urgency_score', ascending=False).head(limit)
+        
+        return pricing_df
 
 # --- Example Usage ---
 if __name__ == "__main__":

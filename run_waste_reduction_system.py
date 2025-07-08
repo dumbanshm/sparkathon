@@ -121,7 +121,9 @@ def demonstrate_recommendations(system, users_df):
         if not hybrid_recs.empty:
             for idx, rec in hybrid_recs.iterrows():
                 print(f"   - {rec['product_name']} ({rec['category']})")
-                print(f"     Score: {rec['hybrid_score']:.3f}, Days until expiry: {rec['days_until_expiry']}, "
+                print(f"     Score: {rec['hybrid_score']:.3f} (Base: {rec.get('base_score', rec['hybrid_score']):.3f}), "
+                      f"Urgency: {rec.get('urgency_score', 0):.2f}")
+                print(f"     Days until expiry: {rec['days_until_expiry']}, "
                       f"Price: ₹{rec['price']}, Discount: {rec['discount']}%")
                 if rec.get('is_dead_stock_risk', 0) == 1:
                     print(f"     ⚠️  AT RISK OF BECOMING DEAD STOCK")
@@ -152,40 +154,66 @@ def demonstrate_recommendations(system, users_df):
                 print(f"   - {rec['product_name']} ({rec['category']})")
                 print(f"     Similarity: {rec['similarity_score']:.3f}, Days until expiry: {rec['days_until_expiry']}")
 
-def demonstrate_waste_reduction_strategies(products_enhanced, threshold_calculator):
-    """Show waste reduction strategies"""
+def demonstrate_waste_reduction_strategies(products_enhanced, system):
+    """Show waste reduction strategies with dynamic pricing"""
     print("\n" + "="*50)
-    print("WASTE REDUCTION STRATEGIES")
+    print("DYNAMIC WASTE REDUCTION STRATEGIES")
     print("="*50)
     
-    # Products needing immediate action
-    urgent_products = products_enhanced[
-        (products_enhanced['days_until_expiry'] > 0) & 
-        (products_enhanced['days_until_expiry'] <= 7) &
-        (products_enhanced['is_dead_stock_risk'] == 1)
-    ].sort_values('days_until_expiry')
+    # Get dynamic pricing recommendations
+    pricing_recommendations = system.get_dynamic_pricing_recommendations(min_urgency=0.4, limit=10)
     
-    print(f"\n1. URGENT ACTION REQUIRED ({len(urgent_products)} products):")
-    for idx, product in urgent_products.head(5).iterrows():
-        threshold = threshold_calculator.get_threshold(product['product_id'])
-        suggested_discount = min(50, product['current_discount_percent'] + 20)
-        print(f"\n   Product: {product['name']}")
-        print(f"   - Days until expiry: {product['days_until_expiry']}")
-        print(f"   - Current discount: {product['current_discount_percent']}%")
-        print(f"   - Suggested discount: {suggested_discount}%")
-        print(f"   - Dynamic threshold: {threshold} days")
+    if not pricing_recommendations.empty:
+        print(f"\n1. DYNAMIC PRICING RECOMMENDATIONS (Top {len(pricing_recommendations)} products):")
+        print("-" * 80)
+        
+        for idx, rec in pricing_recommendations.iterrows():
+            print(f"\n   Product: {rec['product_name']} ({rec['category']})")
+            print(f"   Days until expiry: {rec['days_until_expiry']}")
+            print(f"   Urgency Score: {rec['urgency_score']:.2f}")
+            print(f"   Current Discount: {rec['current_discount']}%")
+            print(f"   Recommended Discount: {rec['recommended_discount']}%")
+            print(f"   Price Change: ₹{rec['current_price']:.2f} → ₹{rec['recommended_price']:.2f}")
+            print(f"   Customer Savings: ₹{rec['potential_savings']:.2f}")
+            print(f"   Reasoning: {rec['reasoning']}")
+            
+            if idx >= 4:  # Show only top 5
+                break
     
-    # Category-wise recommendations
-    print("\n2. CATEGORY-WISE OPTIMIZATION:")
-    category_thresholds = threshold_calculator.category_thresholds
-    for category, threshold in sorted(category_thresholds.items(), key=lambda x: x[1]):
+    # Category-wise urgency analysis
+    print("\n\n2. CATEGORY-WISE URGENCY ANALYSIS:")
+    print("-" * 80)
+    
+    category_urgency = {}
+    for category in products_enhanced['category'].unique():
         category_products = products_enhanced[products_enhanced['category'] == category]
-        at_risk = category_products[category_products['is_dead_stock_risk'] == 1]
+        
+        # Calculate average urgency for category
+        urgency_scores = []
+        for _, product in category_products.iterrows():
+            if product['days_until_expiry'] > 0:  # Skip expired
+                urgency = system.pricing_engine.calculate_dynamic_urgency_score(product)
+                urgency_scores.append(urgency)
+        
+        if urgency_scores:
+            avg_urgency = np.mean(urgency_scores)
+            high_urgency_count = sum(1 for u in urgency_scores if u > 0.5)
+            
+            category_urgency[category] = {
+                'avg_urgency': avg_urgency,
+                'high_urgency_count': high_urgency_count,
+                'total_products': len(category_products)
+            }
+    
+    # Sort by average urgency
+    for category, stats in sorted(category_urgency.items(), key=lambda x: x[1]['avg_urgency'], reverse=True):
         print(f"\n   {category}:")
-        print(f"   - Base threshold: {threshold} days")
-        print(f"   - Products at risk: {len(at_risk)}/{len(category_products)}")
-        if len(at_risk) > 0:
-            print(f"   - Avg days to expiry for at-risk: {at_risk['days_until_expiry'].mean():.1f}")
+        print(f"   - Average urgency score: {stats['avg_urgency']:.2f}")
+        print(f"   - High urgency products: {stats['high_urgency_count']}/{stats['total_products']}")
+        
+        # Show urgency distribution
+        if stats['avg_urgency'] > 0.4:
+            print(f"   - Status: ⚠️  NEEDS ATTENTION")
 
 def test_all_users_recommendations(system, users_df, n_recommendations=5):
     """Test recommendation system for all users to find corner cases and debug issues"""
@@ -398,7 +426,7 @@ def run_system(users_df, products_df, transactions_df):
     demonstrate_recommendations(system, users_df)
     
     # Show waste reduction strategies
-    demonstrate_waste_reduction_strategies(products_enhanced, system.threshold_calculator)
+    demonstrate_waste_reduction_strategies(products_enhanced, system)
     
     # Test all users' recommendations
     issues = test_all_users_recommendations(system, users_df)
