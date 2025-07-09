@@ -62,11 +62,13 @@ def calculate_dead_stock_analysis(products_df, transactions_df, threshold_calcul
     sales_velocity.columns = ['product_id', 'total_sold', 'first_sale', 'last_sale']
     sales_velocity['days_on_market'] = (sales_velocity['last_sale'] - sales_velocity['first_sale']).dt.days + 1
     sales_velocity['sales_velocity'] = sales_velocity['total_sold'] / sales_velocity['days_on_market']
+    sales_velocity['days_since_last_sale'] = (current_date - sales_velocity['last_sale']).dt.days
     
-    # Merge with products
-    products_enhanced = products_df.merge(sales_velocity[['product_id', 'sales_velocity']], 
+    # Merge with products, including days_since_last_sale
+    products_enhanced = products_df.merge(sales_velocity[['product_id', 'sales_velocity', 'days_since_last_sale']], 
                                          on='product_id', how='left')
     products_enhanced['sales_velocity'].fillna(0, inplace=True)
+    products_enhanced['days_since_last_sale'].fillna(999, inplace=True)
     
     # Calculate dead stock risk
     products_enhanced['is_dead_stock_risk'] = products_enhanced.apply(

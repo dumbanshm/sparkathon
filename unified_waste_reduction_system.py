@@ -160,6 +160,12 @@ def is_compatible_diet_allergy(user, product):
         return False
     return True
 
+def calculate_risk_score(row, threshold):
+    expiry_score = max(0, min(0.5, (threshold - row['days_until_expiry']) / threshold * 0.5))
+    velocity_score = 0.3 * (1 - min(1, row['sales_velocity'] / 5))
+    stagnation_score = 0.2 * min(1, row['days_since_last_sale'] / 30)
+    return expiry_score + velocity_score + stagnation_score
+
 # --- Hybrid Recommendation System (from dynamic_recommendation_system.py, with improved compatibility logic) ---
 class UnifiedRecommendationSystem:
     """
@@ -470,8 +476,7 @@ class UnifiedRecommendationSystem:
         for idx, row in self.products_df.iterrows():
             pid = row['product_id']
             threshold = self.threshold_calculator.get_threshold(pid)
-            # If you have a risk score calculation, use it; else set to None
-            risk_score = None  # Placeholder, replace with your risk score logic if available
+            risk_score = calculate_risk_score(row, threshold)
             risk_records.append({
                 'product_id': pid,
                 'threshold': threshold,
