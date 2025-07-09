@@ -464,6 +464,21 @@ class UnifiedRecommendationSystem:
             'current_discount_percent': 'discount'
         })
 
+    def build_product_risk_df(self):
+        # Build a DataFrame with product_id, threshold, and risk_score
+        risk_records = []
+        for idx, row in self.products_df.iterrows():
+            pid = row['product_id']
+            threshold = self.threshold_calculator.get_threshold(pid)
+            # If you have a risk score calculation, use it; else set to None
+            risk_score = None  # Placeholder, replace with your risk score logic if available
+            risk_records.append({
+                'product_id': pid,
+                'threshold': threshold,
+                'risk_score': risk_score
+            })
+        self.product_risk_df = pd.DataFrame(risk_records)
+
 # --- Example Usage ---
 if __name__ == "__main__":
     print("Unified Waste Reduction System Example")

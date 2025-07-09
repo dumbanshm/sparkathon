@@ -430,6 +430,9 @@ def run_system(users_df, products_df, transactions_df):
     # Rebuild content similarity matrix with updated discounts
     system.build_content_similarity_matrix()
     
+    # Build product risk DataFrame for fast API/export
+    system.build_product_risk_df()
+    
     # Demonstrate recommendations
     demonstrate_recommendations(system, users_df)
     

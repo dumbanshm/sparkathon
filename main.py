@@ -85,6 +85,8 @@ def get_dead_stock_risk(category: Optional[str] = None):
         if category:
             df = df[df["category"] == category]
         at_risk = df[df["is_dead_stock_risk"] == 1]
+        # Merge with product_risk_df to get threshold and risk_score
+        merged = at_risk.merge(system.product_risk_df, on='product_id', how='left')
         items = [
             DeadStockRiskItem(
                 product_id=row.get("product_id", ""),
@@ -92,10 +94,10 @@ def get_dead_stock_risk(category: Optional[str] = None):
                 category=row.get("category", ""),
                 days_until_expiry=int(row.get("days_until_expiry", 0)),
                 current_discount_percent=float(row.get("current_discount_percent", 0)),
-                risk_score=None,
-                threshold=None,
+                risk_score=row.get("risk_score", None),
+                threshold=row.get("threshold", None),
             )
-            for _, row in at_risk.iterrows()
+            for _, row in merged.iterrows()
         ]
         return items
     except Exception as e:
