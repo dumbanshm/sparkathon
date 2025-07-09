@@ -12,6 +12,7 @@ A comprehensive system for reducing waste in retail environments through intelli
 - **Comprehensive Analytics**: Provides insights into product risk levels and waste reduction strategies
 - **Robust Error Handling**: Handles edge cases like missing products and empty recommendations
 - **Real-time Risk Assessment**: Continuously monitors and flags products at risk of becoming dead stock
+- **Continuous Risk Score Export**: Exports both threshold and a continuous risk score for each product via a dedicated DataFrame for fast API and reporting
 
 ## Installation
 
@@ -24,6 +25,17 @@ pip install -r requirements.txt
    - `fake_users.csv`
    - `fake_products.csv`
    - `fake_transactions.csv`
+
+### Virtual Environment (Mac/Linux)
+
+To activate your Python virtual environment:
+```bash
+source venv/bin/activate
+```
+To deactivate:
+```bash
+deactivate
+```
 
 ## Usage
 
@@ -43,6 +55,7 @@ This will:
 5. **Automatically update discounts for at-risk products**
 6. Generate sample recommendations for users
 7. Display waste reduction strategies with updated discount information
+8. **Export a separate DataFrame with product_id, threshold, and risk_score for API and reporting**
 
 ### Programmatic Usage
 
@@ -65,6 +78,9 @@ system.build_collaborative_filtering_model()
 # Update discounts for at-risk products
 system.update_discounts_for_at_risk_products()
 
+# Build risk DataFrame (threshold and risk_score)
+system.build_product_risk_df()
+
 # Get recommendations for a user (now includes updated discounts)
 recommendations = system.get_hybrid_recommendations(
     user_id='U0001',
@@ -72,6 +88,9 @@ recommendations = system.get_hybrid_recommendations(
     content_weight=0.4,
     collaborative_weight=0.6
 )
+
+# Access risk DataFrame
+risk_df = system.product_risk_df
 ```
 
 ## System Components
@@ -101,6 +120,7 @@ recommendations = system.get_hybrid_recommendations(
 - Provides actionable insights for inventory management
 - Suggests discount strategies with real-time discount updates
 - **Enhanced Reporting**: Shows both original and updated discount information
+- **Exports a separate DataFrame with threshold and risk_score for each product**
 
 ## Key Improvements
 
@@ -128,6 +148,7 @@ The driver code provides comprehensive output including:
 3. **Personalized Recommendations**: Tailored suggestions with **current discount information**
 4. **Waste Reduction Strategies**: Actionable insights with **automated discount recommendations**
 5. **Top 10 At-Risk Products**: Real-time list with **updated discount percentages**
+6. **Risk Data Export**: API and reporting now include both threshold and continuous risk score for each product
 
 ## Customization
 
@@ -158,7 +179,7 @@ uvicorn main:app --reload
 
 Available endpoints:
 - `GET /recommendations/{user_id}`: Get personalized recommendations
-- `GET /dead_stock_risk`: Get products at risk of becoming dead stock
+- `GET /dead_stock_risk`: Get products at risk of becoming dead stock (now includes threshold and risk_score)
 
 ## Technical Architecture
 
