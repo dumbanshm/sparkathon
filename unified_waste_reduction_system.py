@@ -318,6 +318,12 @@ def is_compatible_diet_allergy(user, product):
         return False
     return True
 
+def calculate_risk_score(row, threshold):
+    expiry_score = max(0, min(0.5, (threshold - row['days_until_expiry']) / threshold * 0.5))
+    velocity_score = 0.3 * (1 - min(1, row['sales_velocity'] / 5))
+    stagnation_score = 0.2 * min(1, row['days_since_last_sale'] / 30)
+    return expiry_score + velocity_score + stagnation_score
+
 # --- Hybrid Recommendation System (from dynamic_recommendation_system.py, with improved compatibility logic) ---
 class UnifiedRecommendationSystem:
     """
@@ -325,6 +331,7 @@ class UnifiedRecommendationSystem:
     """
     def __init__(self, users_df, products_df, transactions_df):
         self.users_df = users_df
+        self.all_products_df = products_df.copy()
         self.products_df = products_df
         self.transactions_df = transactions_df
         self.le_diet = LabelEncoder()
@@ -344,6 +351,24 @@ class UnifiedRecommendationSystem:
         self.pricing_engine = DynamicPricingEngine(
             self.products_df, self.transactions_df, self.threshold_calculator
         )
+    
+    def update_discounts_for_at_risk_products(self):
+        # Update current_discount_percent for at-risk products
+        for idx, row in self.products_df.iterrows():
+            if row.get('is_dead_stock_risk', 0) == 1:
+                threshold = self.threshold_calculator.get_threshold(row['product_id'])
+                days_left = row['days_until_expiry']
+                base_discount = row['current_discount_percent']
+                if days_left <= threshold:
+                    urgency_factor = (threshold - days_left) / threshold
+                    # Calculate additional discount (up to 50% total, in 2.5% steps)
+                    add_discount = urgency_factor * (50 - base_discount)
+                    # Round to nearest 2.5%
+                    add_discount = round(add_discount / 2.5) * 2.5
+                    new_discount = min(50, base_discount + add_discount)
+                    # Only update if new_discount > base_discount
+                    if new_discount > base_discount:
+                        self.products_df.at[idx, 'current_discount_percent'] = new_discount
     def preprocess_data(self):
         current_date = pd.Timestamp.now()
         
@@ -359,6 +384,9 @@ class UnifiedRecommendationSystem:
         self.products_df['days_until_expiry'] = (self.products_df['expiry_date'] - current_date).dt.days
         self.products_df['total_shelf_life'] = (self.products_df['expiry_date'] - self.products_df['packaging_date']).dt.days
         self.products_df['shelf_life_remaining_pct'] = self.products_df['days_until_expiry'] / self.products_df['total_shelf_life'] * 100
+
+        # Remove already expired products
+        self.products_df = self.products_df[self.products_df['days_until_expiry'] > 0].copy()
 
         # Calculate sales metrics for each product
         sales_metrics = self.transactions_df.groupby('product_id').agg({
@@ -444,7 +472,8 @@ class UnifiedRecommendationSystem:
         content_recs_list = []
         for product_id in user_products[-3:]:
             content_recs = self.get_content_based_recommendations(product_id, n_recommendations)
-            content_recs_list.append(content_recs)
+            if not content_recs.empty:
+                content_recs_list.append(content_recs)
         if content_recs_list:
             content_recs_combined = pd.concat(content_recs_list).groupby('product_id').agg({
                 'final_score': 'mean',
@@ -455,7 +484,9 @@ class UnifiedRecommendationSystem:
                 'discount': 'first'
             }).reset_index()
         else:
-            content_recs_combined = pd.DataFrame()
+            content_recs_combined = pd.DataFrame(columns=[
+                'product_id', 'final_score', 'product_name', 'days_until_expiry', 'category', 'price', 'discount'
+            ])
         all_products = set()
         if not collab_recs.empty:
             all_products.update(collab_recs['product_id'].tolist())
@@ -471,7 +502,10 @@ class UnifiedRecommendationSystem:
             if not content_recs_combined.empty and product_id in content_recs_combined['product_id'].values:
                 content_score = content_recs_combined[content_recs_combined['product_id'] == product_id]['final_score'].iloc[0]
                 score += content_weight * content_score
-            product = self.products_df[self.products_df['product_id'] == product_id].iloc[0].to_dict()
+            product_row = self.products_df[self.products_df['product_id'] == product_id]
+            if product_row.empty:
+                continue  # Skip if product not found (e.g., filtered out as expired)
+            product = product_row.iloc[0].to_dict()
             if not is_compatible_diet_allergy(user, product):
                 continue
             # Calculate dynamic urgency for this product
@@ -492,12 +526,26 @@ class UnifiedRecommendationSystem:
                 'discount': product['current_discount_percent'],
                 'is_dead_stock_risk': product.get('is_dead_stock_risk', 0)
             })
+            # Add small boost for at-risk products (discount already given)
+            if product.get('is_dead_stock_risk', 0) == 1:
+                at_risk_boost = 0.15  # 15% additional boost
+                hybrid_scores[-1]['hybrid_score'] += at_risk_boost
         hybrid_df = pd.DataFrame(hybrid_scores)
         return hybrid_df.nlargest(n_recommendations, 'hybrid_score')
     def get_content_based_recommendations(self, product_id, n_recommendations=10, filter_expired=True, urgency_boost=True):
         if self.content_similarity_matrix is None:
             self.build_content_similarity_matrix()
-        product_idx = self.products_df[self.products_df['product_id'] == product_id].index[0]
+        # Use all_products_df for lookup to allow for expired products in history
+        product_row = self.all_products_df[self.all_products_df['product_id'] == product_id]
+        if product_row.empty:
+            return pd.DataFrame()  # Product not found, return empty
+        # Find the index in the filtered products_df for similarity
+        filtered_row = self.products_df[self.products_df['product_id'] == product_id]
+        if filtered_row.empty:
+            # If the product is not in the filtered set, pick the first available for similarity (fallback)
+            product_idx = 0
+        else:
+            product_idx = filtered_row.index[0]
         sim_scores = list(enumerate(self.content_similarity_matrix[product_idx]))
         sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
         similar_products = []
@@ -542,7 +590,10 @@ class UnifiedRecommendationSystem:
             product_id = product_ids[idx]
             if filter_purchased and self.user_item_matrix.iloc[user_idx, idx] > 0:
                 continue
-            product = self.products_df[self.products_df['product_id'] == product_id].iloc[0].to_dict()
+            product_row = self.products_df[self.products_df['product_id'] == product_id]
+            if product_row.empty:
+                continue  # Skip if product not found (e.g., filtered out as expired)
+            product = product_row.iloc[0].to_dict()
             if product['days_until_expiry'] <= 0:
                 continue
             if not is_compatible_diet_allergy(user, product):
@@ -658,6 +709,20 @@ class UnifiedRecommendationSystem:
             pricing_df = pricing_df.sort_values('urgency_score', ascending=False).head(limit)
         
         return pricing_df
+
+    def build_product_risk_df(self):
+        # Build a DataFrame with product_id, threshold, and risk_score
+        risk_records = []
+        for idx, row in self.products_df.iterrows():
+            pid = row['product_id']
+            threshold = self.threshold_calculator.get_threshold(pid)
+            risk_score = calculate_risk_score(row, threshold)
+            risk_records.append({
+                'product_id': pid,
+                'threshold': threshold,
+                'risk_score': risk_score
+            })
+        self.product_risk_df = pd.DataFrame(risk_records)
 
 # --- Example Usage ---
 if __name__ == "__main__":
