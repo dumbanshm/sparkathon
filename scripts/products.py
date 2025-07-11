@@ -104,4 +104,8 @@ print(f"Generated {len(products_df)} products")
 print(f"Categories: {products_df['category'].value_counts().to_dict()}")
 print(f"At-risk products: {products_df['is_dead_stock_risk'].sum()}")
 print(products_df.head())
-products_df.to_csv("products.csv", index=False)
+
+import os
+os.makedirs("../datasets", exist_ok=True)
+products_df.to_csv("../datasets/products.csv", index=False)
+print("File saved to ../datasets/products.csv")

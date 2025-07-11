@@ -2,12 +2,19 @@ from faker import Faker
 import pandas as pd
 import random
 from datetime import datetime
+import os
 
 fake = Faker()
 
-# Load the corrected CSV files
-products_df = pd.read_csv('products.csv')
-users_df = pd.read_csv('users.csv')
+# Load the corrected CSV files from datasets folder
+try:
+    products_df = pd.read_csv('../datasets/products.csv')
+    users_df = pd.read_csv('../datasets/users.csv')
+except FileNotFoundError:
+    # Try current directory if datasets folder doesn't have them
+    print("Files not found in ../datasets/, trying current directory...")
+    products_df = pd.read_csv('products.csv')
+    users_df = pd.read_csv('users.csv')
 
 # Convert date columns
 products_df['expiry_date'] = pd.to_datetime(products_df['expiry_date']).dt.date
@@ -95,4 +102,7 @@ print(f"Generated {len(transactions_df)} transactions")
 print(f"Transactions with discounts: {len(transactions_df[transactions_df['discount_percent'] > 0])}")
 print(f"User engagement with deals: {transactions_df['user_engaged_with_deal'].sum()}")
 print(transactions_df.head())
-transactions_df.to_csv('transactions.csv', index=False) 
+
+os.makedirs("../datasets", exist_ok=True)
+transactions_df.to_csv('../datasets/transactions.csv', index=False)
+print("File saved to ../datasets/transactions.csv") 

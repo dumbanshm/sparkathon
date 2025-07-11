@@ -10,6 +10,25 @@ num_users = 300
 categories = ['Dairy', 'Vegetables', 'Fruits', 'Meat', 'Grains', 'Snacks', 'Beverages']
 common_allergens = ['nuts', 'dairy', 'gluten', 'soy', 'eggs', 'shellfish']
 
+def get_allowed_categories(diet_type):
+    """Get categories that are appropriate for a given diet type"""
+    # Categories that contain animal products
+    non_vegan_categories = ['Dairy', 'Meat']
+    meat_categories = ['Meat']
+    
+    # All available categories
+    all_categories = ['Dairy', 'Vegetables', 'Fruits', 'Meat', 'Grains', 'Snacks', 'Beverages']
+    
+    if diet_type == 'vegetarian':
+        # Vegetarians avoid meat
+        return [cat for cat in all_categories if cat not in meat_categories]
+    elif diet_type == 'eggitarian':
+        # Eggitarians avoid meat but can have dairy and eggs
+        return [cat for cat in all_categories if cat not in meat_categories]
+    else:  # non-vegetarian
+        # Non-vegetarians can have any category
+        return all_categories
+
 user_data = []
 for i in range(num_users):
     uid = f"U{i:04d}"
@@ -26,9 +45,10 @@ for i in range(num_users):
         num_allergies = random.randint(1, 2)
         user_allergies = random.sample(common_allergens, num_allergies)
     
-    # Generate preferred categories (users typically prefer 2-4 categories)
-    num_preferred = random.randint(2, 4)
-    preferred_categories = random.sample(categories, num_preferred)
+    # Generate preferred categories based on diet type
+    allowed_categories = get_allowed_categories(diet_type)
+    num_preferred = min(len(allowed_categories), random.randint(2, 4))
+    preferred_categories = random.sample(allowed_categories, num_preferred)
     
     # Last purchase date (within last 6 months)
     last_purchase = fake.date_between(start_date='-180d', end_date='today')
@@ -52,4 +72,8 @@ print(f"Generated {len(users_df)} users")
 print(f"Diet types: {users_df['diet_type'].value_counts().to_dict()}")
 print(f"Users with allergies: {len(users_df[users_df['allergies'] != ''])}")
 print(users_df.head())
-users_df.to_csv("users.csv", index=False)
+
+import os
+os.makedirs("../datasets", exist_ok=True)
+users_df.to_csv("../datasets/users.csv", index=False)
+print("File saved to ../datasets/users.csv")

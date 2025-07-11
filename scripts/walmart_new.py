@@ -2,6 +2,7 @@ from faker import Faker
 import pandas as pd
 import random
 from datetime import datetime, timedelta
+import os
 
 fake = Faker()
 
@@ -27,6 +28,25 @@ def is_diet_compatible(user_diet, product_diet):
 def is_allergen_safe(user_allergies, product_allergens):
     return not any(a in product_allergens for a in user_allergies)
 
+def get_allowed_categories(diet_type):
+    """Get categories that are appropriate for a given diet type"""
+    # Categories that contain animal products
+    non_vegan_categories = ['Dairy', 'Cheese', 'Meat']
+    meat_categories = ['Meat']
+    
+    # All categories
+    all_categories = ['Snacks', 'Dairy', 'Meat', 'Beverages', 'Spreads', 'Biscuits', 'Sauces', 'Cheese']
+    
+    if diet_type == 'vegan':
+        # Vegans avoid all animal products
+        return [cat for cat in all_categories if cat not in non_vegan_categories]
+    elif diet_type in ['vegetarian', 'eggs']:
+        # Vegetarians and egg-eaters avoid meat but can have dairy
+        return [cat for cat in all_categories if cat not in meat_categories]
+    else:  # non-vegetarian
+        # Non-vegetarians can have any category
+        return all_categories
+
 # USERS
 users = []
 for i in range(NUM_USERS):
@@ -36,7 +56,13 @@ for i in range(NUM_USERS):
     allergies = random.sample(ALLERGENS, random.randint(0, 2))
     prefers_discount = fake.boolean(chance_of_getting_true=70)
     gender = random.choice(['Male', 'Female', 'Other'])
-    preferred_categories = random.sample(CATEGORIES, random.randint(1, 3))
+    
+    # Get allowed categories based on diet type
+    allowed_categories = get_allowed_categories(diet_type)
+    # Select 1-3 preferred categories from allowed ones
+    num_preferred = min(len(allowed_categories), random.randint(1, 3))
+    preferred_categories = random.sample(allowed_categories, num_preferred)
+    
     users.append({
         "user_id": uid,
         "age": age,
@@ -128,6 +154,13 @@ for _ in range(NUM_TRANSACTIONS):
 transactions_df = pd.DataFrame(transactions)
 
 # SAVE
-users_df.to_csv("fake_users.csv", index=False)
-products_df.to_csv("fake_products.csv", index=False)
-transactions_df.to_csv("fake_transactions.csv", index=False)
+# Create datasets directory if it doesn't exist
+os.makedirs("../datasets", exist_ok=True)
+
+# Save to datasets folder
+users_df.to_csv("../datasets/fake_users.csv", index=False)
+products_df.to_csv("../datasets/fake_products.csv", index=False)
+transactions_df.to_csv("../datasets/fake_transactions.csv", index=False)
+
+print(f"Generated {NUM_USERS} users, {NUM_PRODUCTS} products, and {NUM_TRANSACTIONS} transactions")
+print("Files saved to ../datasets/ folder")

@@ -1,0 +1,301 @@
+product_id,name,category,brand,diet_type,allergens,shelf_life_days,packaging_date,expiry_date,weight_grams,price_mrp,current_discount_percent,store_location_lat,store_location_lon
+P0000,Nor Snacks,Snacks,Martin-Nelson,non-vegetarian,"['eggs', 'nuts']",90,2025-05-29,2025-08-27,750,145.07,30,78.6627945,164.402997
+P0001,Physical Cheese,Cheese,Rivas-Lopez,non-vegetarian,[],41,2025-06-13,2025-07-24,250,476.43,0,-56.707465,-160.894196
+P0002,Law Dairy,Dairy,"James, Davis and Zuniga",non-vegetarian,['soy'],79,2025-06-22,2025-09-09,500,96.91,20,-32.227528,123.527034
+P0003,Himself Spreads,Spreads,"Fischer, Henson and Baird",eggs,[],81,2025-06-03,2025-08-23,500,189.14,20,-32.8706645,54.993490
+P0004,International Cheese,Cheese,"Mckinney, Love and Golden",vegetarian,"['eggs', 'gluten']",48,2025-06-21,2025-08-08,750,62.5,40,47.7204765,-131.611627
+P0005,Eat Meat,Meat,Stephens-French,non-vegetarian,['dairy'],57,2025-06-01,2025-07-28,750,103.05,30,-69.298886,43.170827
+P0006,Dinner Beverages,Beverages,Brown Inc,vegan,[],64,2025-05-21,2025-07-24,250,61.01,40,-36.612915,35.104319
+P0007,Mr Snacks,Snacks,Nelson Group,eggs,"['eggs', 'nuts']",154,2025-07-03,2025-12-04,750,257.07,30,-50.5155865,-99.027498
+P0008,Among Biscuits,Biscuits,Phillips-Bowen,vegan,"['soy', 'gluten']",83,2025-05-17,2025-08-08,250,169.14,20,-44.6205305,106.494612
+P0009,Art Biscuits,Biscuits,"Clayton, Fisher and Roberts",non-vegetarian,"['dairy', 'nuts']",180,2025-06-28,2025-12-25,1000,87.73,30,69.491740,145.764292
+P0010,Degree Biscuits,Biscuits,Ellis PLC,non-vegetarian,"['soy', 'eggs']",36,2025-05-26,2025-07-01,1000,297.7,0,-31.7635155,76.120614
+P0011,Power Dairy,Dairy,"Scott, Gibson and Roberson",eggs,['nuts'],127,2025-06-23,2025-10-28,1000,401.06,40,71.230801,125.062106
+P0012,Sea Cheese,Cheese,"Mccormick, King and Tran",vegan,"['dairy', 'gluten']",144,2025-07-01,2025-11-22,500,488.91,50,-62.455752,13.458086
+P0013,Guess Cheese,Cheese,"Braun, Nielsen and Webb",vegan,[],79,2025-06-21,2025-09-08,750,468.84,10,-63.102467,-123.773453
+P0014,Memory Beverages,Beverages,Bell-Mendoza,non-vegetarian,['nuts'],132,2025-06-20,2025-10-30,750,419.22,20,78.4766735,-55.854849
+P0015,Difficult Spreads,Spreads,Lambert-Snyder,eggs,['soy'],113,2025-05-21,2025-09-11,750,142.17,50,51.875313,-85.155215
+P0016,Seek Dairy,Dairy,Li and Sons,eggs,"['gluten', 'nuts']",79,2025-05-25,2025-08-12,1000,423.89,40,65.8433375,-156.688676
+P0017,Prevent Beverages,Beverages,"Jones, Meyer and Lee",vegetarian,['nuts'],179,2025-06-01,2025-11-27,250,359.14,10,-50.8003135,-56.616238
+P0018,Exactly Meat,Meat,Byrd-Cole,vegetarian,"['gluten', 'eggs']",141,2025-06-04,2025-10-23,750,376.82,0,-6.6846355,135.155758
+P0019,Yourself Meat,Meat,"Gibbs, Clark and Mendoza",vegetarian,['eggs'],156,2025-05-14,2025-10-17,750,329.88,10,48.057566,87.496756
+P0020,Far Biscuits,Biscuits,Parrish-White,vegan,[],56,2025-06-06,2025-08-01,750,431.76,20,-64.1523385,-0.808527
+P0021,Rest Sauces,Sauces,Romero PLC,vegan,['soy'],144,2025-07-03,2025-11-24,1000,91.5,50,37.8676005,-57.685839
+P0022,Social Spreads,Spreads,Cooper-Miller,vegetarian,"['gluten', 'nuts']",147,2025-06-15,2025-11-09,1000,428.66,30,-76.854508,-82.842303
+P0023,Agreement Cheese,Cheese,"Walters, Sullivan and Mays",non-vegetarian,"['nuts', 'dairy']",147,2025-05-19,2025-10-13,750,376.37,10,-40.323254,23.030598
+P0024,Table Dairy,Dairy,Nguyen Group,eggs,[],170,2025-05-20,2025-11-06,1000,323.0,40,75.1352395,-179.457238
+P0025,Leader Cheese,Cheese,Wood Inc,eggs,[],56,2025-06-08,2025-08-03,250,131.87,0,0.6262425,154.634716
+P0026,Environment Sauces,Sauces,Hernandez Group,eggs,['gluten'],118,2025-06-02,2025-09-28,1000,441.71,30,-15.417761,-111.956189
+P0027,Sense Sauces,Sauces,Smith-Cline,eggs,[],157,2025-06-02,2025-11-06,250,126.93,30,-33.7079285,24.121854
+P0028,Fear Cheese,Cheese,"Parker, Hartman and Johnson",vegan,[],133,2025-06-05,2025-10-16,250,495.76,20,45.059735,-51.872003
+P0029,Something Sauces,Sauces,"Williams, Peterson and Neal",eggs,[],50,2025-06-11,2025-07-31,1000,350.12,30,13.0340005,109.795456
+P0030,Close Spreads,Spreads,"Rollins, Wright and Briggs",non-vegetarian,[],59,2025-05-19,2025-07-17,250,58.07,10,7.4879595,61.835137
+P0031,Practice Dairy,Dairy,"Smith, Ramsey and Gordon",non-vegetarian,['dairy'],174,2025-05-23,2025-11-13,1000,322.9,0,52.4740825,-145.860422
+P0032,Imagine Dairy,Dairy,Rodriguez PLC,eggs,"['nuts', 'soy']",170,2025-05-16,2025-11-02,1000,122.53,10,13.4225985,147.003845
+P0033,Happy Meat,Meat,Ortiz LLC,vegan,"['eggs', 'gluten']",126,2025-05-24,2025-09-27,750,418.65,10,-34.5565065,153.800941
+P0034,Food Sauces,Sauces,Anthony PLC,vegan,['soy'],74,2025-06-05,2025-08-18,750,251.01,10,-51.067839,-100.256127
+P0035,Everything Cheese,Cheese,"Hill, Franco and Campos",vegetarian,[],103,2025-06-24,2025-10-05,500,221.38,30,-11.7656005,127.468614
+P0036,Miss Biscuits,Biscuits,Torres Group,vegetarian,['soy'],103,2025-06-15,2025-09-26,750,171.9,10,22.550846,106.679608
+P0037,Edge Dairy,Dairy,Johnson-Elliott,non-vegetarian,['dairy'],31,2025-06-01,2025-07-02,1000,255.87,40,65.4175245,85.246495
+P0038,Later Snacks,Snacks,Stout LLC,non-vegetarian,[],76,2025-06-02,2025-08-17,250,213.96,30,-5.5758245,68.069240
+P0039,Human Sauces,Sauces,"Aguilar, Brown and Jackson",vegetarian,[],77,2025-06-07,2025-08-23,500,258.7,20,-79.7854975,-9.083390
+P0040,Part Cheese,Cheese,Williams-Mann,non-vegetarian,['gluten'],87,2025-06-26,2025-09-21,250,422.8,30,20.4956665,-165.444394
+P0041,School Dairy,Dairy,Morales Group,non-vegetarian,[],37,2025-06-07,2025-07-14,750,77.49,30,1.836876,68.255520
+P0042,Industry Snacks,Snacks,Clark-Ruiz,eggs,[],166,2025-06-02,2025-11-15,250,451.63,40,-44.619245,144.528965
+P0043,Difficult Dairy,Dairy,"Moore, Cooper and Hernandez",vegetarian,['dairy'],62,2025-06-10,2025-08-11,250,178.75,50,-35.446647,-86.303670
+P0044,Various Snacks,Snacks,"Stevens, Jennings and Matthews",non-vegetarian,[],111,2025-05-15,2025-09-03,750,311.53,10,27.5514835,21.242873
+P0045,Fire Snacks,Snacks,Erickson-Landry,vegetarian,"['gluten', 'eggs']",86,2025-06-25,2025-09-19,1000,185.42,20,-35.029107,31.474040
+P0046,Goal Spreads,Spreads,"Mitchell, Mathews and Smith",vegetarian,"['dairy', 'eggs']",114,2025-06-20,2025-10-12,750,213.84,10,79.6714985,-173.280205
+P0047,Area Spreads,Spreads,Levine-Shaw,vegetarian,['gluten'],141,2025-05-25,2025-10-13,750,175.0,40,14.154461,175.863225
+P0048,Together Cheese,Cheese,Hubbard-Clark,vegan,"['gluten', 'soy']",145,2025-06-27,2025-11-19,1000,198.41,10,3.9351705,-24.433623
+P0049,Need Dairy,Dairy,Wagner-Shaw,vegetarian,"['soy', 'eggs']",96,2025-06-30,2025-10-04,250,381.59,20,60.475718,127.750554
+P0050,Pay Cheese,Cheese,Davis-Delgado,vegetarian,"['dairy', 'soy']",50,2025-07-01,2025-08-20,1000,435.24,30,50.9557255,138.212728
+P0051,Sport Dairy,Dairy,Chapman Group,vegetarian,"['soy', 'eggs']",159,2025-05-17,2025-10-23,500,349.44,10,-22.649671,145.118147
+P0052,Interest Dairy,Dairy,"Castillo, Hammond and Jones",vegan,[],165,2025-06-13,2025-11-25,250,257.11,30,-4.2304735,-159.726556
+P0053,Choose Spreads,Spreads,Shields LLC,vegetarian,"['soy', 'gluten']",127,2025-07-04,2025-11-08,250,379.49,30,-78.554664,-81.216055
+P0054,Consumer Biscuits,Biscuits,"Rodriguez, Jones and Roberts",eggs,"['eggs', 'gluten']",39,2025-05-15,2025-06-23,250,172.37,10,-65.8450695,-89.898427
+P0055,Foreign Cheese,Cheese,Villarreal and Sons,eggs,[],30,2025-05-31,2025-06-30,750,448.58,10,-58.510365,-125.161858
+P0056,Him Snacks,Snacks,"Walker, Jones and Davis",vegetarian,['nuts'],88,2025-05-30,2025-08-26,750,210.74,50,63.153122,71.894462
+P0057,Red Biscuits,Biscuits,Joyce-Miller,vegan,"['nuts', 'eggs']",175,2025-05-24,2025-11-15,250,169.31,40,74.217354,102.908238
+P0058,Become Snacks,Snacks,Johnson-Fuentes,eggs,"['gluten', 'soy']",176,2025-07-02,2025-12-25,750,373.76,50,-74.260212,150.180279
+P0059,Treatment Meat,Meat,Jackson-Jones,vegetarian,[],33,2025-05-16,2025-06-18,500,199.91,10,33.845750,-106.783432
+P0060,Middle Beverages,Beverages,Holmes Ltd,non-vegetarian,[],104,2025-05-21,2025-09-02,1000,364.49,30,14.3280705,81.452868
+P0061,Cover Cheese,Cheese,Smith-Mendoza,vegetarian,"['soy', 'gluten']",109,2025-07-01,2025-10-18,750,138.69,0,45.892139,39.323962
+P0062,Trial Spreads,Spreads,Smith PLC,non-vegetarian,['nuts'],120,2025-06-06,2025-10-04,1000,447.51,40,82.914526,77.170769
+P0063,Animal Spreads,Spreads,"Floyd, Brooks and Haynes",vegan,['gluten'],32,2025-07-05,2025-08-06,500,286.95,50,39.5376515,143.731929
+P0064,Discover Spreads,Spreads,Ortiz Ltd,eggs,"['gluten', 'eggs']",49,2025-07-04,2025-08-22,250,387.84,40,48.715233,-22.943199
+P0065,Start Biscuits,Biscuits,Harris Inc,non-vegetarian,['gluten'],126,2025-06-24,2025-10-28,250,234.71,30,-24.860284,-37.665249
+P0066,Role Snacks,Snacks,Curry-Hunt,eggs,[],95,2025-06-04,2025-09-07,750,469.15,30,-57.353217,122.724358
+P0067,Can Dairy,Dairy,Barrett Inc,non-vegetarian,['gluten'],165,2025-06-11,2025-11-23,1000,340.4,10,9.9055475,0.185838
+P0068,Beautiful Meat,Meat,Pace-Johnston,vegetarian,['eggs'],83,2025-07-01,2025-09-22,750,350.41,30,-69.615011,18.639162
+P0069,Heart Biscuits,Biscuits,Jackson-Ross,non-vegetarian,['eggs'],164,2025-06-14,2025-11-25,250,167.41,20,75.7523505,99.959630
+P0070,About Dairy,Dairy,Ramirez Inc,non-vegetarian,"['soy', 'nuts']",62,2025-06-12,2025-08-13,750,87.21,10,47.9831485,-65.338550
+P0071,One Meat,Meat,Morrison Group,eggs,"['gluten', 'eggs']",34,2025-06-07,2025-07-11,500,343.15,40,-38.1382545,75.449263
+P0072,Air Snacks,Snacks,Hamilton Inc,vegan,"['gluten', 'eggs']",146,2025-06-30,2025-11-23,1000,408.15,50,-21.600269,-87.229605
+P0073,Machine Snacks,Snacks,Boyer-Young,non-vegetarian,[],36,2025-07-05,2025-08-10,250,221.55,40,88.637692,-113.489496
+P0074,Thought Cheese,Cheese,Livingston PLC,vegan,"['eggs', 'nuts']",64,2025-05-16,2025-07-19,500,480.98,40,63.122797,-153.625168
+P0075,Skill Sauces,Sauces,"Ramirez, Phillips and Wood",non-vegetarian,['dairy'],87,2025-05-17,2025-08-12,500,68.69,20,46.416011,38.089824
+P0076,Ago Dairy,Dairy,Carroll-Daniels,vegetarian,['eggs'],121,2025-07-01,2025-10-30,250,348.74,0,76.9852275,83.059428
+P0077,Force Meat,Meat,Martinez Ltd,vegetarian,[],48,2025-05-14,2025-07-01,1000,486.37,40,11.2645345,-45.440173
+P0078,Admit Beverages,Beverages,Jackson-Lee,non-vegetarian,"['nuts', 'dairy']",80,2025-06-25,2025-09-13,250,362.15,40,-29.6903445,101.642970
+P0079,Economy Meat,Meat,Henry-Cline,vegetarian,[],98,2025-06-11,2025-09-17,250,102.7,0,-29.136798,-41.350031
+P0080,Last Spreads,Spreads,Poole-Vasquez,eggs,"['dairy', 'gluten']",158,2025-06-18,2025-11-23,500,52.04,0,64.592338,-107.825040
+P0081,Close Sauces,Sauces,Krueger LLC,vegan,"['dairy', 'eggs']",67,2025-06-15,2025-08-21,250,208.89,10,37.032700,-46.249729
+P0082,Yard Biscuits,Biscuits,"Thompson, Shepherd and Phillips",vegetarian,"['dairy', 'eggs']",161,2025-05-14,2025-10-22,750,295.85,20,-83.088190,116.820119
+P0083,Open Cheese,Cheese,Henry Ltd,vegetarian,[],123,2025-06-11,2025-10-12,750,78.23,50,-89.3670055,-5.222279
+P0084,Seek Snacks,Snacks,Stein LLC,vegetarian,[],100,2025-06-21,2025-09-29,1000,421.63,20,-78.4576945,27.291249
+P0085,Wall Snacks,Snacks,"Brown, Gonzalez and Dixon",non-vegetarian,['soy'],58,2025-06-19,2025-08-16,1000,279.17,30,-36.546418,25.231393
+P0086,These Beverages,Beverages,Pearson-Williams,non-vegetarian,[],52,2025-06-07,2025-07-29,750,449.48,50,-62.573274,24.228092
+P0087,Challenge Dairy,Dairy,House Group,vegetarian,"['soy', 'eggs']",111,2025-06-21,2025-10-10,1000,150.54,0,-48.686965,-130.816230
+P0088,Agent Spreads,Spreads,Miller and Sons,vegetarian,['soy'],99,2025-05-30,2025-09-06,250,285.3,30,58.459481,151.009933
+P0089,Main Snacks,Snacks,Sweeney-Hoover,eggs,"['gluten', 'soy']",45,2025-05-25,2025-07-09,750,154.8,0,-81.165960,-92.459564
+P0090,I Beverages,Beverages,Munoz PLC,vegan,"['nuts', 'dairy']",143,2025-06-16,2025-11-06,750,217.18,50,49.0252625,159.098562
+P0091,Like Biscuits,Biscuits,Price and Sons,vegetarian,['nuts'],177,2025-07-02,2025-12-26,250,373.71,10,-23.995347,-78.004714
+P0092,Response Beverages,Beverages,King-Williams,vegetarian,['soy'],147,2025-05-29,2025-10-23,750,155.31,40,-39.966359,-49.511724
+P0093,Cultural Meat,Meat,"Hutchinson, Aguirre and Evans",non-vegetarian,['eggs'],35,2025-06-13,2025-07-18,750,489.02,50,67.333147,139.026867
+P0094,Know Beverages,Beverages,"Hurst, Phillips and Allen",non-vegetarian,[],85,2025-07-02,2025-09-25,750,458.23,20,-30.0822785,-176.370000
+P0095,Friend Snacks,Snacks,Oliver-Potter,eggs,"['eggs', 'gluten']",179,2025-06-04,2025-11-30,750,240.08,40,-66.853281,19.142210
+P0096,Test Spreads,Spreads,"Wagner, Armstrong and James",vegetarian,['nuts'],55,2025-06-28,2025-08-22,250,72.54,10,-82.6439555,-156.703693
+P0097,We Snacks,Snacks,"Phillips, Anderson and Williams",vegetarian,"['dairy', 'gluten']",83,2025-05-15,2025-08-06,1000,98.93,10,74.913671,77.715388
+P0098,Project Biscuits,Biscuits,Ross PLC,non-vegetarian,['soy'],63,2025-06-12,2025-08-14,1000,78.03,10,-73.898110,175.555532
+P0099,Cover Spreads,Spreads,"Leblanc, Vega and Olsen",non-vegetarian,[],172,2025-05-22,2025-11-10,750,224.72,40,35.734244,-161.126796
+P0100,Poor Meat,Meat,Obrien Ltd,eggs,[],158,2025-06-17,2025-11-22,500,272.25,20,38.146212,-169.705246
+P0101,Find Snacks,Snacks,Hatfield Inc,vegetarian,['gluten'],91,2025-06-23,2025-09-22,1000,139.15,0,15.3040815,125.285681
+P0102,Oil Biscuits,Biscuits,Goodman LLC,non-vegetarian,['eggs'],160,2025-06-11,2025-11-18,750,322.43,40,59.0400145,134.147153
+P0103,Sense Beverages,Beverages,"Stanley, Serrano and Miller",vegan,[],97,2025-05-21,2025-08-26,1000,72.97,0,-89.3559115,-172.542003
+P0104,Skin Cheese,Cheese,"Griffin, Hodges and Castillo",eggs,['nuts'],145,2025-06-01,2025-10-24,500,488.5,20,65.536679,-38.767868
+P0105,Choose Sauces,Sauces,Lopez LLC,eggs,['nuts'],120,2025-06-20,2025-10-18,250,168.83,10,-47.8359275,103.973540
+P0106,Message Snacks,Snacks,Cummings Ltd,vegan,['gluten'],110,2025-05-15,2025-09-02,250,305.41,10,76.173681,-119.186266
+P0107,Moment Dairy,Dairy,Lynch and Sons,vegetarian,[],65,2025-06-16,2025-08-20,1000,444.98,30,20.9458455,-42.721818
+P0108,Trouble Dairy,Dairy,Hughes and Sons,vegan,['nuts'],112,2025-07-05,2025-10-25,250,213.03,20,-48.442500,-57.808051
+P0109,Skill Cheese,Cheese,Taylor and Sons,vegan,['eggs'],95,2025-05-21,2025-08-24,1000,470.12,0,-42.6429655,-177.455588
+P0110,Eight Dairy,Dairy,Ward-Lewis,vegan,[],97,2025-06-27,2025-10-02,250,286.0,50,-26.883605,79.724735
+P0111,Gun Meat,Meat,"Nguyen, Castaneda and Cooke",eggs,['soy'],178,2025-05-16,2025-11-10,500,450.91,10,74.5095335,128.707598
+P0112,Turn Beverages,Beverages,"Davis, Jackson and Brown",vegan,['dairy'],98,2025-07-03,2025-10-09,250,131.8,10,-35.592889,76.076160
+P0113,Situation Sauces,Sauces,Watson and Sons,vegetarian,"['dairy', 'nuts']",171,2025-06-04,2025-11-22,500,372.85,50,-7.9525365,69.696093
+P0114,Become Snacks,Snacks,Campos PLC,non-vegetarian,[],149,2025-07-04,2025-11-30,250,196.54,10,-30.186992,132.638912
+P0115,Buy Meat,Meat,"Villegas, Bell and Davis",non-vegetarian,[],151,2025-05-24,2025-10-22,750,248.9,10,-76.1435215,82.858458
+P0116,Special Meat,Meat,Gibson-Brown,vegetarian,[],109,2025-05-16,2025-09-02,250,180.91,0,38.742991,165.056360
+P0117,Once Meat,Meat,"Gallagher, Graham and Williams",non-vegetarian,[],145,2025-07-05,2025-11-27,750,256.55,20,6.959855,-97.821836
+P0118,Enough Dairy,Dairy,Jenkins PLC,vegetarian,"['gluten', 'soy']",97,2025-05-17,2025-08-22,500,141.23,40,-60.7578895,94.555031
+P0119,Player Sauces,Sauces,"Willis, Gomez and Perez",eggs,['eggs'],141,2025-07-03,2025-11-21,250,441.14,40,-36.467890,-2.638331
+P0120,West Dairy,Dairy,"Williams, Edwards and Hall",vegetarian,"['dairy', 'nuts']",83,2025-06-05,2025-08-27,250,237.63,0,54.676724,-61.646191
+P0121,Beyond Cheese,Cheese,"Green, Cameron and Warren",non-vegetarian,[],42,2025-05-31,2025-07-12,1000,447.69,0,-22.4247765,67.615094
+P0122,Class Dairy,Dairy,"Dyer, Martin and Butler",vegetarian,['nuts'],123,2025-06-13,2025-10-14,1000,407.89,0,77.4011265,-21.495896
+P0123,Pull Spreads,Spreads,"Robles, Wong and Marquez",eggs,['eggs'],80,2025-06-08,2025-08-27,500,256.65,40,-62.7031045,-48.047775
+P0124,Whom Beverages,Beverages,"Steele, Nelson and Smith",vegetarian,[],156,2025-06-06,2025-11-09,1000,278.64,40,-29.1288555,-125.577804
+P0125,Move Snacks,Snacks,Houston and Sons,non-vegetarian,[],140,2025-05-30,2025-10-17,750,282.28,50,79.0611235,-168.276283
+P0126,Apply Cheese,Cheese,"Wells, Harris and Shaw",eggs,"['gluten', 'soy']",39,2025-06-04,2025-07-13,1000,480.2,20,-84.594309,-45.092854
+P0127,College Snacks,Snacks,"Nunez, Sharp and Lee",vegan,"['gluten', 'eggs']",137,2025-07-02,2025-11-16,750,376.36,30,-76.2096415,-147.332560
+P0128,Loss Snacks,Snacks,"Kelly, Benton and Hill",vegetarian,[],41,2025-05-12,2025-06-22,250,276.65,20,29.781906,158.022285
+P0129,Population Beverages,Beverages,Hansen-Montes,eggs,['soy'],81,2025-05-30,2025-08-19,1000,365.14,20,0.2772845,-121.536862
+P0130,Scene Biscuits,Biscuits,"Simpson, Crawford and Cameron",vegetarian,['eggs'],146,2025-06-25,2025-11-18,500,385.04,40,-51.7112635,97.689254
+P0131,Skill Cheese,Cheese,Garcia Group,non-vegetarian,"['nuts', 'gluten']",174,2025-06-10,2025-12-01,250,73.41,30,-34.0316395,-157.199208
+P0132,More Cheese,Cheese,Woodard-Barry,eggs,"['nuts', 'gluten']",103,2025-05-31,2025-09-11,750,173.09,30,-53.8923655,100.974926
+P0133,Only Dairy,Dairy,Fields PLC,non-vegetarian,[],110,2025-05-31,2025-09-18,1000,168.25,30,61.440386,-158.894718
+P0134,Consider Dairy,Dairy,"Garcia, Guerrero and Johnston",non-vegetarian,[],97,2025-05-29,2025-09-03,1000,402.44,10,-15.4154305,-81.130333
+P0135,List Cheese,Cheese,Thomas-Campbell,vegetarian,['soy'],30,2025-05-16,2025-06-15,250,252.52,0,-12.4326805,109.247004
+P0136,Education Cheese,Cheese,Gardner-Mcfarland,vegetarian,"['gluten', 'dairy']",174,2025-05-22,2025-11-12,750,214.24,50,28.9384025,-41.661176
+P0137,Change Cheese,Cheese,Patton-Scott,eggs,"['gluten', 'eggs']",179,2025-06-09,2025-12-05,750,409.31,40,-73.658595,130.294916
+P0138,Second Sauces,Sauces,"Hill, Diaz and Bell",vegetarian,[],85,2025-06-29,2025-09-22,1000,302.94,20,19.467214,-12.552372
+P0139,Now Sauces,Sauces,Johnson PLC,eggs,[],84,2025-06-01,2025-08-24,750,370.69,50,-12.6776265,-57.552524
+P0140,Hold Spreads,Spreads,Sims and Sons,vegetarian,"['dairy', 'soy']",151,2025-06-14,2025-11-12,250,454.95,0,58.075530,166.972445
+P0141,Throw Biscuits,Biscuits,Stevens-Farrell,vegetarian,['soy'],149,2025-05-25,2025-10-21,250,381.49,50,62.537506,113.068775
+P0142,Customer Spreads,Spreads,Harris-Lewis,vegan,"['eggs', 'nuts']",173,2025-06-07,2025-11-27,750,422.31,30,-80.845108,-89.345303
+P0143,Everyone Meat,Meat,Johnson PLC,eggs,"['eggs', 'nuts']",153,2025-05-29,2025-10-29,250,385.88,50,88.3663665,-122.189419
+P0144,Short Beverages,Beverages,Schwartz-Rodriguez,non-vegetarian,"['nuts', 'gluten']",45,2025-05-23,2025-07-07,750,127.37,50,54.6881775,-167.139912
+P0145,Stage Sauces,Sauces,Hall-Ford,vegan,"['eggs', 'nuts']",89,2025-05-26,2025-08-23,1000,237.19,30,29.4293385,-115.515024
+P0146,Fly Biscuits,Biscuits,Taylor Ltd,non-vegetarian,['nuts'],44,2025-05-22,2025-07-05,500,71.67,50,31.293259,177.621580
+P0147,Tree Snacks,Snacks,Smith-Jones,vegetarian,"['soy', 'nuts']",81,2025-06-07,2025-08-27,750,445.38,20,76.5198265,18.963776
+P0148,Because Spreads,Spreads,Johnson LLC,vegan,['dairy'],58,2025-06-11,2025-08-08,1000,51.73,20,-29.0028195,143.331646
+P0149,Late Beverages,Beverages,Harmon Ltd,eggs,['dairy'],178,2025-05-28,2025-11-22,500,270.82,0,-9.5402965,32.835552
+P0150,International Dairy,Dairy,Brown-Brown,eggs,['gluten'],120,2025-06-11,2025-10-09,250,320.93,30,-61.653571,153.389200
+P0151,Occur Beverages,Beverages,"Lewis, Schmidt and Espinoza",vegan,[],94,2025-06-14,2025-09-16,250,285.33,10,68.7556445,-42.319945
+P0152,Market Sauces,Sauces,Dominguez-Carroll,eggs,"['gluten', 'dairy']",98,2025-07-05,2025-10-11,250,387.32,20,-28.452301,2.198518
+P0153,Top Snacks,Snacks,Hawkins-Ewing,eggs,['gluten'],141,2025-06-07,2025-10-26,250,99.52,20,37.510649,-21.257683
+P0154,Morning Spreads,Spreads,Patrick Group,vegetarian,"['soy', 'nuts']",150,2025-05-17,2025-10-14,750,270.07,0,21.240400,-145.838967
+P0155,Five Spreads,Spreads,Mcintosh-Acosta,non-vegetarian,"['nuts', 'eggs']",82,2025-06-15,2025-09-05,500,199.79,0,76.4573665,-86.831772
+P0156,Open Biscuits,Biscuits,Rios-Mills,vegetarian,['soy'],132,2025-05-22,2025-10-01,1000,295.27,50,83.516333,128.557375
+P0157,Rate Spreads,Spreads,Reeves Inc,non-vegetarian,[],180,2025-06-08,2025-12-05,750,98.31,20,-3.4714155,-42.799203
+P0158,Site Cheese,Cheese,Cameron-Taylor,vegetarian,[],167,2025-06-23,2025-12-07,750,287.92,50,62.020744,133.119858
+P0159,Need Snacks,Snacks,Mccarthy-Walker,non-vegetarian,['soy'],62,2025-06-23,2025-08-24,750,194.24,0,79.2647615,47.190966
+P0160,Apply Beverages,Beverages,"Hess, Scott and Ruiz",vegan,['dairy'],31,2025-07-05,2025-08-05,500,218.31,50,4.361001,-80.083268
+P0161,Research Cheese,Cheese,"Bailey, Cervantes and Smith",non-vegetarian,"['dairy', 'eggs']",89,2025-06-20,2025-09-17,750,100.51,40,-63.8160575,138.197551
+P0162,Find Meat,Meat,"Walters, Smith and Sanchez",non-vegetarian,"['dairy', 'nuts']",144,2025-05-22,2025-10-13,250,87.15,50,70.6257385,-102.588623
+P0163,Memory Cheese,Cheese,"Allison, Harris and Day",eggs,[],86,2025-06-08,2025-09-02,500,485.8,0,42.5226265,81.932193
+P0164,Yard Dairy,Dairy,Huerta-Morgan,non-vegetarian,[],134,2025-07-05,2025-11-16,1000,199.6,20,-20.5964275,-116.019054
+P0165,Reach Sauces,Sauces,"Smith, Garcia and Rivera",vegetarian,['soy'],145,2025-05-20,2025-10-12,250,250.77,30,-41.158788,54.008631
+P0166,Certainly Beverages,Beverages,Carter LLC,eggs,[],167,2025-07-04,2025-12-18,750,130.62,20,33.377162,-140.331358
+P0167,History Meat,Meat,Bell-Williams,eggs,[],73,2025-05-14,2025-07-26,250,210.04,20,-20.3155845,150.801679
+P0168,Let Biscuits,Biscuits,Terry and Sons,eggs,"['eggs', 'nuts']",101,2025-05-19,2025-08-28,1000,423.86,30,60.9204225,85.258718
+P0169,Still Sauces,Sauces,"Rice, Riley and Wright",eggs,[],44,2025-05-16,2025-06-29,250,453.54,50,-23.685721,58.001798
+P0170,A Sauces,Sauces,"Miller, Hancock and Moore",vegan,['gluten'],142,2025-06-09,2025-10-29,500,141.21,20,-54.615682,-34.288992
+P0171,Worker Cheese,Cheese,Sherman LLC,eggs,"['soy', 'gluten']",91,2025-06-08,2025-09-07,1000,358.39,10,-35.056623,-174.156808
+P0172,Base Biscuits,Biscuits,"Johnston, Johns and Smith",non-vegetarian,"['nuts', 'dairy']",129,2025-05-16,2025-09-22,250,190.76,0,-66.9797055,20.679159
+P0173,Late Snacks,Snacks,"Jones, Lee and Gonzalez",vegan,"['nuts', 'dairy']",104,2025-06-03,2025-09-15,250,118.58,40,48.480407,-35.440368
+P0174,Reflect Dairy,Dairy,Martin-Johnson,vegetarian,['eggs'],45,2025-06-27,2025-08-11,500,138.16,40,86.425045,-169.265784
+P0175,None Snacks,Snacks,"Vasquez, Austin and Williams",vegetarian,[],53,2025-05-13,2025-07-05,1000,388.86,50,-10.158013,179.628535
+P0176,Training Dairy,Dairy,Chase-Conner,non-vegetarian,"['soy', 'gluten']",98,2025-05-31,2025-09-06,250,469.6,10,11.0043475,109.016689
+P0177,Else Beverages,Beverages,"Reynolds, Bennett and Marshall",vegan,"['gluten', 'dairy']",114,2025-06-15,2025-10-07,750,407.79,30,89.417038,-124.505210
+P0178,May Beverages,Beverages,Woodward Group,vegan,"['nuts', 'gluten']",170,2025-06-13,2025-11-30,1000,475.3,20,-74.9467215,-45.896597
+P0179,New Biscuits,Biscuits,"Farrell, Page and Bennett",vegan,[],65,2025-05-16,2025-07-20,750,388.48,50,33.228802,-171.425292
+P0180,Image Spreads,Spreads,Garcia-Smith,vegetarian,"['dairy', 'soy']",157,2025-06-15,2025-11-19,250,499.49,0,48.0900755,127.036120
+P0181,Foreign Dairy,Dairy,"Rush, Foster and Cunningham",vegan,"['dairy', 'soy']",86,2025-05-16,2025-08-10,750,226.21,0,-50.4731735,146.303900
+P0182,Executive Snacks,Snacks,House-Nelson,vegan,"['eggs', 'nuts']",32,2025-05-15,2025-06-16,1000,465.38,50,33.6851505,-93.083128
+P0183,Subject Biscuits,Biscuits,Watson-Green,eggs,[],129,2025-06-26,2025-11-02,250,363.96,50,-70.847618,39.924969
+P0184,Office Meat,Meat,Forbes-Clark,non-vegetarian,['nuts'],159,2025-06-14,2025-11-20,1000,445.48,20,-46.2280965,130.429975
+P0185,There Biscuits,Biscuits,Moreno Group,vegetarian,[],132,2025-06-04,2025-10-14,250,321.46,20,61.1333955,-99.938293
+P0186,Contain Dairy,Dairy,Lamb-Lopez,vegetarian,[],126,2025-06-24,2025-10-28,750,106.01,30,64.8543025,80.467492
+P0187,Responsibility Dairy,Dairy,Terrell-Harrington,vegan,[],146,2025-06-01,2025-10-25,1000,356.18,30,-13.8539625,124.192757
+P0188,Important Sauces,Sauces,"Jackson, Soto and Ramos",vegetarian,"['eggs', 'soy']",174,2025-06-29,2025-12-20,500,362.36,50,48.9644985,6.930721
+P0189,Answer Snacks,Snacks,Mcdonald Inc,vegan,['nuts'],161,2025-05-29,2025-11-06,500,61.79,0,-47.891954,59.966087
+P0190,Somebody Meat,Meat,Collins Inc,vegetarian,[],71,2025-05-21,2025-07-31,1000,184.35,50,-81.130460,139.105433
+P0191,History Beverages,Beverages,Obrien-Cline,vegetarian,[],136,2025-06-30,2025-11-13,750,386.36,20,64.3105255,-150.410110
+P0192,To Snacks,Snacks,Nichols Inc,non-vegetarian,['nuts'],78,2025-06-09,2025-08-26,750,246.9,40,-46.8470265,-103.669322
+P0193,Budget Snacks,Snacks,Johnson-Santana,non-vegetarian,[],57,2025-06-02,2025-07-29,250,295.46,10,24.5547805,-64.545551
+P0194,Point Dairy,Dairy,"Moore, Mckenzie and Rogers",vegan,"['dairy', 'eggs']",41,2025-05-13,2025-06-23,500,430.95,20,38.549603,59.989824
+P0195,Practice Sauces,Sauces,"Hickman, King and Evans",eggs,['soy'],132,2025-06-01,2025-10-11,750,444.03,10,-54.098066,-1.831982
+P0196,Take Spreads,Spreads,Lawrence-Ramirez,vegetarian,['dairy'],121,2025-05-22,2025-09-20,500,346.37,20,-32.1188995,123.399800
+P0197,Indeed Biscuits,Biscuits,"Miller, Lee and Lawrence",eggs,"['nuts', 'gluten']",109,2025-06-28,2025-10-15,250,108.23,50,-41.639231,-6.249921
+P0198,Conference Snacks,Snacks,"Boyd, Brooks and Jenkins",vegetarian,['nuts'],180,2025-05-15,2025-11-11,500,460.28,30,-33.734731,55.620497
+P0199,Writer Biscuits,Biscuits,Moore Inc,vegetarian,[],86,2025-05-26,2025-08-20,1000,323.89,40,-11.125347,-154.010261
+P0200,Child Beverages,Beverages,Nguyen-Lucas,non-vegetarian,[],111,2025-06-16,2025-10-05,500,457.57,10,-41.8624535,-108.909081
+P0201,Design Spreads,Spreads,Santiago PLC,vegetarian,[],100,2025-06-30,2025-10-08,250,307.07,30,-37.965887,92.402245
+P0202,Know Beverages,Beverages,"Miller, Cuevas and Moreno",vegetarian,"['dairy', 'nuts']",105,2025-06-20,2025-10-03,750,75.24,30,-52.5658415,-13.973659
+P0203,Child Dairy,Dairy,Young-Walsh,vegan,['gluten'],94,2025-06-06,2025-09-08,250,300.38,50,-2.082374,-176.764279
+P0204,Later Spreads,Spreads,"Mason, Bruce and Harrison",vegetarian,['gluten'],72,2025-06-14,2025-08-25,750,451.44,50,-60.028965,-68.113202
+P0205,Important Biscuits,Biscuits,Perez-Coleman,vegan,[],161,2025-06-18,2025-11-26,750,434.75,30,-33.568831,149.178089
+P0206,First Sauces,Sauces,Coleman-Wu,non-vegetarian,"['eggs', 'soy']",126,2025-05-29,2025-10-02,750,410.46,30,57.067701,22.450722
+P0207,Activity Biscuits,Biscuits,Brown Group,eggs,"['soy', 'dairy']",56,2025-07-03,2025-08-28,750,409.84,10,-49.834916,-87.387895
+P0208,Rather Cheese,Cheese,Murray and Sons,vegan,['soy'],132,2025-06-22,2025-11-01,500,316.12,0,-89.5144235,18.502445
+P0209,Subject Spreads,Spreads,Collier-Small,vegetarian,[],70,2025-06-27,2025-09-05,1000,385.42,20,-23.7436895,-162.971260
+P0210,North Spreads,Spreads,"Evans, Miller and Underwood",non-vegetarian,['nuts'],54,2025-06-25,2025-08-18,500,305.63,10,-28.5006185,-12.564383
+P0211,This Spreads,Spreads,Clark-Wiley,eggs,"['nuts', 'dairy']",35,2025-05-28,2025-07-02,500,205.89,10,-79.5801945,-33.413134
+P0212,Degree Beverages,Beverages,"Robinson, Ford and Taylor",vegan,['nuts'],164,2025-06-24,2025-12-05,250,374.94,20,88.0030825,-127.744525
+P0213,Walk Dairy,Dairy,Long and Sons,non-vegetarian,"['eggs', 'soy']",147,2025-06-29,2025-11-23,250,128.13,20,30.4311025,-95.390397
+P0214,Series Snacks,Snacks,Tanner-Kidd,vegan,"['dairy', 'nuts']",85,2025-06-20,2025-09-13,500,68.68,0,23.800169,155.593388
+P0215,Begin Spreads,Spreads,Rasmussen-White,non-vegetarian,[],171,2025-05-14,2025-11-01,500,237.92,50,-85.1676535,-121.931011
+P0216,Key Spreads,Spreads,Rodriguez PLC,vegan,"['nuts', 'soy']",54,2025-06-24,2025-08-17,250,357.9,20,-51.1653835,129.714087
+P0217,Who Biscuits,Biscuits,"Owens, Davidson and Solomon",eggs,"['gluten', 'dairy']",176,2025-06-23,2025-12-16,250,346.68,20,-68.065364,101.192333
+P0218,Will Spreads,Spreads,Murphy LLC,vegan,['soy'],77,2025-05-27,2025-08-12,750,448.25,30,-3.2889665,11.265909
+P0219,Feel Meat,Meat,Perez LLC,eggs,['dairy'],54,2025-06-11,2025-08-04,500,257.14,0,-53.718567,-88.762059
+P0220,Yet Dairy,Dairy,Gonzalez and Sons,eggs,[],141,2025-05-17,2025-10-05,1000,445.01,50,42.3457195,150.439595
+P0221,Hundred Snacks,Snacks,"Dean, Jones and Arnold",vegan,['dairy'],145,2025-06-05,2025-10-28,500,361.93,20,40.4754355,-41.995903
+P0222,Activity Biscuits,Biscuits,"Boyer, Alvarez and Jones",vegan,"['eggs', 'dairy']",90,2025-06-29,2025-09-27,250,108.09,50,88.733074,87.127380
+P0223,Natural Dairy,Dairy,"Turner, Peters and Marquez",eggs,"['gluten', 'nuts']",63,2025-06-30,2025-09-01,500,183.89,30,56.795443,-29.812310
+P0224,Measure Beverages,Beverages,Moon PLC,vegan,[],38,2025-07-05,2025-08-12,250,421.68,30,-27.2129515,-1.276767
+P0225,Bank Sauces,Sauces,"Anderson, Brewer and Orozco",vegetarian,"['gluten', 'soy']",111,2025-05-27,2025-09-15,750,404.22,20,-37.449771,163.521283
+P0226,Particularly Sauces,Sauces,"Adams, Hicks and Hayden",eggs,[],100,2025-06-25,2025-10-03,500,443.05,40,-29.408426,-139.388557
+P0227,Your Biscuits,Biscuits,"Gutierrez, Becker and Harris",vegan,[],132,2025-06-16,2025-10-26,500,181.29,50,17.9226595,41.882252
+P0228,Send Snacks,Snacks,Ross-Olson,non-vegetarian,['dairy'],135,2025-06-15,2025-10-28,750,279.78,20,46.4326875,-88.304396
+P0229,Do Dairy,Dairy,Brown PLC,non-vegetarian,"['soy', 'dairy']",104,2025-06-24,2025-10-06,250,210.97,0,-8.5751905,135.016213
+P0230,Window Meat,Meat,Gill-Hurley,non-vegetarian,[],110,2025-05-29,2025-09-16,250,327.02,20,28.4815675,164.013607
+P0231,Environmental Dairy,Dairy,"Ramirez, Coffey and Mitchell",vegan,['eggs'],31,2025-05-19,2025-06-19,250,196.64,0,-79.946723,74.603919
+P0232,Tax Beverages,Beverages,"Francis, Castillo and Dennis",non-vegetarian,"['soy', 'gluten']",142,2025-06-07,2025-10-27,250,371.15,40,-22.3152005,-45.108373
+P0233,Early Beverages,Beverages,Perez and Sons,vegan,"['gluten', 'dairy']",96,2025-06-04,2025-09-08,1000,93.55,40,-85.9041185,-52.416805
+P0234,Movie Meat,Meat,"Chambers, Perez and Hanson",vegetarian,['nuts'],40,2025-05-28,2025-07-07,250,187.74,30,-0.024838,-137.754862
+P0235,Meeting Spreads,Spreads,Smith-Nixon,vegan,[],36,2025-06-01,2025-07-07,250,402.0,10,-77.0136665,-111.574195
+P0236,Magazine Spreads,Spreads,"Valdez, Hartman and Trujillo",non-vegetarian,['eggs'],164,2025-06-09,2025-11-20,250,306.08,20,-34.133486,-16.301634
+P0237,Yard Spreads,Spreads,Ruiz-Brooks,vegetarian,['nuts'],61,2025-06-07,2025-08-07,500,68.7,50,-72.025163,131.876779
+P0238,End Spreads,Spreads,Mitchell Group,non-vegetarian,[],71,2025-06-25,2025-09-04,750,64.0,10,-27.9086555,-158.218266
+P0239,Picture Snacks,Snacks,Ruiz LLC,eggs,['gluten'],138,2025-06-02,2025-10-18,250,179.27,0,-83.110865,-169.267042
+P0240,Clear Cheese,Cheese,Bradley-Turner,vegan,[],67,2025-06-20,2025-08-26,250,87.35,40,-14.703794,37.997409
+P0241,Cost Beverages,Beverages,Ball Group,eggs,[],44,2025-06-12,2025-07-26,250,400.98,10,9.1591625,-167.178822
+P0242,Nature Spreads,Spreads,Reilly-Lutz,eggs,[],100,2025-05-27,2025-09-04,750,172.25,40,-49.7988235,-152.413329
+P0243,Some Snacks,Snacks,Russell-Brown,vegetarian,[],130,2025-05-23,2025-09-30,250,407.35,10,-11.2211375,-33.500388
+P0244,Single Dairy,Dairy,"Nielsen, Lindsey and Martin",vegetarian,['dairy'],101,2025-06-11,2025-09-20,500,469.29,40,-67.3213465,-82.005246
+P0245,Air Sauces,Sauces,"Martinez, Martin and Ryan",eggs,['dairy'],121,2025-06-29,2025-10-28,500,249.95,0,59.3606825,-29.748886
+P0246,Try Cheese,Cheese,Douglas-Allen,vegetarian,"['eggs', 'nuts']",150,2025-05-20,2025-10-17,500,113.69,20,64.5635045,-78.764671
+P0247,Skin Meat,Meat,Patel Group,vegan,"['gluten', 'eggs']",99,2025-06-29,2025-10-06,250,117.85,10,32.3440055,-157.069182
+P0248,Republican Cheese,Cheese,"Mcgrath, Castillo and Kennedy",vegetarian,"['soy', 'nuts']",77,2025-06-22,2025-09-07,500,226.74,50,-41.115179,-71.725443
+P0249,Mother Dairy,Dairy,"Green, Hill and Munoz",vegan,[],108,2025-06-18,2025-10-04,750,369.04,30,-7.1892425,-165.502392
+P0250,Information Sauces,Sauces,Newman-Jackson,non-vegetarian,['gluten'],68,2025-06-14,2025-08-21,1000,374.41,10,71.710831,-110.469394
+P0251,Make Snacks,Snacks,Washington-Butler,vegetarian,"['dairy', 'soy']",157,2025-06-18,2025-11-22,250,312.26,30,-29.0566575,-54.455837
+P0252,Believe Dairy,Dairy,Jenkins-Lopez,vegan,[],54,2025-05-13,2025-07-06,750,176.75,50,85.8369285,-35.724023
+P0253,Song Dairy,Dairy,"Crane, Powell and Richmond",eggs,"['eggs', 'gluten']",74,2025-06-25,2025-09-07,500,425.28,10,53.3884695,158.961982
+P0254,Woman Snacks,Snacks,"Johnson, Alvarado and Maldonado",vegan,['gluten'],95,2025-05-30,2025-09-02,250,458.05,10,52.3525635,-51.053972
+P0255,Environment Dairy,Dairy,Hartman-Brown,vegan,"['soy', 'gluten']",74,2025-06-16,2025-08-29,500,95.49,10,-81.142834,-68.475234
+P0256,Against Beverages,Beverages,Day PLC,non-vegetarian,"['gluten', 'eggs']",116,2025-06-07,2025-10-01,750,438.88,30,-53.3078315,-137.320248
+P0257,Small Snacks,Snacks,Estrada-Chambers,vegan,[],106,2025-05-21,2025-09-04,250,357.51,0,71.1900125,-16.573085
+P0258,Size Sauces,Sauces,Reeves Inc,eggs,[],106,2025-06-26,2025-10-10,1000,148.77,10,-55.9051025,-121.506679
+P0259,Notice Sauces,Sauces,Wallace Group,vegan,"['gluten', 'eggs']",48,2025-05-17,2025-07-04,1000,480.25,10,-7.061733,-47.049714
+P0260,Room Meat,Meat,Reed Group,eggs,['nuts'],133,2025-05-22,2025-10-02,750,232.63,30,71.9381365,-34.772406
+P0261,Southern Biscuits,Biscuits,Travis-Atkins,eggs,"['nuts', 'gluten']",132,2025-06-18,2025-10-28,1000,102.64,0,-15.1884305,96.750273
+P0262,Present Sauces,Sauces,Taylor-Butler,eggs,"['dairy', 'soy']",58,2025-07-01,2025-08-28,1000,291.42,40,-71.8651865,-179.064762
+P0263,Energy Dairy,Dairy,Powell-Ward,non-vegetarian,['nuts'],120,2025-05-26,2025-09-23,500,166.04,10,-28.247692,108.741651
+P0264,College Beverages,Beverages,Foster-Livingston,non-vegetarian,[],30,2025-06-01,2025-07-01,1000,131.11,40,16.5014555,-16.562474
+P0265,General Meat,Meat,Lewis Group,vegetarian,[],122,2025-05-18,2025-09-17,500,418.03,0,53.7979485,-122.540757
+P0266,Thing Cheese,Cheese,Washington-Goodman,vegan,"['nuts', 'dairy']",151,2025-05-20,2025-10-18,750,405.63,40,-0.494843,162.451137
+P0267,What Dairy,Dairy,Gibson-Romero,eggs,[],88,2025-06-18,2025-09-14,250,381.73,40,53.5198035,170.718763
+P0268,Science Snacks,Snacks,"Anthony, Jacobson and Price",eggs,"['soy', 'nuts']",176,2025-06-28,2025-12-21,500,50.38,20,26.901617,-45.172881
+P0269,Stage Snacks,Snacks,"Moore, Caldwell and Campos",vegan,"['gluten', 'eggs']",180,2025-06-01,2025-11-28,750,493.58,0,37.998382,51.152839
+P0270,Opportunity Dairy,Dairy,Edwards-Klein,vegetarian,[],115,2025-06-19,2025-10-12,750,463.81,20,0.562938,30.362348
+P0271,Pull Meat,Meat,Webb-Lucero,vegan,[],81,2025-06-07,2025-08-27,1000,360.39,0,-4.572365,-1.934344
+P0272,Whole Snacks,Snacks,Gardner Inc,eggs,['dairy'],162,2025-05-30,2025-11-08,750,395.73,10,26.6215535,76.245659
+P0273,Whole Beverages,Beverages,"Roberts, Holland and Scott",vegan,"['soy', 'dairy']",87,2025-06-21,2025-09-16,750,204.45,50,-27.6179765,-59.342237
+P0274,Practice Sauces,Sauces,Lopez-Ramsey,vegan,"['nuts', 'soy']",152,2025-06-24,2025-11-23,750,286.05,30,-13.0228565,-22.889333
+P0275,Actually Beverages,Beverages,"Cain, Golden and Garcia",non-vegetarian,[],92,2025-05-31,2025-08-31,250,395.66,50,-13.3018285,15.316821
+P0276,Water Dairy,Dairy,Cole LLC,vegetarian,"['soy', 'nuts']",142,2025-06-18,2025-11-07,250,491.75,50,-79.420769,-51.258791
+P0277,Indeed Snacks,Snacks,Larson LLC,non-vegetarian,"['soy', 'eggs']",67,2025-06-15,2025-08-21,1000,116.06,30,-6.761509,-66.651293
+P0278,Wrong Cheese,Cheese,Brown and Sons,non-vegetarian,"['nuts', 'eggs']",162,2025-05-17,2025-10-26,750,126.35,10,7.0209525,161.456206
+P0279,Pay Dairy,Dairy,Mitchell-Tran,vegan,"['nuts', 'gluten']",153,2025-06-28,2025-11-28,250,124.42,50,-50.198335,63.885625
+P0280,Training Snacks,Snacks,Mooney-Price,eggs,"['soy', 'gluten']",96,2025-06-15,2025-09-19,1000,383.42,30,-23.1450605,88.577184
+P0281,Ok Dairy,Dairy,Cole-Gonzalez,eggs,[],111,2025-06-05,2025-09-24,250,355.56,0,47.378295,-168.513193
+P0282,Country Dairy,Dairy,Dennis-Black,eggs,[],68,2025-07-01,2025-09-07,750,202.1,30,-71.698646,45.850080
+P0283,Staff Meat,Meat,"Sloan, Graham and Dennis",eggs,['eggs'],61,2025-07-02,2025-09-01,500,322.58,30,47.9811765,-111.912066
+P0284,Majority Snacks,Snacks,Mata Ltd,eggs,"['dairy', 'soy']",88,2025-05-17,2025-08-13,500,341.03,40,-37.9501315,-103.121564
+P0285,Exist Biscuits,Biscuits,West Ltd,eggs,"['eggs', 'soy']",124,2025-06-17,2025-10-19,1000,355.62,30,-1.735210,131.733149
+P0286,Eat Meat,Meat,"Russell, Mullins and Roberts",vegetarian,"['dairy', 'gluten']",44,2025-06-15,2025-07-29,1000,266.89,10,76.934461,108.095494
+P0287,Effort Spreads,Spreads,Jacobs Inc,vegan,[],119,2025-06-09,2025-10-06,750,348.07,10,-44.6034965,-179.534052
+P0288,Serve Dairy,Dairy,"Thompson, White and Graham",non-vegetarian,"['gluten', 'eggs']",173,2025-05-17,2025-11-06,500,402.87,30,-82.4798045,49.556280
+P0289,Want Spreads,Spreads,"Pruitt, Brown and Armstrong",vegan,"['nuts', 'dairy']",147,2025-06-29,2025-11-23,1000,312.74,40,-82.7115255,-39.230555
+P0290,Daughter Dairy,Dairy,Jensen-Stein,non-vegetarian,"['nuts', 'gluten']",34,2025-05-18,2025-06-21,750,227.95,50,-71.432488,69.045656
+P0291,Accept Meat,Meat,Cohen-Lawrence,vegetarian,[],139,2025-05-15,2025-10-01,750,381.58,20,79.706644,-91.464256
+P0292,Push Meat,Meat,Haynes Group,vegetarian,"['nuts', 'soy']",39,2025-06-15,2025-07-24,750,53.52,50,-87.714188,42.344260
+P0293,Still Biscuits,Biscuits,"Smith, Brown and Kelley",non-vegetarian,"['soy', 'eggs']",164,2025-06-16,2025-11-27,1000,206.88,10,-41.885725,-82.424000
+P0294,Lose Snacks,Snacks,Wallace PLC,non-vegetarian,[],128,2025-05-23,2025-09-28,1000,296.71,30,-37.198105,60.405267
+P0295,Behavior Spreads,Spreads,Hodges-Mcdonald,eggs,['dairy'],75,2025-06-14,2025-08-28,250,174.21,40,-16.5920365,-56.231957
+P0296,Make Biscuits,Biscuits,"Tucker, Thornton and Reyes",vegetarian,[],163,2025-06-01,2025-11-11,250,278.75,30,-70.3703005,-88.133945
+P0297,Understand Snacks,Snacks,Foster-Ward,vegan,"['eggs', 'gluten']",69,2025-06-06,2025-08-14,500,255.03,0,7.084013,97.751702
+P0298,Interview Snacks,Snacks,Garcia-Moore,vegetarian,"['dairy', 'gluten']",37,2025-05-20,2025-06-26,750,171.96,0,-68.2264795,-11.554123
+P0299,Structure Snacks,Snacks,Green-Morris,eggs,"['nuts', 'gluten']",174,2025-07-05,2025-12-26,750,82.79,50,-39.311169,-12.720364
