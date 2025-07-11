@@ -1,201 +1,201 @@
 user_id,age,gender,diet_type,allergies,prefers_discount,location_lat,location_lon,preferred_categories,last_purchase_date
-U0000,20,Female,vegan,"['nuts', 'eggs']",True,-44.292352,-96.914743,"['Cheese', 'Sauces', 'Dairy']",2025-06-25
-U0001,25,Male,non-vegetarian,['gluten'],False,43.461965,-72.778420,['Meat'],2025-06-06
-U0002,46,Male,eggs,['nuts'],False,-70.566254,121.830596,"['Sauces', 'Biscuits']",2025-06-20
-U0003,19,Other,vegetarian,[],True,-41.656514,175.783070,['Snacks'],2025-06-21
-U0004,49,Male,non-vegetarian,['eggs'],True,-43.243618,65.061907,"['Meat', 'Dairy']",2025-06-19
-U0005,51,Female,vegan,"['dairy', 'gluten']",True,-16.6255115,-61.450112,"['Snacks', 'Cheese', 'Meat']",2025-05-19
-U0006,42,Female,vegan,[],True,-16.8982845,54.096547,"['Snacks', 'Beverages']",2025-05-02
-U0007,18,Female,non-vegetarian,['soy'],False,-20.992910,-47.914413,['Sauces'],2025-06-06
-U0008,56,Other,non-vegetarian,['nuts'],True,-71.393386,58.609451,"['Biscuits', 'Cheese']",2025-06-09
-U0009,51,Other,vegan,"['gluten', 'dairy']",False,-87.7948885,-15.541512,['Dairy'],2025-05-22
-U0010,40,Female,vegetarian,[],True,-0.591202,79.886622,['Spreads'],2025-05-11
-U0011,23,Female,vegetarian,['soy'],True,29.2653525,171.485105,"['Cheese', 'Beverages']",2025-06-27
-U0012,36,Other,vegan,['nuts'],True,-59.8761425,145.959673,"['Cheese', 'Beverages']",2025-05-25
-U0013,57,Male,vegetarian,[],True,80.2633015,140.150309,"['Dairy', 'Spreads']",2025-05-23
-U0014,42,Female,vegetarian,[],True,15.322792,-49.269008,['Cheese'],2025-05-10
-U0015,49,Female,vegetarian,[],False,50.1600105,48.193727,"['Meat', 'Snacks', 'Biscuits']",2025-06-06
-U0016,44,Male,vegan,"['soy', 'gluten']",True,-57.6900805,-170.548237,"['Spreads', 'Cheese']",2025-05-29
-U0017,55,Male,eggs,['soy'],True,52.966328,-35.815520,"['Cheese', 'Dairy']",2025-05-10
-U0018,19,Female,vegetarian,[],True,4.6520805,52.782108,"['Snacks', 'Dairy']",2025-05-11
-U0019,20,Other,non-vegetarian,"['eggs', 'gluten']",True,18.631154,128.915523,['Biscuits'],2025-06-22
-U0020,23,Other,non-vegetarian,"['nuts', 'gluten']",False,0.810016,49.892816,"['Beverages', 'Cheese', 'Dairy']",2025-05-15
-U0021,34,Other,eggs,"['nuts', 'eggs']",True,33.179399,-50.075729,"['Snacks', 'Dairy', 'Sauces']",2025-06-10
-U0022,41,Female,vegetarian,['nuts'],True,-46.0109625,-8.071309,['Sauces'],2025-06-26
-U0023,48,Female,vegan,[],True,-10.1487145,100.452926,['Biscuits'],2025-05-26
-U0024,28,Male,vegetarian,"['dairy', 'eggs']",False,-37.2470275,-140.711941,"['Beverages', 'Cheese', 'Spreads']",2025-04-30
-U0025,22,Male,vegetarian,['eggs'],False,87.4697105,-90.786877,"['Meat', 'Spreads']",2025-06-25
-U0026,50,Male,vegetarian,[],False,-37.9297335,169.478160,"['Beverages', 'Spreads']",2025-06-23
-U0027,18,Other,non-vegetarian,[],True,-20.629851,7.535914,['Snacks'],2025-05-26
-U0028,40,Female,non-vegetarian,[],True,-59.6934295,-76.553808,"['Sauces', 'Snacks']",2025-06-12
-U0029,20,Female,non-vegetarian,['soy'],False,-19.1409615,-8.315177,"['Spreads', 'Dairy', 'Snacks']",2025-05-09
-U0030,28,Female,eggs,['gluten'],False,-71.8622185,35.337330,['Snacks'],2025-05-16
-U0031,28,Female,eggs,"['eggs', 'nuts']",True,11.4708525,-148.475606,"['Cheese', 'Snacks']",2025-06-15
-U0032,25,Female,eggs,[],True,20.7631435,84.370353,['Cheese'],2025-06-09
-U0033,30,Other,non-vegetarian,[],True,-51.571077,63.389511,"['Meat', 'Sauces']",2025-06-11
-U0034,57,Other,vegan,"['soy', 'eggs']",True,-10.3261795,-145.452176,['Biscuits'],2025-06-03
-U0035,37,Other,non-vegetarian,['eggs'],False,25.602668,152.606622,"['Spreads', 'Meat']",2025-06-24
-U0036,56,Female,non-vegetarian,['dairy'],False,22.4653275,-173.049535,['Biscuits'],2025-06-27
-U0037,63,Male,vegan,['soy'],True,-39.7821875,130.045101,"['Sauces', 'Dairy']",2025-06-25
-U0038,24,Other,non-vegetarian,[],True,27.032226,-124.060773,"['Biscuits', 'Dairy']",2025-05-05
-U0039,48,Male,eggs,[],True,60.451435,162.896104,"['Biscuits', 'Dairy', 'Spreads']",2025-05-29
-U0040,59,Male,vegan,"['dairy', 'soy']",False,-36.234336,107.989615,"['Dairy', 'Meat', 'Cheese']",2025-05-02
-U0041,51,Male,non-vegetarian,"['dairy', 'soy']",False,50.061700,-97.735374,['Dairy'],2025-05-02
-U0042,42,Female,vegetarian,[],True,-2.168948,69.628411,['Cheese'],2025-05-10
-U0043,40,Female,vegetarian,['eggs'],True,11.607937,-77.861412,"['Sauces', 'Biscuits']",2025-06-07
-U0044,26,Female,eggs,[],False,87.625695,95.673913,['Sauces'],2025-06-11
-U0045,56,Female,non-vegetarian,"['soy', 'dairy']",False,11.6147395,-110.563110,['Spreads'],2025-05-03
-U0046,21,Other,vegan,[],True,70.4056185,-116.903955,"['Sauces', 'Biscuits']",2025-05-09
-U0047,50,Male,vegetarian,['soy'],False,64.9505825,164.171654,['Sauces'],2025-05-17
-U0048,20,Male,vegan,['soy'],True,-28.3237465,-152.972663,"['Spreads', 'Cheese', 'Sauces']",2025-05-18
-U0049,63,Other,non-vegetarian,[],False,43.668831,109.802399,"['Meat', 'Beverages', 'Sauces']",2025-06-07
-U0050,36,Female,vegetarian,"['soy', 'gluten']",True,28.3577365,104.072464,"['Meat', 'Beverages']",2025-05-04
-U0051,60,Other,non-vegetarian,"['nuts', 'soy']",True,-56.4196845,52.485897,"['Spreads', 'Cheese']",2025-05-10
-U0052,18,Male,vegetarian,[],True,-68.853581,84.426782,"['Spreads', 'Biscuits']",2025-05-12
-U0053,57,Male,vegan,"['soy', 'nuts']",True,2.0811085,-39.348099,['Sauces'],2025-05-22
-U0054,21,Female,vegetarian,['eggs'],False,33.601145,19.689042,"['Meat', 'Spreads', 'Cheese']",2025-06-17
-U0055,39,Male,non-vegetarian,[],True,65.6298035,-23.274061,"['Cheese', 'Sauces', 'Spreads']",2025-05-29
-U0056,50,Female,vegetarian,['soy'],True,-28.922278,-79.713504,"['Dairy', 'Sauces', 'Beverages']",2025-05-06
-U0057,48,Female,eggs,"['soy', 'gluten']",True,2.3839345,-93.352189,['Sauces'],2025-05-16
-U0058,38,Female,eggs,[],False,-84.928957,-122.911367,"['Dairy', 'Spreads', 'Beverages']",2025-05-02
-U0059,18,Other,vegan,[],True,-28.024545,40.022000,"['Beverages', 'Sauces', 'Cheese']",2025-05-12
-U0060,48,Male,non-vegetarian,[],True,12.372084,101.238119,['Spreads'],2025-05-14
-U0061,36,Other,vegan,[],True,-40.734719,-32.273174,"['Spreads', 'Meat']",2025-06-05
-U0062,41,Male,vegetarian,[],True,-19.550393,-132.164849,"['Biscuits', 'Beverages', 'Dairy']",2025-05-18
-U0063,39,Female,eggs,"['nuts', 'dairy']",True,-7.5102105,-16.504093,['Snacks'],2025-05-20
-U0064,36,Other,vegetarian,[],True,-51.503419,-110.920048,"['Biscuits', 'Cheese', 'Dairy']",2025-06-01
-U0065,42,Male,vegetarian,['nuts'],True,-57.3024885,165.468585,"['Sauces', 'Dairy', 'Cheese']",2025-06-20
-U0066,65,Male,eggs,"['nuts', 'soy']",True,-10.525924,-156.200899,"['Dairy', 'Sauces']",2025-05-15
-U0067,22,Female,vegan,['nuts'],True,-87.2931935,125.411139,"['Snacks', 'Spreads']",2025-06-03
-U0068,59,Male,non-vegetarian,"['soy', 'gluten']",True,-70.001881,165.476524,"['Dairy', 'Sauces', 'Meat']",2025-05-31
-U0069,26,Other,vegetarian,"['nuts', 'gluten']",True,19.8223935,-134.713955,['Beverages'],2025-05-11
-U0070,33,Male,non-vegetarian,['soy'],False,5.6470295,105.423540,['Snacks'],2025-05-11
-U0071,22,Male,non-vegetarian,['gluten'],True,-48.4296775,42.291442,"['Cheese', 'Snacks', 'Biscuits']",2025-06-12
-U0072,38,Female,eggs,[],True,-54.7566515,-174.992741,"['Sauces', 'Beverages', 'Dairy']",2025-05-27
-U0073,48,Male,vegan,[],True,26.5918205,-158.533617,"['Dairy', 'Cheese']",2025-06-03
-U0074,52,Male,vegetarian,"['gluten', 'soy']",True,-36.6494965,-80.182471,['Spreads'],2025-06-28
-U0075,36,Other,vegetarian,[],True,-7.7896645,49.056463,"['Beverages', 'Sauces', 'Snacks']",2025-06-07
-U0076,27,Female,vegetarian,"['eggs', 'gluten']",True,67.769622,-131.559747,"['Snacks', 'Biscuits', 'Dairy']",2025-05-11
-U0077,20,Male,eggs,['eggs'],False,27.0752035,-51.948923,"['Spreads', 'Snacks', 'Dairy']",2025-06-20
-U0078,50,Male,vegetarian,[],True,-30.4220685,64.275335,['Meat'],2025-05-10
-U0079,34,Female,vegetarian,[],False,-77.517514,-164.712618,"['Cheese', 'Snacks', 'Spreads']",2025-05-12
-U0080,46,Other,vegan,[],False,55.001129,-88.212236,"['Dairy', 'Spreads']",2025-05-04
-U0081,27,Other,vegetarian,[],True,64.4307565,-43.690925,['Meat'],2025-05-23
-U0082,63,Other,eggs,[],False,35.889829,-30.892167,['Spreads'],2025-05-17
-U0083,61,Male,vegetarian,"['eggs', 'soy']",True,42.502182,-175.110446,"['Snacks', 'Dairy']",2025-05-08
-U0084,53,Other,vegan,"['dairy', 'nuts']",True,-79.3193865,158.676024,"['Snacks', 'Meat', 'Dairy']",2025-05-02
-U0085,31,Female,vegan,"['gluten', 'eggs']",True,-3.3547575,-87.682087,"['Spreads', 'Meat']",2025-05-12
-U0086,43,Other,vegan,['eggs'],False,-69.1858535,109.831354,['Cheese'],2025-05-07
-U0087,28,Other,non-vegetarian,[],False,-71.0503455,121.864374,"['Cheese', 'Beverages', 'Spreads']",2025-05-14
-U0088,52,Other,vegetarian,['nuts'],False,61.583186,10.478885,"['Cheese', 'Spreads', 'Snacks']",2025-04-30
-U0089,23,Other,eggs,[],True,0.583228,-114.936828,['Sauces'],2025-05-06
-U0090,29,Male,vegetarian,"['gluten', 'nuts']",False,-69.3034215,146.053709,"['Beverages', 'Meat']",2025-06-26
-U0091,65,Female,vegetarian,[],True,-75.479661,-102.185999,['Beverages'],2025-05-12
-U0092,23,Other,vegetarian,"['dairy', 'soy']",False,79.9372475,-176.504086,['Biscuits'],2025-05-07
-U0093,63,Other,eggs,[],False,-21.423617,54.684567,['Cheese'],2025-04-30
-U0094,19,Female,non-vegetarian,['dairy'],True,-25.2223675,-45.847492,"['Dairy', 'Beverages', 'Meat']",2025-06-04
-U0095,46,Other,vegan,[],False,-54.8604245,-6.601239,"['Meat', 'Spreads', 'Sauces']",2025-05-17
-U0096,40,Male,non-vegetarian,"['soy', 'nuts']",False,-19.6322825,166.562806,"['Dairy', 'Meat', 'Biscuits']",2025-06-08
-U0097,63,Female,non-vegetarian,[],True,33.9304315,-52.663265,['Spreads'],2025-05-22
-U0098,60,Male,eggs,['eggs'],True,-84.3365415,-174.929361,['Dairy'],2025-06-08
-U0099,63,Female,vegan,['gluten'],True,88.744181,6.240803,"['Dairy', 'Sauces']",2025-04-30
-U0100,41,Male,vegetarian,[],True,17.823575,76.108774,"['Meat', 'Beverages', 'Biscuits']",2025-05-08
-U0101,62,Male,non-vegetarian,[],True,-48.329582,130.635950,['Dairy'],2025-05-03
-U0102,48,Other,eggs,"['dairy', 'soy']",False,15.268089,-99.807985,['Cheese'],2025-06-02
-U0103,21,Male,vegetarian,[],False,-21.2927455,-97.251915,"['Beverages', 'Spreads']",2025-06-05
-U0104,34,Female,non-vegetarian,"['nuts', 'soy']",True,38.2352735,-45.444268,"['Beverages', 'Biscuits', 'Cheese']",2025-06-22
-U0105,33,Female,vegetarian,"['gluten', 'eggs']",False,26.062881,45.215104,['Spreads'],2025-05-05
-U0106,19,Female,non-vegetarian,"['soy', 'nuts']",False,-17.4157445,-174.376696,"['Dairy', 'Beverages', 'Cheese']",2025-05-28
-U0107,58,Female,non-vegetarian,['eggs'],True,2.3991275,157.077375,['Sauces'],2025-06-13
-U0108,58,Female,vegetarian,['gluten'],False,-33.0268875,-169.980746,['Beverages'],2025-05-03
-U0109,49,Male,vegetarian,[],True,18.5645465,55.324466,['Sauces'],2025-06-11
-U0110,25,Female,eggs,"['nuts', 'dairy']",True,73.028296,141.915227,"['Spreads', 'Dairy']",2025-05-26
-U0111,46,Other,vegetarian,['soy'],True,65.264956,-38.421201,"['Snacks', 'Beverages', 'Biscuits']",2025-05-03
-U0112,59,Female,vegetarian,"['eggs', 'dairy']",False,-50.187651,-141.729060,['Meat'],2025-06-03
-U0113,23,Female,vegetarian,[],True,80.580737,-62.681842,"['Cheese', 'Dairy', 'Biscuits']",2025-06-27
-U0114,34,Female,vegan,"['soy', 'nuts']",True,38.362642,81.134075,"['Spreads', 'Cheese', 'Biscuits']",2025-05-03
-U0115,58,Male,non-vegetarian,[],True,12.893678,-131.695156,['Biscuits'],2025-06-26
-U0116,19,Female,eggs,['dairy'],True,80.496334,11.318072,['Biscuits'],2025-05-04
-U0117,32,Other,eggs,"['gluten', 'soy']",False,-48.7565785,-88.060245,['Biscuits'],2025-05-12
-U0118,53,Other,vegetarian,[],True,58.7076295,110.824331,['Spreads'],2025-06-01
-U0119,45,Male,vegan,"['gluten', 'eggs']",True,-42.891605,-150.405865,"['Sauces', 'Biscuits', 'Meat']",2025-06-14
-U0120,25,Male,vegan,[],True,50.670184,-62.733919,"['Snacks', 'Spreads', 'Dairy']",2025-05-07
-U0121,37,Female,eggs,[],True,-57.324552,-116.411936,"['Beverages', 'Sauces']",2025-05-28
-U0122,61,Male,non-vegetarian,[],True,-22.746651,100.822835,"['Sauces', 'Spreads', 'Dairy']",2025-06-05
-U0123,35,Male,non-vegetarian,"['nuts', 'eggs']",True,-45.5884455,176.778429,['Beverages'],2025-06-27
-U0124,18,Other,vegan,['eggs'],True,-88.8530135,13.322641,"['Dairy', 'Snacks', 'Cheese']",2025-05-23
-U0125,64,Other,vegetarian,"['dairy', 'soy']",False,3.3561045,-40.837751,"['Spreads', 'Meat']",2025-05-15
-U0126,31,Male,vegetarian,"['dairy', 'eggs']",True,-12.651990,116.811572,"['Biscuits', 'Meat']",2025-05-28
-U0127,19,Other,vegan,"['nuts', 'gluten']",False,89.102634,130.725307,"['Spreads', 'Dairy', 'Biscuits']",2025-06-23
-U0128,50,Female,vegan,[],True,49.1267965,-62.863173,['Dairy'],2025-05-05
-U0129,23,Female,vegan,['gluten'],True,27.459604,-145.194540,"['Snacks', 'Meat']",2025-05-29
-U0130,29,Female,eggs,[],True,30.456928,-8.116982,['Beverages'],2025-06-23
-U0131,52,Male,non-vegetarian,[],True,1.079431,68.901372,"['Cheese', 'Sauces']",2025-06-26
-U0132,55,Other,non-vegetarian,"['nuts', 'gluten']",False,57.649617,68.071791,"['Spreads', 'Sauces', 'Dairy']",2025-05-23
-U0133,25,Male,vegan,[],True,15.4970855,-59.655816,"['Cheese', 'Biscuits']",2025-06-26
-U0134,40,Male,non-vegetarian,['nuts'],True,-72.7547945,-159.897018,"['Meat', 'Cheese', 'Beverages']",2025-06-01
-U0135,37,Other,non-vegetarian,[],True,-9.251245,-85.993812,['Sauces'],2025-06-11
-U0136,34,Male,non-vegetarian,"['gluten', 'eggs']",True,-29.934664,-76.972639,['Sauces'],2025-06-18
-U0137,56,Other,eggs,['eggs'],False,-38.6245735,156.166259,"['Biscuits', 'Meat', 'Beverages']",2025-05-05
-U0138,32,Other,non-vegetarian,"['dairy', 'nuts']",False,-29.062049,74.252002,"['Snacks', 'Spreads', 'Meat']",2025-06-04
-U0139,41,Other,non-vegetarian,"['gluten', 'soy']",False,-19.5009305,-138.255243,"['Snacks', 'Cheese']",2025-05-24
-U0140,48,Male,eggs,[],False,79.7265825,-53.344316,"['Cheese', 'Meat']",2025-05-19
-U0141,25,Other,vegan,"['eggs', 'gluten']",False,76.542520,-41.976171,"['Snacks', 'Spreads']",2025-06-06
-U0142,29,Male,vegan,"['soy', 'gluten']",True,-37.153983,2.268142,['Cheese'],2025-06-04
-U0143,28,Female,vegetarian,"['eggs', 'nuts']",True,68.395938,-9.045527,"['Meat', 'Beverages', 'Biscuits']",2025-06-08
-U0144,62,Female,vegetarian,"['gluten', 'soy']",True,-18.425702,-33.642290,"['Meat', 'Dairy', 'Cheese']",2025-05-04
-U0145,53,Other,eggs,"['soy', 'eggs']",False,-52.3966005,-69.562667,"['Snacks', 'Meat', 'Sauces']",2025-06-19
-U0146,20,Female,vegan,['dairy'],True,69.447501,-77.643591,['Biscuits'],2025-05-31
-U0147,62,Female,vegan,['eggs'],False,-4.111322,-59.806881,['Meat'],2025-05-23
-U0148,24,Other,vegetarian,"['nuts', 'soy']",True,39.796264,-85.218717,['Snacks'],2025-05-29
-U0149,30,Female,vegetarian,"['eggs', 'nuts']",False,28.755236,92.991566,"['Dairy', 'Beverages', 'Sauces']",2025-06-21
-U0150,55,Other,non-vegetarian,"['nuts', 'soy']",False,-74.2054595,-174.695724,"['Sauces', 'Dairy']",2025-06-02
-U0151,23,Other,vegan,[],True,74.240505,-144.518974,"['Snacks', 'Spreads']",2025-06-02
-U0152,55,Other,non-vegetarian,[],True,0.800618,51.097379,"['Snacks', 'Biscuits', 'Meat']",2025-06-01
-U0153,52,Female,vegetarian,"['soy', 'eggs']",True,68.578104,-19.583208,['Dairy'],2025-06-25
-U0154,47,Other,non-vegetarian,[],True,53.849317,97.979260,"['Meat', 'Biscuits', 'Spreads']",2025-05-28
-U0155,55,Female,non-vegetarian,[],False,87.294951,-142.058075,"['Biscuits', 'Meat']",2025-06-05
-U0156,59,Male,non-vegetarian,['dairy'],True,-28.2257805,-157.901057,"['Spreads', 'Snacks']",2025-05-20
-U0157,57,Other,vegan,['gluten'],True,-42.2631575,-103.121039,['Biscuits'],2025-06-03
-U0158,53,Female,vegetarian,"['soy', 'dairy']",False,-29.065236,77.063947,"['Dairy', 'Beverages', 'Spreads']",2025-06-08
-U0159,65,Other,vegetarian,['dairy'],False,-9.4844725,-47.349045,"['Cheese', 'Dairy', 'Meat']",2025-06-04
-U0160,41,Female,vegetarian,"['gluten', 'dairy']",True,-5.1492005,-64.241531,['Dairy'],2025-05-16
-U0161,18,Female,non-vegetarian,"['gluten', 'soy']",True,9.1046925,-114.447837,"['Snacks', 'Cheese']",2025-05-14
-U0162,61,Female,non-vegetarian,[],True,-34.087236,174.386046,"['Sauces', 'Snacks']",2025-05-28
-U0163,65,Other,non-vegetarian,"['nuts', 'gluten']",True,-23.837378,-18.765615,['Snacks'],2025-05-29
-U0164,59,Other,vegetarian,[],True,17.1913685,125.004602,['Cheese'],2025-05-26
-U0165,54,Female,non-vegetarian,"['eggs', 'nuts']",True,-56.3234305,153.682860,"['Biscuits', 'Snacks']",2025-05-03
-U0166,26,Male,vegetarian,['nuts'],False,3.9191335,-59.353311,"['Beverages', 'Meat', 'Spreads']",2025-05-13
-U0167,38,Other,eggs,[],True,58.6595065,-117.200381,['Beverages'],2025-05-02
-U0168,53,Other,non-vegetarian,[],True,9.8557545,-151.837877,"['Biscuits', 'Cheese']",2025-05-12
-U0169,56,Male,vegetarian,['eggs'],True,-12.4203445,-61.933600,"['Spreads', 'Snacks', 'Biscuits']",2025-06-23
-U0170,38,Other,vegan,[],False,-67.9239765,-84.331762,"['Dairy', 'Cheese', 'Snacks']",2025-05-21
-U0171,64,Other,vegan,[],True,-2.956592,114.202386,['Meat'],2025-05-15
-U0172,42,Female,eggs,[],True,-60.582666,20.005669,"['Sauces', 'Beverages']",2025-05-22
-U0173,35,Female,vegetarian,['nuts'],True,-63.0733755,148.401355,"['Cheese', 'Dairy', 'Sauces']",2025-05-23
-U0174,49,Male,non-vegetarian,[],True,36.814246,-133.335438,['Biscuits'],2025-06-07
-U0175,54,Female,vegan,['nuts'],True,64.117140,-51.134700,['Snacks'],2025-05-22
-U0176,40,Male,non-vegetarian,['soy'],True,25.646962,119.636189,['Snacks'],2025-06-25
-U0177,39,Other,vegan,[],False,71.173767,-100.331438,"['Snacks', 'Spreads']",2025-05-26
-U0178,60,Female,vegetarian,['nuts'],False,-19.636299,112.490927,['Snacks'],2025-05-06
-U0179,55,Female,non-vegetarian,['dairy'],True,-63.9971535,82.329898,['Spreads'],2025-05-23
-U0180,56,Male,eggs,['dairy'],True,-73.388381,21.388127,['Dairy'],2025-05-17
-U0181,19,Female,vegan,[],False,-67.090175,102.800011,['Spreads'],2025-05-15
-U0182,54,Female,vegan,"['nuts', 'soy']",False,40.954698,-1.351421,['Spreads'],2025-05-28
-U0183,55,Female,non-vegetarian,[],False,-55.7675945,-111.047690,"['Snacks', 'Sauces']",2025-06-22
-U0184,22,Female,vegan,['nuts'],True,-59.909297,-69.203677,"['Biscuits', 'Spreads', 'Snacks']",2025-05-24
-U0185,39,Other,vegetarian,['dairy'],False,55.1119255,56.817765,['Cheese'],2025-05-04
-U0186,34,Male,vegetarian,"['nuts', 'soy']",True,11.2675365,-94.760774,['Dairy'],2025-06-09
-U0187,63,Other,eggs,['nuts'],False,1.201352,-1.419825,"['Spreads', 'Snacks']",2025-06-05
-U0188,44,Female,vegetarian,['gluten'],True,-35.0824565,31.404374,"['Cheese', 'Dairy']",2025-05-21
-U0189,26,Male,non-vegetarian,['eggs'],True,-36.0894465,95.627214,['Cheese'],2025-05-10
-U0190,54,Female,vegan,[],True,-73.098366,-40.144086,['Meat'],2025-05-26
-U0191,38,Female,vegan,['gluten'],True,29.4949855,4.946821,"['Beverages', 'Biscuits']",2025-05-23
-U0192,18,Female,non-vegetarian,"['nuts', 'dairy']",True,-19.445196,90.495464,"['Cheese', 'Meat']",2025-05-21
-U0193,27,Male,vegetarian,[],True,26.3706625,-146.772044,"['Biscuits', 'Beverages']",2025-06-23
-U0194,21,Male,vegetarian,"['nuts', 'gluten']",True,42.5419465,175.929569,['Beverages'],2025-06-06
-U0195,40,Male,eggs,[],True,-87.5239325,-1.256669,['Biscuits'],2025-05-07
-U0196,65,Other,eggs,"['gluten', 'eggs']",True,-45.3896065,109.161083,"['Spreads', 'Biscuits', 'Snacks']",2025-06-13
-U0197,26,Other,vegan,[],False,10.740506,-135.460465,"['Beverages', 'Biscuits', 'Cheese']",2025-05-27
-U0198,56,Other,non-vegetarian,"['eggs', 'gluten']",True,-21.876734,-139.446084,"['Dairy', 'Meat', 'Sauces']",2025-06-03
-U0199,39,Other,non-vegetarian,"['nuts', 'soy']",True,-54.9693825,42.886369,"['Spreads', 'Snacks', 'Sauces']",2025-05-07
+U0000,20,Female,vegan,"['nuts', 'eggs']",TRUE,-44.292352,-96.914743,"['Cheese', 'Sauces', 'Dairy']",25-06-2025
+U0001,25,Male,non-vegetarian,['gluten'],FALSE,43.461965,-72.77842,['Meat'],06-06-2025
+U0002,46,Male,eggs,['nuts'],FALSE,-70.566254,121.830596,"['Sauces', 'Biscuits']",20-06-2025
+U0003,19,Other,vegetarian,[],TRUE,-41.656514,175.78307,['Snacks'],21-06-2025
+U0004,49,Male,non-vegetarian,['eggs'],TRUE,-43.243618,65.061907,"['Meat', 'Dairy']",19-06-2025
+U0005,51,Female,vegan,"['dairy', 'gluten']",TRUE,-16.6255115,-61.450112,"['Snacks', 'Cheese', 'Meat']",19-05-2025
+U0006,42,Female,vegan,[],TRUE,-16.8982845,54.096547,"['Snacks', 'Beverages']",02-05-2025
+U0007,18,Female,non-vegetarian,['soy'],FALSE,-20.99291,-47.914413,['Sauces'],06-06-2025
+U0008,56,Other,non-vegetarian,['nuts'],TRUE,-71.393386,58.609451,"['Biscuits', 'Cheese']",09-06-2025
+U0009,51,Other,vegan,"['gluten', 'dairy']",FALSE,-87.7948885,-15.541512,['Dairy'],22-05-2025
+U0010,40,Female,vegetarian,[],TRUE,-0.591202,79.886622,['Spreads'],11-05-2025
+U0011,23,Female,vegetarian,['soy'],TRUE,29.2653525,171.485105,"['Cheese', 'Beverages']",27-06-2025
+U0012,36,Other,vegan,['nuts'],TRUE,-59.8761425,145.959673,"['Cheese', 'Beverages']",25-05-2025
+U0013,57,Male,vegetarian,[],TRUE,80.2633015,140.150309,"['Dairy', 'Spreads']",23-05-2025
+U0014,42,Female,vegetarian,[],TRUE,15.322792,-49.269008,['Cheese'],10-05-2025
+U0015,49,Female,vegetarian,[],FALSE,50.1600105,48.193727,"['Meat', 'Snacks', 'Biscuits']",06-06-2025
+U0016,44,Male,vegan,"['soy', 'gluten']",TRUE,-57.6900805,-170.548237,"['Spreads', 'Cheese']",29-05-2025
+U0017,55,Male,eggs,['soy'],TRUE,52.966328,-35.81552,"['Cheese', 'Dairy']",10-05-2025
+U0018,19,Female,vegetarian,[],TRUE,4.6520805,52.782108,"['Snacks', 'Dairy']",11-05-2025
+U0019,20,Other,non-vegetarian,"['eggs', 'gluten']",TRUE,18.631154,128.915523,['Biscuits'],22-06-2025
+U0020,23,Other,non-vegetarian,"['nuts', 'gluten']",FALSE,0.810016,49.892816,"['Beverages', 'Cheese', 'Dairy']",15-05-2025
+U0021,34,Other,eggs,"['nuts', 'eggs']",TRUE,33.179399,-50.075729,"['Snacks', 'Dairy', 'Sauces']",10-06-2025
+U0022,41,Female,vegetarian,['nuts'],TRUE,-46.0109625,-8.071309,['Sauces'],26-06-2025
+U0023,48,Female,vegan,[],TRUE,-10.1487145,100.452926,['Biscuits'],26-05-2025
+U0024,28,Male,vegetarian,"['dairy', 'eggs']",FALSE,-37.2470275,-140.711941,"['Beverages', 'Cheese', 'Spreads']",30-04-2025
+U0025,22,Male,vegetarian,['eggs'],FALSE,87.4697105,-90.786877,"['Meat', 'Spreads']",25-06-2025
+U0026,50,Male,vegetarian,[],FALSE,-37.9297335,169.47816,"['Beverages', 'Spreads']",23-06-2025
+U0027,18,Other,non-vegetarian,[],TRUE,-20.629851,7.535914,['Snacks'],26-05-2025
+U0028,40,Female,non-vegetarian,[],TRUE,-59.6934295,-76.553808,"['Sauces', 'Snacks']",12-06-2025
+U0029,20,Female,non-vegetarian,['soy'],FALSE,-19.1409615,-8.315177,"['Spreads', 'Dairy', 'Snacks']",09-05-2025
+U0030,28,Female,eggs,['gluten'],FALSE,-71.8622185,35.33733,['Snacks'],16-05-2025
+U0031,28,Female,eggs,"['eggs', 'nuts']",TRUE,11.4708525,-148.475606,"['Cheese', 'Snacks']",15-06-2025
+U0032,25,Female,eggs,[],TRUE,20.7631435,84.370353,['Cheese'],09-06-2025
+U0033,30,Other,non-vegetarian,[],TRUE,-51.571077,63.389511,"['Meat', 'Sauces']",11-06-2025
+U0034,57,Other,vegan,"['soy', 'eggs']",TRUE,-10.3261795,-145.452176,['Biscuits'],03-06-2025
+U0035,37,Other,non-vegetarian,['eggs'],FALSE,25.602668,152.606622,"['Spreads', 'Meat']",24-06-2025
+U0036,56,Female,non-vegetarian,['dairy'],FALSE,22.4653275,-173.049535,['Biscuits'],27-06-2025
+U0037,63,Male,vegan,['soy'],TRUE,-39.7821875,130.045101,"['Sauces', 'Dairy']",25-06-2025
+U0038,24,Other,non-vegetarian,[],TRUE,27.032226,-124.060773,"['Biscuits', 'Dairy']",05-05-2025
+U0039,48,Male,eggs,[],TRUE,60.451435,162.896104,"['Biscuits', 'Dairy', 'Spreads']",29-05-2025
+U0040,59,Male,vegan,"['dairy', 'soy']",FALSE,-36.234336,107.989615,"['Dairy', 'Meat', 'Cheese']",02-05-2025
+U0041,51,Male,non-vegetarian,"['dairy', 'soy']",FALSE,50.0617,-97.735374,['Dairy'],02-05-2025
+U0042,42,Female,vegetarian,[],TRUE,-2.168948,69.628411,['Cheese'],10-05-2025
+U0043,40,Female,vegetarian,['eggs'],TRUE,11.607937,-77.861412,"['Sauces', 'Biscuits']",07-06-2025
+U0044,26,Female,eggs,[],FALSE,87.625695,95.673913,['Sauces'],11-06-2025
+U0045,56,Female,non-vegetarian,"['soy', 'dairy']",FALSE,11.6147395,-110.56311,['Spreads'],03-05-2025
+U0046,21,Other,vegan,[],TRUE,70.4056185,-116.903955,"['Sauces', 'Biscuits']",09-05-2025
+U0047,50,Male,vegetarian,['soy'],FALSE,64.9505825,164.171654,['Sauces'],17-05-2025
+U0048,20,Male,vegan,['soy'],TRUE,-28.3237465,-152.972663,"['Spreads', 'Cheese', 'Sauces']",18-05-2025
+U0049,63,Other,non-vegetarian,[],FALSE,43.668831,109.802399,"['Meat', 'Beverages', 'Sauces']",07-06-2025
+U0050,36,Female,vegetarian,"['soy', 'gluten']",TRUE,28.3577365,104.072464,"['Meat', 'Beverages']",04-05-2025
+U0051,60,Other,non-vegetarian,"['nuts', 'soy']",TRUE,-56.4196845,52.485897,"['Spreads', 'Cheese']",10-05-2025
+U0052,18,Male,vegetarian,[],TRUE,-68.853581,84.426782,"['Spreads', 'Biscuits']",12-05-2025
+U0053,57,Male,vegan,"['soy', 'nuts']",TRUE,2.0811085,-39.348099,['Sauces'],22-05-2025
+U0054,21,Female,vegetarian,['eggs'],FALSE,33.601145,19.689042,"['Meat', 'Spreads', 'Cheese']",17-06-2025
+U0055,39,Male,non-vegetarian,[],TRUE,65.6298035,-23.274061,"['Cheese', 'Sauces', 'Spreads']",29-05-2025
+U0056,50,Female,vegetarian,['soy'],TRUE,-28.922278,-79.713504,"['Dairy', 'Sauces', 'Beverages']",06-05-2025
+U0057,48,Female,eggs,"['soy', 'gluten']",TRUE,2.3839345,-93.352189,['Sauces'],16-05-2025
+U0058,38,Female,eggs,[],FALSE,-84.928957,-122.911367,"['Dairy', 'Spreads', 'Beverages']",02-05-2025
+U0059,18,Other,vegan,[],TRUE,-28.024545,40.022,"['Beverages', 'Sauces', 'Cheese']",12-05-2025
+U0060,48,Male,non-vegetarian,[],TRUE,12.372084,101.238119,['Spreads'],14-05-2025
+U0061,36,Other,vegan,[],TRUE,-40.734719,-32.273174,"['Spreads', 'Meat']",05-06-2025
+U0062,41,Male,vegetarian,[],TRUE,-19.550393,-132.164849,"['Biscuits', 'Beverages', 'Dairy']",18-05-2025
+U0063,39,Female,eggs,"['nuts', 'dairy']",TRUE,-7.5102105,-16.504093,['Snacks'],20-05-2025
+U0064,36,Other,vegetarian,[],TRUE,-51.503419,-110.920048,"['Biscuits', 'Cheese', 'Dairy']",01-06-2025
+U0065,42,Male,vegetarian,['nuts'],TRUE,-57.3024885,165.468585,"['Sauces', 'Dairy', 'Cheese']",20-06-2025
+U0066,65,Male,eggs,"['nuts', 'soy']",TRUE,-10.525924,-156.200899,"['Dairy', 'Sauces']",15-05-2025
+U0067,22,Female,vegan,['nuts'],TRUE,-87.2931935,125.411139,"['Snacks', 'Spreads']",03-06-2025
+U0068,59,Male,non-vegetarian,"['soy', 'gluten']",TRUE,-70.001881,165.476524,"['Dairy', 'Sauces', 'Meat']",31-05-2025
+U0069,26,Other,vegetarian,"['nuts', 'gluten']",TRUE,19.8223935,-134.713955,['Beverages'],11-05-2025
+U0070,33,Male,non-vegetarian,['soy'],FALSE,5.6470295,105.42354,['Snacks'],11-05-2025
+U0071,22,Male,non-vegetarian,['gluten'],TRUE,-48.4296775,42.291442,"['Cheese', 'Snacks', 'Biscuits']",12-06-2025
+U0072,38,Female,eggs,[],TRUE,-54.7566515,-174.992741,"['Sauces', 'Beverages', 'Dairy']",27-05-2025
+U0073,48,Male,vegan,[],TRUE,26.5918205,-158.533617,"['Dairy', 'Cheese']",03-06-2025
+U0074,52,Male,vegetarian,"['gluten', 'soy']",TRUE,-36.6494965,-80.182471,['Spreads'],28-06-2025
+U0075,36,Other,vegetarian,[],TRUE,-7.7896645,49.056463,"['Beverages', 'Sauces', 'Snacks']",07-06-2025
+U0076,27,Female,vegetarian,"['eggs', 'gluten']",TRUE,67.769622,-131.559747,"['Snacks', 'Biscuits', 'Dairy']",11-05-2025
+U0077,20,Male,eggs,['eggs'],FALSE,27.0752035,-51.948923,"['Spreads', 'Snacks', 'Dairy']",20-06-2025
+U0078,50,Male,vegetarian,[],TRUE,-30.4220685,64.275335,['Meat'],10-05-2025
+U0079,34,Female,vegetarian,[],FALSE,-77.517514,-164.712618,"['Cheese', 'Snacks', 'Spreads']",12-05-2025
+U0080,46,Other,vegan,[],FALSE,55.001129,-88.212236,"['Dairy', 'Spreads']",04-05-2025
+U0081,27,Other,vegetarian,[],TRUE,64.4307565,-43.690925,['Meat'],23-05-2025
+U0082,63,Other,eggs,[],FALSE,35.889829,-30.892167,['Spreads'],17-05-2025
+U0083,61,Male,vegetarian,"['eggs', 'soy']",TRUE,42.502182,-175.110446,"['Snacks', 'Dairy']",08-05-2025
+U0084,53,Other,vegan,"['dairy', 'nuts']",TRUE,-79.3193865,158.676024,"['Snacks', 'Meat', 'Dairy']",02-05-2025
+U0085,31,Female,vegan,"['gluten', 'eggs']",TRUE,-3.3547575,-87.682087,"['Spreads', 'Meat']",12-05-2025
+U0086,43,Other,vegan,['eggs'],FALSE,-69.1858535,109.831354,['Cheese'],07-05-2025
+U0087,28,Other,non-vegetarian,[],FALSE,-71.0503455,121.864374,"['Cheese', 'Beverages', 'Spreads']",14-05-2025
+U0088,52,Other,vegetarian,['nuts'],FALSE,61.583186,10.478885,"['Cheese', 'Spreads', 'Snacks']",30-04-2025
+U0089,23,Other,eggs,[],TRUE,0.583228,-114.936828,['Sauces'],06-05-2025
+U0090,29,Male,vegetarian,"['gluten', 'nuts']",FALSE,-69.3034215,146.053709,"['Beverages', 'Meat']",26-06-2025
+U0091,65,Female,vegetarian,[],TRUE,-75.479661,-102.185999,['Beverages'],12-05-2025
+U0092,23,Other,vegetarian,"['dairy', 'soy']",FALSE,79.9372475,-176.504086,['Biscuits'],07-05-2025
+U0093,63,Other,eggs,[],FALSE,-21.423617,54.684567,['Cheese'],30-04-2025
+U0094,19,Female,non-vegetarian,['dairy'],TRUE,-25.2223675,-45.847492,"['Dairy', 'Beverages', 'Meat']",04-06-2025
+U0095,46,Other,vegan,[],FALSE,-54.8604245,-6.601239,"['Meat', 'Spreads', 'Sauces']",17-05-2025
+U0096,40,Male,non-vegetarian,"['soy', 'nuts']",FALSE,-19.6322825,166.562806,"['Dairy', 'Meat', 'Biscuits']",08-06-2025
+U0097,63,Female,non-vegetarian,[],TRUE,33.9304315,-52.663265,['Spreads'],22-05-2025
+U0098,60,Male,eggs,['eggs'],TRUE,-84.3365415,-174.929361,['Dairy'],08-06-2025
+U0099,63,Female,vegan,['gluten'],TRUE,88.744181,6.240803,"['Dairy', 'Sauces']",30-04-2025
+U0100,41,Male,vegetarian,[],TRUE,17.823575,76.108774,"['Meat', 'Beverages', 'Biscuits']",08-05-2025
+U0101,62,Male,non-vegetarian,[],TRUE,-48.329582,130.63595,['Dairy'],03-05-2025
+U0102,48,Other,eggs,"['dairy', 'soy']",FALSE,15.268089,-99.807985,['Cheese'],02-06-2025
+U0103,21,Male,vegetarian,[],FALSE,-21.2927455,-97.251915,"['Beverages', 'Spreads']",05-06-2025
+U0104,34,Female,non-vegetarian,"['nuts', 'soy']",TRUE,38.2352735,-45.444268,"['Beverages', 'Biscuits', 'Cheese']",22-06-2025
+U0105,33,Female,vegetarian,"['gluten', 'eggs']",FALSE,26.062881,45.215104,['Spreads'],05-05-2025
+U0106,19,Female,non-vegetarian,"['soy', 'nuts']",FALSE,-17.4157445,-174.376696,"['Dairy', 'Beverages', 'Cheese']",28-05-2025
+U0107,58,Female,non-vegetarian,['eggs'],TRUE,2.3991275,157.077375,['Sauces'],13-06-2025
+U0108,58,Female,vegetarian,['gluten'],FALSE,-33.0268875,-169.980746,['Beverages'],03-05-2025
+U0109,49,Male,vegetarian,[],TRUE,18.5645465,55.324466,['Sauces'],11-06-2025
+U0110,25,Female,eggs,"['nuts', 'dairy']",TRUE,73.028296,141.915227,"['Spreads', 'Dairy']",26-05-2025
+U0111,46,Other,vegetarian,['soy'],TRUE,65.264956,-38.421201,"['Snacks', 'Beverages', 'Biscuits']",03-05-2025
+U0112,59,Female,vegetarian,"['eggs', 'dairy']",FALSE,-50.187651,-141.72906,['Meat'],03-06-2025
+U0113,23,Female,vegetarian,[],TRUE,80.580737,-62.681842,"['Cheese', 'Dairy', 'Biscuits']",27-06-2025
+U0114,34,Female,vegan,"['soy', 'nuts']",TRUE,38.362642,81.134075,"['Spreads', 'Cheese', 'Biscuits']",03-05-2025
+U0115,58,Male,non-vegetarian,[],TRUE,12.893678,-131.695156,['Biscuits'],26-06-2025
+U0116,19,Female,eggs,['dairy'],TRUE,80.496334,11.318072,['Biscuits'],04-05-2025
+U0117,32,Other,eggs,"['gluten', 'soy']",FALSE,-48.7565785,-88.060245,['Biscuits'],12-05-2025
+U0118,53,Other,vegetarian,[],TRUE,58.7076295,110.824331,['Spreads'],01-06-2025
+U0119,45,Male,vegan,"['gluten', 'eggs']",TRUE,-42.891605,-150.405865,"['Sauces', 'Biscuits', 'Meat']",14-06-2025
+U0120,25,Male,vegan,[],TRUE,50.670184,-62.733919,"['Snacks', 'Spreads', 'Dairy']",07-05-2025
+U0121,37,Female,eggs,[],TRUE,-57.324552,-116.411936,"['Beverages', 'Sauces']",28-05-2025
+U0122,61,Male,non-vegetarian,[],TRUE,-22.746651,100.822835,"['Sauces', 'Spreads', 'Dairy']",05-06-2025
+U0123,35,Male,non-vegetarian,"['nuts', 'eggs']",TRUE,-45.5884455,176.778429,['Beverages'],27-06-2025
+U0124,18,Other,vegan,['eggs'],TRUE,-88.8530135,13.322641,"['Dairy', 'Snacks', 'Cheese']",23-05-2025
+U0125,64,Other,vegetarian,"['dairy', 'soy']",FALSE,3.3561045,-40.837751,"['Spreads', 'Meat']",15-05-2025
+U0126,31,Male,vegetarian,"['dairy', 'eggs']",TRUE,-12.65199,116.811572,"['Biscuits', 'Meat']",28-05-2025
+U0127,19,Other,vegan,"['nuts', 'gluten']",FALSE,89.102634,130.725307,"['Spreads', 'Dairy', 'Biscuits']",23-06-2025
+U0128,50,Female,vegan,[],TRUE,49.1267965,-62.863173,['Dairy'],05-05-2025
+U0129,23,Female,vegan,['gluten'],TRUE,27.459604,-145.19454,"['Snacks', 'Meat']",29-05-2025
+U0130,29,Female,eggs,[],TRUE,30.456928,-8.116982,['Beverages'],23-06-2025
+U0131,52,Male,non-vegetarian,[],TRUE,1.079431,68.901372,"['Cheese', 'Sauces']",26-06-2025
+U0132,55,Other,non-vegetarian,"['nuts', 'gluten']",FALSE,57.649617,68.071791,"['Spreads', 'Sauces', 'Dairy']",23-05-2025
+U0133,25,Male,vegan,[],TRUE,15.4970855,-59.655816,"['Cheese', 'Biscuits']",26-06-2025
+U0134,40,Male,non-vegetarian,['nuts'],TRUE,-72.7547945,-159.897018,"['Meat', 'Cheese', 'Beverages']",01-06-2025
+U0135,37,Other,non-vegetarian,[],TRUE,-9.251245,-85.993812,['Sauces'],11-06-2025
+U0136,34,Male,non-vegetarian,"['gluten', 'eggs']",TRUE,-29.934664,-76.972639,['Sauces'],18-06-2025
+U0137,56,Other,eggs,['eggs'],FALSE,-38.6245735,156.166259,"['Biscuits', 'Meat', 'Beverages']",05-05-2025
+U0138,32,Other,non-vegetarian,"['dairy', 'nuts']",FALSE,-29.062049,74.252002,"['Snacks', 'Spreads', 'Meat']",04-06-2025
+U0139,41,Other,non-vegetarian,"['gluten', 'soy']",FALSE,-19.5009305,-138.255243,"['Snacks', 'Cheese']",24-05-2025
+U0140,48,Male,eggs,[],FALSE,79.7265825,-53.344316,"['Cheese', 'Meat']",19-05-2025
+U0141,25,Other,vegan,"['eggs', 'gluten']",FALSE,76.54252,-41.976171,"['Snacks', 'Spreads']",06-06-2025
+U0142,29,Male,vegan,"['soy', 'gluten']",TRUE,-37.153983,2.268142,['Cheese'],04-06-2025
+U0143,28,Female,vegetarian,"['eggs', 'nuts']",TRUE,68.395938,-9.045527,"['Meat', 'Beverages', 'Biscuits']",08-06-2025
+U0144,62,Female,vegetarian,"['gluten', 'soy']",TRUE,-18.425702,-33.64229,"['Meat', 'Dairy', 'Cheese']",04-05-2025
+U0145,53,Other,eggs,"['soy', 'eggs']",FALSE,-52.3966005,-69.562667,"['Snacks', 'Meat', 'Sauces']",19-06-2025
+U0146,20,Female,vegan,['dairy'],TRUE,69.447501,-77.643591,['Biscuits'],31-05-2025
+U0147,62,Female,vegan,['eggs'],FALSE,-4.111322,-59.806881,['Meat'],23-05-2025
+U0148,24,Other,vegetarian,"['nuts', 'soy']",TRUE,39.796264,-85.218717,['Snacks'],29-05-2025
+U0149,30,Female,vegetarian,"['eggs', 'nuts']",FALSE,28.755236,92.991566,"['Dairy', 'Beverages', 'Sauces']",21-06-2025
+U0150,55,Other,non-vegetarian,"['nuts', 'soy']",FALSE,-74.2054595,-174.695724,"['Sauces', 'Dairy']",02-06-2025
+U0151,23,Other,vegan,[],TRUE,74.240505,-144.518974,"['Snacks', 'Spreads']",02-06-2025
+U0152,55,Other,non-vegetarian,[],TRUE,0.800618,51.097379,"['Snacks', 'Biscuits', 'Meat']",01-06-2025
+U0153,52,Female,vegetarian,"['soy', 'eggs']",TRUE,68.578104,-19.583208,['Dairy'],25-06-2025
+U0154,47,Other,non-vegetarian,[],TRUE,53.849317,97.97926,"['Meat', 'Biscuits', 'Spreads']",28-05-2025
+U0155,55,Female,non-vegetarian,[],FALSE,87.294951,-142.058075,"['Biscuits', 'Meat']",05-06-2025
+U0156,59,Male,non-vegetarian,['dairy'],TRUE,-28.2257805,-157.901057,"['Spreads', 'Snacks']",20-05-2025
+U0157,57,Other,vegan,['gluten'],TRUE,-42.2631575,-103.121039,['Biscuits'],03-06-2025
+U0158,53,Female,vegetarian,"['soy', 'dairy']",FALSE,-29.065236,77.063947,"['Dairy', 'Beverages', 'Spreads']",08-06-2025
+U0159,65,Other,vegetarian,['dairy'],FALSE,-9.4844725,-47.349045,"['Cheese', 'Dairy', 'Meat']",04-06-2025
+U0160,41,Female,vegetarian,"['gluten', 'dairy']",TRUE,-5.1492005,-64.241531,['Dairy'],16-05-2025
+U0161,18,Female,non-vegetarian,"['gluten', 'soy']",TRUE,9.1046925,-114.447837,"['Snacks', 'Cheese']",14-05-2025
+U0162,61,Female,non-vegetarian,[],TRUE,-34.087236,174.386046,"['Sauces', 'Snacks']",28-05-2025
+U0163,65,Other,non-vegetarian,"['nuts', 'gluten']",TRUE,-23.837378,-18.765615,['Snacks'],29-05-2025
+U0164,59,Other,vegetarian,[],TRUE,17.1913685,125.004602,['Cheese'],26-05-2025
+U0165,54,Female,non-vegetarian,"['eggs', 'nuts']",TRUE,-56.3234305,153.68286,"['Biscuits', 'Snacks']",03-05-2025
+U0166,26,Male,vegetarian,['nuts'],FALSE,3.9191335,-59.353311,"['Beverages', 'Meat', 'Spreads']",13-05-2025
+U0167,38,Other,eggs,[],TRUE,58.6595065,-117.200381,['Beverages'],02-05-2025
+U0168,53,Other,non-vegetarian,[],TRUE,9.8557545,-151.837877,"['Biscuits', 'Cheese']",12-05-2025
+U0169,56,Male,vegetarian,['eggs'],TRUE,-12.4203445,-61.9336,"['Spreads', 'Snacks', 'Biscuits']",23-06-2025
+U0170,38,Other,vegan,[],FALSE,-67.9239765,-84.331762,"['Dairy', 'Cheese', 'Snacks']",21-05-2025
+U0171,64,Other,vegan,[],TRUE,-2.956592,114.202386,['Meat'],15-05-2025
+U0172,42,Female,eggs,[],TRUE,-60.582666,20.005669,"['Sauces', 'Beverages']",22-05-2025
+U0173,35,Female,vegetarian,['nuts'],TRUE,-63.0733755,148.401355,"['Cheese', 'Dairy', 'Sauces']",23-05-2025
+U0174,49,Male,non-vegetarian,[],TRUE,36.814246,-133.335438,['Biscuits'],07-06-2025
+U0175,54,Female,vegan,['nuts'],TRUE,64.11714,-51.1347,['Snacks'],22-05-2025
+U0176,40,Male,non-vegetarian,['soy'],TRUE,25.646962,119.636189,['Snacks'],25-06-2025
+U0177,39,Other,vegan,[],FALSE,71.173767,-100.331438,"['Snacks', 'Spreads']",26-05-2025
+U0178,60,Female,vegetarian,['nuts'],FALSE,-19.636299,112.490927,['Snacks'],06-05-2025
+U0179,55,Female,non-vegetarian,['dairy'],TRUE,-63.9971535,82.329898,['Spreads'],23-05-2025
+U0180,56,Male,eggs,['dairy'],TRUE,-73.388381,21.388127,['Dairy'],17-05-2025
+U0181,19,Female,vegan,[],FALSE,-67.090175,102.800011,['Spreads'],15-05-2025
+U0182,54,Female,vegan,"['nuts', 'soy']",FALSE,40.954698,-1.351421,['Spreads'],28-05-2025
+U0183,55,Female,non-vegetarian,[],FALSE,-55.7675945,-111.04769,"['Snacks', 'Sauces']",22-06-2025
+U0184,22,Female,vegan,['nuts'],TRUE,-59.909297,-69.203677,"['Biscuits', 'Spreads', 'Snacks']",24-05-2025
+U0185,39,Other,vegetarian,['dairy'],FALSE,55.1119255,56.817765,['Cheese'],04-05-2025
+U0186,34,Male,vegetarian,"['nuts', 'soy']",TRUE,11.2675365,-94.760774,['Dairy'],09-06-2025
+U0187,63,Other,eggs,['nuts'],FALSE,1.201352,-1.419825,"['Spreads', 'Snacks']",05-06-2025
+U0188,44,Female,vegetarian,['gluten'],TRUE,-35.0824565,31.404374,"['Cheese', 'Dairy']",21-05-2025
+U0189,26,Male,non-vegetarian,['eggs'],TRUE,-36.0894465,95.627214,['Cheese'],10-05-2025
+U0190,54,Female,vegan,[],TRUE,-73.098366,-40.144086,['Meat'],26-05-2025
+U0191,38,Female,vegan,['gluten'],TRUE,29.4949855,4.946821,"['Beverages', 'Biscuits']",23-05-2025
+U0192,18,Female,non-vegetarian,"['nuts', 'dairy']",TRUE,-19.445196,90.495464,"['Cheese', 'Meat']",21-05-2025
+U0193,27,Male,vegetarian,[],TRUE,26.3706625,-146.772044,"['Biscuits', 'Beverages']",23-06-2025
+U0194,21,Male,vegetarian,"['nuts', 'gluten']",TRUE,42.5419465,175.929569,['Beverages'],06-06-2025
+U0195,40,Male,eggs,[],TRUE,-87.5239325,-1.256669,['Biscuits'],07-05-2025
+U0196,65,Other,eggs,"['gluten', 'eggs']",TRUE,-45.3896065,109.161083,"['Spreads', 'Biscuits', 'Snacks']",13-06-2025
+U0197,26,Other,vegan,[],FALSE,10.740506,-135.460465,"['Beverages', 'Biscuits', 'Cheese']",27-05-2025
+U0198,56,Other,non-vegetarian,"['eggs', 'gluten']",TRUE,-21.876734,-139.446084,"['Dairy', 'Meat', 'Sauces']",03-06-2025
+U0199,39,Other,non-vegetarian,"['nuts', 'soy']",TRUE,-54.9693825,42.886369,"['Spreads', 'Snacks', 'Sauces']",07-05-2025
