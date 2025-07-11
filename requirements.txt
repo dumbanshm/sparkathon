@@ -14,3 +14,8 @@ seaborn
 
 # For warnings and type hints (usually pre-installed but good to specify)
 python-dateutil
+
+# FastAPI and server
+fastapi
+uvicorn
+python-multipart

@@ -188,9 +188,7 @@ def get_categories():
     except Exception as e:
         logger.error(f"Error fetching categories: {e}")
         raise HTTPException(status_code=500, detail=f"Error fetching categories: {str(e)}")
-
-# Add after the existing endpoints
-
+    
 @app.get("/users")
 def get_users():
     """Get all available users"""
@@ -212,7 +210,7 @@ def get_users():
     except Exception as e:
         logger.error(f"Error fetching users: {e}")
         raise HTTPException(status_code=500, detail=f"Error fetching users: {str(e)}")
-    
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)

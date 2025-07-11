@@ -50,7 +50,10 @@ def calculate_dead_stock_analysis(products_df, transactions_df, threshold_calcul
     # Calculate sales velocity for each product
     current_date = pd.Timestamp.now()
     products_df['days_until_expiry'] = (products_df['expiry_date'] - current_date).dt.days
-    
+
+    # Remove already expired products
+    products_df = products_df[products_df['days_until_expiry'] > 0].copy()
+
     sales_velocity = transactions_df.groupby('product_id').agg({
         'quantity': 'sum',
         'purchase_date': ['min', 'max']
@@ -59,11 +62,13 @@ def calculate_dead_stock_analysis(products_df, transactions_df, threshold_calcul
     sales_velocity.columns = ['product_id', 'total_sold', 'first_sale', 'last_sale']
     sales_velocity['days_on_market'] = (sales_velocity['last_sale'] - sales_velocity['first_sale']).dt.days + 1
     sales_velocity['sales_velocity'] = sales_velocity['total_sold'] / sales_velocity['days_on_market']
+    sales_velocity['days_since_last_sale'] = (current_date - sales_velocity['last_sale']).dt.days
     
-    # Merge with products
-    products_enhanced = products_df.merge(sales_velocity[['product_id', 'sales_velocity']], 
+    # Merge with products, including days_since_last_sale
+    products_enhanced = products_df.merge(sales_velocity[['product_id', 'sales_velocity', 'days_since_last_sale']], 
                                          on='product_id', how='left')
     products_enhanced['sales_velocity'].fillna(0, inplace=True)
+    products_enhanced['days_since_last_sale'].fillna(999, inplace=True)
     
     # Calculate dead stock risk
     products_enhanced['is_dead_stock_risk'] = products_enhanced.apply(
@@ -73,8 +78,25 @@ def calculate_dead_stock_analysis(products_df, transactions_df, threshold_calcul
     # Get thresholds for all products
     threshold_df = threshold_calculator.calculate_all_thresholds()
     
+    # Debug: Check for expired products before analysis
+    expired_debug = products_enhanced[products_enhanced['days_until_expiry'] <= 0]
+    if not expired_debug.empty:
+        print("[DEBUG] EXPIRED PRODUCTS FOUND IN products_enhanced BEFORE ANALYSIS:")
+        print(expired_debug[['product_id', 'name', 'category', 'days_until_expiry']])
+        raise ValueError("Expired products present in products_enhanced before analysis!")
+
     # Analysis
-    at_risk_products = products_enhanced[products_enhanced['is_dead_stock_risk'] == 1]
+    # Filter out expired products from at_risk_products and products_enhanced
+    at_risk_products = products_enhanced[(products_enhanced['is_dead_stock_risk'] == 1) & (products_enhanced['days_until_expiry'] > 0)]
+    products_enhanced = products_enhanced[products_enhanced['days_until_expiry'] > 0].copy()
+
+    # Debug: Check for expired products in at_risk_products
+    expired_risk_debug = at_risk_products[at_risk_products['days_until_expiry'] <= 0]
+    if not expired_risk_debug.empty:
+        print("[DEBUG] EXPIRED PRODUCTS FOUND IN at_risk_products:")
+        print(expired_risk_debug[['product_id', 'name', 'category', 'days_until_expiry']])
+        raise ValueError("Expired products present in at_risk_products!")
+
     print(f"\nTotal products at risk: {len(at_risk_products)} ({len(at_risk_products)/len(products_enhanced)*100:.1f}%)")
     
     print("\nRisk by Category:")
@@ -83,14 +105,7 @@ def calculate_dead_stock_analysis(products_df, transactions_df, threshold_calcul
         total_in_category = (products_enhanced['category'] == category).sum()
         print(f"- {category}: {count}/{total_in_category} ({count/total_in_category*100:.1f}%)")
     
-    print("\nTop 10 Products at Risk (with lowest days until expiry):")
-    top_risk = at_risk_products.nsmallest(10, 'days_until_expiry')[
-        ['product_id', 'name', 'category', 'days_until_expiry', 'current_discount_percent']
-    ]
-    for idx, row in top_risk.iterrows():
-        threshold = threshold_calculator.get_threshold(row['product_id'])
-        print(f"- {row['name']} ({row['category']}): {row['days_until_expiry']} days left, "
-              f"threshold: {threshold} days, current discount: {row['current_discount_percent']}%")
+    # (Moved to demonstrate_waste_reduction_strategies)
     
     return products_enhanced
 
@@ -144,9 +159,11 @@ def demonstrate_recommendations(system, users_df):
             # Content-based recommendations
             print("\n2. CONTENT-BASED RECOMMENDATIONS (Similar to your purchases):")
             last_product = user_products[-1]
-            product_name = system.products_df[
-                system.products_df['product_id'] == last_product
-            ]['name'].iloc[0]
+            product_row = system.all_products_df[system.all_products_df['product_id'] == last_product]
+            if not product_row.empty:
+                product_name = product_row['name'].iloc[0]
+            else:
+                product_name = "Unknown Product"
             print(f"   Based on your purchase of: {product_name}")
             
             content_recs = system.get_content_based_recommendations(
@@ -159,17 +176,26 @@ def demonstrate_recommendations(system, users_df):
                 print(f"   - {rec['product_name']} ({rec['category']})")
                 print(f"     Similarity: {rec['similarity_score']:.3f}, Days until expiry: {rec['days_until_expiry']}")
 
-def demonstrate_waste_reduction_strategies(products_enhanced, threshold_calculator):
+def demonstrate_waste_reduction_strategies(products_df, threshold_calculator):
     """Show waste reduction strategies"""
     print("\n" + "="*50)
     print("WASTE REDUCTION STRATEGIES")
     print("="*50)
     
+    # Debug: Check for expired products before analysis
+    expired_debug = products_df[products_df['days_until_expiry'] <= 0]
+    if not expired_debug.empty:
+        print("[DEBUG] EXPIRED PRODUCTS FOUND IN products_df BEFORE STRATEGY ANALYSIS:")
+        print(expired_debug[['product_id', 'name', 'category', 'days_until_expiry']])
+        raise ValueError("Expired products present in products_df before strategy analysis!")
+
+    # Filter out expired products before analysis
+    products_df = products_df[products_df['days_until_expiry'] > 0].copy()
     # Products needing immediate action
-    urgent_products = products_enhanced[
-        (products_enhanced['days_until_expiry'] > 0) & 
-        (products_enhanced['days_until_expiry'] <= 7) &
-        (products_enhanced['is_dead_stock_risk'] == 1)
+    urgent_products = products_df[
+        (products_df['days_until_expiry'] > 0) & 
+        (products_df['days_until_expiry'] <= 7) &
+        (products_df['is_dead_stock_risk'] == 1)
     ].sort_values('days_until_expiry')
     
     print(f"\n1. URGENT ACTION REQUIRED ({len(urgent_products)} products):")
@@ -181,18 +207,17 @@ def demonstrate_waste_reduction_strategies(products_enhanced, threshold_calculat
         print(f"   - Current discount: {product['current_discount_percent']}%")
         print(f"   - Suggested discount: {suggested_discount}%")
         print(f"   - Dynamic threshold: {threshold} days")
-    
-    # Category-wise recommendations
-    print("\n2. CATEGORY-WISE OPTIMIZATION:")
-    category_thresholds = threshold_calculator.category_thresholds
-    for category, threshold in sorted(category_thresholds.items(), key=lambda x: x[1]):
-        category_products = products_enhanced[products_enhanced['category'] == category]
-        at_risk = category_products[category_products['is_dead_stock_risk'] == 1]
-        print(f"\n   {category}:")
-        print(f"   - Base threshold: {threshold} days")
-        print(f"   - Products at risk: {len(at_risk)}/{len(category_products)}")
-        if len(at_risk) > 0:
-            print(f"   - Avg days to expiry for at-risk: {at_risk['days_until_expiry'].mean():.1f}")
+
+    # Print Top 10 Products at Risk (with lowest days until expiry) with updated discounts
+    at_risk_products = products_df[(products_df['is_dead_stock_risk'] == 1) & (products_df['days_until_expiry'] > 0)]
+    print("\nTop 10 Products at Risk (with lowest days until expiry):")
+    top_risk = at_risk_products.nsmallest(10, 'days_until_expiry')[
+        ['product_id', 'name', 'category', 'days_until_expiry', 'current_discount_percent']
+    ]
+    for idx, row in top_risk.iterrows():
+        threshold = threshold_calculator.get_threshold(row['product_id'])
+        print(f"- {row['name']} ({row['category']}): {row['days_until_expiry']} days left, "
+              f"threshold: {threshold} days, current discount: {row['current_discount_percent']}%")
 
 def test_all_users_recommendations(system, users_df, n_recommendations=5):
     """Test recommendation system for all users to find corner cases and debug issues"""
@@ -401,11 +426,20 @@ def run_system(users_df, products_df, transactions_df):
     # Update products_df in system with enhanced data
     system.products_df = products_enhanced
     
+    # Update discounts for at-risk products AFTER dead stock analysis
+    system.update_discounts_for_at_risk_products()
+    
+    # Rebuild content similarity matrix with updated discounts
+    system.build_content_similarity_matrix()
+    
+    # Build product risk DataFrame for fast API/export
+    system.build_product_risk_df()
+    
     # Demonstrate recommendations
     demonstrate_recommendations(system, users_df)
     
-    # Show waste reduction strategies
-    demonstrate_waste_reduction_strategies(products_enhanced, system.threshold_calculator)
+    # Show waste reduction strategies with updated discounts
+    demonstrate_waste_reduction_strategies(system.products_df, system.threshold_calculator)
     
     # Test all users' recommendations
     issues = test_all_users_recommendations(system, users_df)
