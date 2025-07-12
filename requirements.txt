@@ -19,3 +19,7 @@ python-dateutil
 fastapi
 uvicorn
 python-multipart
+
+# Database
+supabase
+python-dotenv
