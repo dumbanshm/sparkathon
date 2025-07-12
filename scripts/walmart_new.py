@@ -47,6 +47,29 @@ def get_allowed_categories(diet_type):
         # Non-vegetarians can have any category
         return all_categories
 
+def get_diet_type_for_category(category):
+    """Determine the appropriate diet type based on product category"""
+    if category == 'Meat':
+        # Meat products are always non-vegetarian
+        return 'non-vegetarian'
+    elif category in ['Dairy', 'Cheese']:
+        # Dairy and cheese products are vegetarian (not vegan)
+        return 'vegetarian'
+    elif category == 'Eggs':
+        # If there was an eggs category, it would be 'eggs'
+        return 'eggs'
+    else:
+        # Other categories (Snacks, Beverages, Spreads, Biscuits, Sauces) 
+        # can be any diet type, but we'll make them varied
+        # 40% vegan, 40% vegetarian, 20% may contain eggs
+        rand = random.random()
+        if rand < 0.4:
+            return 'vegan'
+        elif rand < 0.8:
+            return 'vegetarian'
+        else:
+            return 'eggs'
+
 # USERS
 users = []
 for i in range(NUM_USERS):
@@ -83,8 +106,19 @@ products = []
 for i in range(NUM_PRODUCTS):
     pid = f"P{i:04d}"
     category = random.choice(CATEGORIES)
-    diet_type = random.choice(DIET_TYPES)
-    allergens = random.sample(ALLERGENS, random.randint(0, 2))
+    diet_type = get_diet_type_for_category(category)  # Use category-based diet type
+    
+    # Generate allergens based on category and diet type
+    allergens = []
+    # Dairy and Cheese categories always contain dairy allergen
+    if category in ['Dairy', 'Cheese']:
+        allergens.append('dairy')
+    # Eggs allergen for products that contain eggs
+    if diet_type == 'eggs' and random.random() < 0.5:
+        allergens.append('eggs')
+    # Add other random allergens
+    other_allergens = [a for a in ALLERGENS if a not in allergens]
+    allergens.extend(random.sample(other_allergens, random.randint(0, min(1, len(other_allergens)))))
     packaging_date = fake.date_between(start_date='-60d', end_date='-5d')
     shelf_life_days = random.randint(30, 180)
     expiry_date = pd.to_datetime(packaging_date) + timedelta(days=shelf_life_days)

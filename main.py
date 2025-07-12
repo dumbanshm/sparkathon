@@ -30,16 +30,11 @@ app = FastAPI(
 # Enhanced CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",  # React development server
-        "http://127.0.0.1:3000",  # Alternative localhost
-        "http://localhost:5173",  # Vite development server
-        "http://127.0.0.1:5173",  # Alternative Vite localhost
-        "*"  # Allow all origins (use with caution in production)
-    ],
+    allow_origins=["*"],  # Allow all origins for development
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+    expose_headers=["*"]  # Expose all headers
 )
 
 # Pydantic models for responses
@@ -107,21 +102,26 @@ def get_recommendations(user_id: str, n: int = Query(10, ge=1, le=50)):
             logger.warning(f"No recommendations found for user: {user_id}")
             return RecommendationsResponse(user_id=user_id, recommendations=[])
         
+        # Debug: Log the columns available in the recommendations DataFrame
+        logger.info(f"Available columns in recommendations: {recs.columns.tolist()}")
+        if not recs.empty:
+            logger.info(f"First recommendation row: {recs.iloc[0].to_dict()}")
+        
         # Convert DataFrame to list of Recommendation
         recommendations = []
         for _, row in recs.iterrows():
             try:
                 recommendation = Recommendation(
                     product_id=str(row.get("product_id", "")),
-                    product_name=str(row.get("name", "")),  # Use 'name' from CSV
-                    name=str(row.get("name", "")),  # Add this
+                    product_name=str(row.get("product_name", "")),  # Fixed: use 'product_name'
+                    name=str(row.get("product_name", "")),  # Fixed: use 'product_name'
                     category=str(row.get("category", "")),
                     days_until_expiry=int(row.get("days_until_expiry", 0)),
-                    price=float(row.get("price_mrp", 0)),  # Use price_mrp
-                    price_mrp=float(row.get("price_mrp", 0)),  # Add this
-                    discount=float(row.get("current_discount_percent", 0)),  # Use current_discount_percent
-                    current_discount_percent=float(row.get("current_discount_percent", 0)),  # Add this
-                    expiry_date=str(row.get("expiry_date", "")),  # Add this
+                    price=float(row.get("price", 0)),  # Fixed: use 'price'
+                    price_mrp=float(row.get("price", 0)),  # Fixed: use 'price'
+                    discount=float(row.get("discount", 0)),  # Fixed: use 'discount'
+                    current_discount_percent=float(row.get("discount", 0)),  # Fixed: use 'discount'
+                    expiry_date="",  # Not available in recommendations, leave empty
                     score=float(row.get("hybrid_score", row.get("recommendation_score", 0))),
                     is_dead_stock_risk=int(row.get("is_dead_stock_risk", 0)),
                 )
@@ -161,6 +161,8 @@ def get_dead_stock_risk(category: Optional[str] = None):
                     category=str(row.get("category", "")),
                     days_until_expiry=int(row.get("days_until_expiry", 0)),
                     current_discount_percent=float(row.get("current_discount_percent", 0)),
+                    price_mrp=float(row.get("price_mrp", 0)),  # Add the missing field
+                    expiry_date=str(row.get("expiry_date", "")),  # Also add expiry_date
                     risk_score=None,
                     threshold=None,
                 )
@@ -170,7 +172,11 @@ def get_dead_stock_risk(category: Optional[str] = None):
                 continue
         
         logger.info(f"Successfully fetched {len(items)} dead stock risk items")
-        return items
+        
+        # Sort by days_until_expiry (ascending) so most urgent items appear first
+        items_sorted = sorted(items, key=lambda x: x.days_until_expiry)
+        
+        return items_sorted
         
     except Exception as e:
         logger.error(f"Error fetching dead stock risk: {e}")

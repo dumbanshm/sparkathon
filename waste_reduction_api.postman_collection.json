@@ -1,0 +1,197 @@
+{
+	"info": {
+		"_postman_id": "a7d45678-1234-5678-9012-3456789abcdef",
+		"name": "Waste Reduction System API",
+		"description": "API collection for testing the Waste Reduction System endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "System",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Check the API and model status"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Retrieve all available users with their dietary preferences and allergies"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Retrieve all available product categories"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dead Stock Risk (All)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/dead_stock_risk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dead_stock_risk"
+							]
+						},
+						"description": "Get all products at risk of becoming dead stock"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dead Stock Risk (By Category)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/dead_stock_risk?category=Dairy",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dead_stock_risk"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "Dairy"
+								}
+							]
+						},
+						"description": "Get dead stock risk items filtered by category"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Recommendations",
+			"item": [
+				{
+					"name": "Get Recommendations (Default)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/recommendations/U0001",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"recommendations",
+								"U0001"
+							]
+						},
+						"description": "Get default 10 recommendations for user U0001"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recommendations (Custom Count)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/recommendations/U0001?n=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"recommendations",
+								"U0001"
+							],
+							"query": [
+								{
+									"key": "n",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Get 5 recommendations for user U0001"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+} 
