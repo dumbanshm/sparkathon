@@ -26,6 +26,8 @@ class DynamicThresholdCalculator:
         }).rename(columns={'product_id': 'product_count'})
         sales_by_category = self.transactions_df.merge(
             self.products_df[['product_id', 'category']], on='product_id')
+        # Ensure purchase_date is datetime
+        sales_by_category['purchase_date'] = pd.to_datetime(sales_by_category['purchase_date'])
         category_velocity = sales_by_category.groupby('category').agg({
             'quantity': 'sum',
             'purchase_date': lambda x: (x.max() - x.min()).days + 1
@@ -54,6 +56,8 @@ class DynamicThresholdCalculator:
         product_sales = self.transactions_df[
             self.transactions_df['product_id'] == product_id]
         if len(product_sales) > 0:
+            # Ensure purchase_date is datetime
+            product_sales['purchase_date'] = pd.to_datetime(product_sales['purchase_date'])
             days_on_market = (product_sales['purchase_date'].max() - product_sales['purchase_date'].min()).days + 1
             sales_velocity = len(product_sales) / days_on_market
             if sales_velocity > 2:
@@ -182,8 +186,22 @@ class DynamicPricingEngine:
         }
         category_multiplier = category_multipliers.get(category, 1.0)
         
+        # Factor 5: Inventory pressure
+        inventory_quantity = product_row.get('inventory_quantity', 100)
+        if sales_velocity > 0:
+            # Days to clear inventory at current velocity
+            days_to_clear = inventory_quantity / sales_velocity
+            if days_to_clear > days_until_expiry:
+                # Won't clear inventory before expiry
+                inventory_multiplier = 1.2 + min(0.3, (days_to_clear - days_until_expiry) / days_until_expiry)
+            else:
+                inventory_multiplier = 1.0
+        else:
+            # No velocity, high inventory risk
+            inventory_multiplier = 1.3
+        
         # Calculate final urgency score
-        final_urgency = base_urgency * velocity_multiplier * discount_multiplier * dead_stock_multiplier * category_multiplier
+        final_urgency = base_urgency * velocity_multiplier * discount_multiplier * dead_stock_multiplier * category_multiplier * inventory_multiplier
         
         # Cap at 1.0
         return min(final_urgency, 1.0)
@@ -285,6 +303,15 @@ def calculate_dead_stock_risk_dynamic(row, threshold_calculator):
         if row['sales_velocity'] == 0:
             return 1
         projected_sales = row['sales_velocity'] * row['days_until_expiry']
+        
+        # Consider inventory levels
+        inventory_quantity = row.get('inventory_quantity', 100)
+        
+        # If projected sales won't clear even 50% of inventory before expiry
+        if projected_sales < inventory_quantity * 0.5:
+            return 1
+            
+        # Old logic as fallback
         if projected_sales < 80:
             return 1
     return 0
@@ -400,7 +427,7 @@ class UnifiedRecommendationSystem:
         sales_metrics.columns = ['product_id', 'total_quantity_sold', 'avg_quantity_per_sale', 
                                 'number_of_sales', 'first_sale_date', 'last_sale_date',
                                 'avg_discount_given', 'avg_user_engagement']
-
+        
         # Calculate days since last sale
         sales_metrics['days_since_last_sale'] = (current_date - sales_metrics['last_sale_date']).dt.days
 
@@ -416,6 +443,11 @@ class UnifiedRecommendationSystem:
         self.products_df['number_of_sales'].fillna(0, inplace=True)
         self.products_df['sales_velocity'].fillna(0, inplace=True)
         self.products_df['days_since_last_sale'].fillna(999, inplace=True)
+        
+        # Use inventory_quantity directly from products (no need to calculate)
+        if 'inventory_quantity' not in self.products_df.columns:
+            # Default inventory if not present
+            self.products_df['inventory_quantity'] = 200
         
         # Calculate dead stock risk for each product using the threshold calculator
         self.products_df['is_dead_stock_risk'] = self.products_df.apply(

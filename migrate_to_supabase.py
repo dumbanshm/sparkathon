@@ -42,19 +42,20 @@ class SupabaseMigration:
         create_products_table = """
         CREATE TABLE IF NOT EXISTS products (
             product_id VARCHAR(10) PRIMARY KEY,
-            name VARCHAR(255),
+            name VARCHAR(200),
             category VARCHAR(50),
-            brand VARCHAR(255),
+            brand VARCHAR(100),
             diet_type VARCHAR(20),
-            allergens JSONB,
+            allergens TEXT[],
             shelf_life_days INTEGER,
             packaging_date DATE,
             expiry_date DATE,
             weight_grams INTEGER,
             price_mrp DECIMAL(10, 2),
             current_discount_percent DECIMAL(5, 2),
-            store_location_lat DECIMAL(10, 7),
-            store_location_lon DECIMAL(10, 7),
+            inventory_quantity INTEGER DEFAULT 200,
+            store_location_lat DECIMAL(10, 8),
+            store_location_lon DECIMAL(11, 8),
             created_at TIMESTAMP DEFAULT NOW()
         );
         """
@@ -180,6 +181,7 @@ class SupabaseMigration:
                     'weight_grams': int(row['weight_grams']),
                     'price_mrp': float(row['price_mrp']),
                     'current_discount_percent': float(row['current_discount_percent']),
+                    'inventory_quantity': int(row.get('inventory_quantity', 200)),
                     'store_location_lat': float(row['store_location_lat']),
                     'store_location_lon': float(row['store_location_lon'])
                 }

@@ -110,7 +110,7 @@ for i in range(NUM_PRODUCTS):
     
     # Generate allergens based on category and diet type
     allergens = []
-    # Dairy and Cheese categories always contain dairy allergen
+    # Dairy and Cheese products always contain dairy allergen
     if category in ['Dairy', 'Cheese']:
         allergens.append('dairy')
     # Eggs allergen for products that contain eggs
@@ -124,6 +124,7 @@ for i in range(NUM_PRODUCTS):
     expiry_date = pd.to_datetime(packaging_date) + timedelta(days=shelf_life_days)
     price_mrp = round(random.uniform(50, 500), 2)
     current_discount_percent = random.choice([0, 10, 20, 30, 40, 50])
+    inventory_quantity = random.randint(100, 300)  # Add inventory to products
     products.append({
         "product_id": pid,
         "name": f"{fake.word().capitalize()} {category}",
@@ -137,6 +138,7 @@ for i in range(NUM_PRODUCTS):
         "weight_grams": random.choice([250, 500, 750, 1000]),
         "price_mrp": price_mrp,
         "current_discount_percent": current_discount_percent,
+        "inventory_quantity": inventory_quantity,  # Add inventory field
         "store_location_lat": fake.latitude(),
         "store_location_lon": fake.longitude()
     })
@@ -165,6 +167,7 @@ for _ in range(NUM_TRANSACTIONS):
 
     purchase_date = fake.date_between(start_date='-30d', end_date='today')
     quantity = random.randint(1, 3)
+    # Remove inventory_quantity from here
     price_paid = round(product['price_mrp'] * (1 - discount / 100), 2)
     total_price_paid = round(quantity * price_paid, 2)
     expiry = pd.to_datetime(product['expiry_date'])
@@ -176,6 +179,7 @@ for _ in range(NUM_TRANSACTIONS):
         "product_id": product["product_id"],
         "purchase_date": purchase_date,
         "quantity": quantity,
+        # inventory_quantity removed
         "price_paid_per_unit": price_paid,
         "total_price_paid": total_price_paid,
         "discount_percent": discount,

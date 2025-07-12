@@ -100,6 +100,7 @@ class DeadStockRiskItem(BaseModel):
     days_until_expiry: int
     current_discount_percent: float
     price_mrp: float
+    inventory_quantity: Optional[int] = None
     expiry_date: Optional[str] = None
     risk_score: Optional[float] = None
     threshold: Optional[int] = None
@@ -201,6 +202,7 @@ def get_dead_stock_risk(category: Optional[str] = None):
                     days_until_expiry=int(row.get("days_until_expiry", 0)),
                     current_discount_percent=float(row.get("current_discount_percent", 0)),
                     price_mrp=float(row.get("price_mrp", 0)),
+                    inventory_quantity=int(row.get("inventory_quantity", 0)),
                     expiry_date=str(row.get("expiry_date", "")),
                     risk_score=risk_score,
                     threshold=threshold,
