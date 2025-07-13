@@ -105,6 +105,25 @@ class DeadStockRiskItem(BaseModel):
     risk_score: Optional[float] = None
     threshold: Optional[int] = None
 
+class Product(BaseModel):
+    product_id: str
+    name: str
+    category: str
+    brand: str
+    diet_type: str
+    allergens: List[str]
+    shelf_life_days: int
+    packaging_date: str
+    expiry_date: str
+    days_until_expiry: int
+    weight_grams: int
+    price_mrp: float
+    current_discount_percent: float
+    inventory_quantity: int
+    store_location_lat: float
+    store_location_lon: float
+    is_dead_stock_risk: Optional[int] = None
+
 class ApiResponse(BaseModel):
     message: str
     status: str = "success"
@@ -235,6 +254,85 @@ def get_categories():
     except Exception as e:
         logger.error(f"Error fetching categories: {e}")
         raise HTTPException(status_code=500, detail=f"Error fetching categories: {str(e)}")
+
+@app.get("/products", response_model=List[Product])
+def get_products(
+    category: Optional[str] = Query(None, description="Filter by category"),
+    diet_type: Optional[str] = Query(None, description="Filter by diet type"),
+    min_discount: Optional[float] = Query(None, ge=0, le=100, description="Minimum discount percentage"),
+    max_days_until_expiry: Optional[int] = Query(None, ge=0, description="Maximum days until expiry")
+):
+    """Get all products with optional filters"""
+    if system is None:
+        raise HTTPException(status_code=500, detail="Model not loaded.")
+    
+    try:
+        logger.info("Fetching products with filters: " + 
+                   f"category={category}, diet_type={diet_type}, " +
+                   f"min_discount={min_discount}, max_days_until_expiry={max_days_until_expiry}")
+        
+        # Start with all products
+        df = system.products_df.copy()
+        
+        # Apply filters
+        if category:
+            df = df[df["category"] == category]
+        
+        if diet_type:
+            df = df[df["diet_type"] == diet_type]
+        
+        if min_discount is not None:
+            df = df[df["current_discount_percent"] >= min_discount]
+        
+        if max_days_until_expiry is not None:
+            df = df[df["days_until_expiry"] <= max_days_until_expiry]
+        
+        # Convert to Product models
+        products = []
+        for _, row in df.iterrows():
+            try:
+                # Handle allergens - could be a list or string
+                allergens = row.get("allergens", [])
+                if isinstance(allergens, str):
+                    # If it's a comma-separated string, split it
+                    allergens = [a.strip() for a in allergens.split(",")] if allergens else []
+                elif not isinstance(allergens, list):
+                    allergens = []
+                
+                product = Product(
+                    product_id=str(row.get("product_id", "")),
+                    name=str(row.get("name", "")),
+                    category=str(row.get("category", "")),
+                    brand=str(row.get("brand", "")),
+                    diet_type=str(row.get("diet_type", "")),
+                    allergens=allergens,
+                    shelf_life_days=int(row.get("shelf_life_days", 0)),
+                    packaging_date=str(row.get("packaging_date", "")),
+                    expiry_date=str(row.get("expiry_date", "")),
+                    days_until_expiry=int(row.get("days_until_expiry", 0)),
+                    weight_grams=int(row.get("weight_grams", 0)),
+                    price_mrp=float(row.get("price_mrp", 0)),
+                    current_discount_percent=float(row.get("current_discount_percent", 0)),
+                    inventory_quantity=int(row.get("inventory_quantity", 0)),
+                    store_location_lat=float(row.get("store_location_lat", 0)),
+                    store_location_lon=float(row.get("store_location_lon", 0)),
+                    is_dead_stock_risk=int(row.get("is_dead_stock_risk", 0))
+                )
+                products.append(product)
+            except Exception as row_error:
+                logger.error(f"Error processing product row: {row_error}")
+                continue
+        
+        logger.info(f"Successfully fetched {len(products)} products")
+        
+        # Sort by product_id for consistent ordering
+        products_sorted = sorted(products, key=lambda x: x.product_id)
+        
+        return products_sorted
+        
+    except Exception as e:
+        logger.error(f"Error fetching products: {e}")
+        raise HTTPException(status_code=500, detail=f"Error fetching products: {str(e)}")
     
 @app.get("/users")
 def get_users():

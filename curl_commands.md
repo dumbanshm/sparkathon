@@ -1,6 +1,50 @@
-# Dead Stock Risk API - Curl Commands
+# API Curl Commands
 
-## Basic Requests
+## Products Endpoint
+
+### 1. Get all products
+```bash
+curl -X GET "http://localhost:8000/products"
+```
+
+### 2. Get all products (with pretty JSON)
+```bash
+curl -X GET "http://localhost:8000/products" | jq '.'
+```
+
+### 3. Filter products by category
+```bash
+curl -X GET "http://localhost:8000/products?category=Meat"
+```
+
+### 4. Filter products by diet type
+```bash
+curl -X GET "http://localhost:8000/products?diet_type=vegan"
+```
+
+### 5. Filter products by minimum discount
+```bash
+curl -X GET "http://localhost:8000/products?min_discount=30"
+```
+
+### 6. Filter products expiring soon
+```bash
+curl -X GET "http://localhost:8000/products?max_days_until_expiry=7"
+```
+
+### 7. Combine multiple filters
+```bash
+curl -X GET "http://localhost:8000/products?category=Dairy&min_discount=20&max_days_until_expiry=14"
+```
+
+### 8. Get product count
+```bash
+curl -s -X GET "http://localhost:8000/products" | jq 'length'
+```
+
+## Dead Stock Risk API
+
+### Basic Requests
 
 ### 1. Get all dead stock risk items
 ```bash
