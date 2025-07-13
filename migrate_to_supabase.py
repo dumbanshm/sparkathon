@@ -52,8 +52,12 @@ class SupabaseMigration:
             expiry_date DATE,
             weight_grams INTEGER,
             price_mrp DECIMAL(10, 2),
+            cost_price DECIMAL(10, 2),
             current_discount_percent DECIMAL(5, 2),
             inventory_quantity INTEGER DEFAULT 200,
+            initial_inventory_quantity INTEGER,
+            total_cost DECIMAL(12, 2),
+            revenue_generated DECIMAL(12, 2) DEFAULT 0,
             store_location_lat DECIMAL(10, 8),
             store_location_lon DECIMAL(11, 8),
             created_at TIMESTAMP DEFAULT NOW()
@@ -168,6 +172,10 @@ class SupabaseMigration:
             # Transform data
             products_data = []
             for _, row in df.iterrows():
+                # Get inventory quantity (use default if not present)
+                inventory_qty = int(row.get('inventory_quantity', 200))
+                cost_price = float(row['cost_price']) if 'cost_price' in row else float(row['price_mrp']) * 0.425
+                
                 product = {
                     'product_id': row['product_id'],
                     'name': row['name'],
@@ -180,8 +188,12 @@ class SupabaseMigration:
                     'expiry_date': row['expiry_date'],
                     'weight_grams': int(row['weight_grams']),
                     'price_mrp': float(row['price_mrp']),
+                    'cost_price': cost_price,
                     'current_discount_percent': float(row['current_discount_percent']),
-                    'inventory_quantity': int(row.get('inventory_quantity', 200)),
+                    'inventory_quantity': inventory_qty,
+                    'initial_inventory_quantity': int(row.get('initial_inventory_quantity', inventory_qty)),
+                    'total_cost': float(row['total_cost']) if 'total_cost' in row else round(inventory_qty * cost_price, 2),
+                    'revenue_generated': float(row.get('revenue_generated', 0)),
                     'store_location_lat': float(row['store_location_lat']),
                     'store_location_lon': float(row['store_location_lon'])
                 }

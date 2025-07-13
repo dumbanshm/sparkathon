@@ -72,6 +72,9 @@ for i in range(num_products):
     if days_until_expiry <= 7:
         is_dead_stock_risk = 1
     
+    # Generate price_mrp first
+    price_mrp = round(random.uniform(20, 500), 2)
+    
     # Higher discount for items close to expiry
     if days_until_expiry <= 3:
         current_discount = random.choice([30, 40, 50, 60])
@@ -79,6 +82,13 @@ for i in range(num_products):
         current_discount = random.choice([20, 30, 40])
     else:
         current_discount = random.choice([0, 0, 0, 10, 15, 20])  # Most items have no discount
+    
+    # Calculate cost price (40-45% of MRP)
+    cost_price_percentage = random.uniform(0.40, 0.45)
+    cost_price = round(price_mrp * cost_price_percentage, 2)
+    
+    # Calculate total cost (initial inventory * cost price)
+    total_cost = round(inventory_quantity * cost_price, 2)
 
     product_data.append({
         'product_id': pid,
@@ -92,8 +102,13 @@ for i in range(num_products):
         'expiry_date': expiry_date,
         'days_until_expiry': days_until_expiry,
         'weight_grams': random.choice([100, 250, 500, 750, 1000, 1500, 2000]),
-        'price_mrp': round(random.uniform(20, 500), 2),
+        'price_mrp': price_mrp,
+        'cost_price': cost_price,
         'current_discount_percent': current_discount,
+        'inventory_quantity': inventory_quantity,
+        'initial_inventory_quantity': inventory_quantity,  # Same as inventory for new products
+        'total_cost': total_cost,
+        'revenue_generated': 0.0,  # Initialize to 0
         'is_dead_stock_risk': is_dead_stock_risk,
         'store_location_lat': fake.latitude(),
         'store_location_lon': fake.longitude()

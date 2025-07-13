@@ -11,7 +11,7 @@ from supabase import create_client, Client
 
 # Import the existing UnifiedRecommendationSystem
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from unified_waste_reduction_system import UnifiedRecommendationSystem
+from unified_waste_reduction_system import UnifiedRecommendationSystem, calculate_dead_stock_risk_dynamic
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -118,8 +118,12 @@ class Product(BaseModel):
     days_until_expiry: int
     weight_grams: int
     price_mrp: float
+    cost_price: Optional[float] = None
     current_discount_percent: float
     inventory_quantity: int
+    initial_inventory_quantity: Optional[int] = None
+    total_cost: Optional[float] = None
+    revenue_generated: Optional[float] = 0.0
     store_location_lat: float
     store_location_lon: float
     is_dead_stock_risk: Optional[int] = None
@@ -127,6 +131,27 @@ class Product(BaseModel):
 class ApiResponse(BaseModel):
     message: str
     status: str = "success"
+
+class TransactionCreate(BaseModel):
+    user_id: str
+    product_id: str
+    quantity: int = 1
+    
+class TransactionResponse(BaseModel):
+    transaction_id: int
+    user_id: str
+    product_id: str
+    quantity: int
+    price_paid_per_unit: float
+    total_price_paid: float
+    discount_percent: float
+    message: str
+
+class ExpiredProductsResponse(BaseModel):
+    total_expired_products: int
+    total_expired_value: float
+    category_split: dict
+    category_details: List[dict]
 
 @app.get("/", response_model=ApiResponse)
 def root():
@@ -312,8 +337,12 @@ def get_products(
                     days_until_expiry=int(row.get("days_until_expiry", 0)),
                     weight_grams=int(row.get("weight_grams", 0)),
                     price_mrp=float(row.get("price_mrp", 0)),
+                    cost_price=float(row.get("cost_price", 0)) if row.get("cost_price") is not None else None,
                     current_discount_percent=float(row.get("current_discount_percent", 0)),
                     inventory_quantity=int(row.get("inventory_quantity", 0)),
+                    initial_inventory_quantity=int(row.get("initial_inventory_quantity", 0)) if row.get("initial_inventory_quantity") is not None else None,
+                    total_cost=float(row.get("total_cost", 0)) if row.get("total_cost") is not None else None,
+                    revenue_generated=float(row.get("revenue_generated", 0)) if row.get("revenue_generated") is not None else 0.0,
                     store_location_lat=float(row.get("store_location_lat", 0)),
                     store_location_lon=float(row.get("store_location_lon", 0)),
                     is_dead_stock_risk=int(row.get("is_dead_stock_risk", 0))
@@ -355,6 +384,71 @@ def get_users():
         logger.error(f"Error fetching users: {e}")
         raise HTTPException(status_code=500, detail=f"Error fetching users: {str(e)}")
 
+@app.get("/expired_products", response_model=ExpiredProductsResponse)
+def get_expired_products():
+    """Get number and category split of expired products cost-wise"""
+    if system is None:
+        raise HTTPException(status_code=500, detail="Model not loaded.")
+    
+    try:
+        logger.info("Fetching expired products data")
+        
+        # Get all products including expired ones from all_products_df
+        df = system.all_products_df.copy()
+        
+        # Calculate days until expiry
+        current_date = pd.Timestamp.now()
+        df['days_until_expiry'] = (df['expiry_date'] - current_date).dt.days
+        
+        # Get expired products (days_until_expiry < 0)
+        expired_df = df[df["days_until_expiry"] < 0]
+        
+        # Calculate total value for each expired product
+        expired_df["total_value"] = expired_df["price_mrp"] * expired_df["inventory_quantity"]
+        
+        # Calculate category-wise statistics
+        category_stats = expired_df.groupby("category").agg({
+            "product_id": "count",  # Number of products
+            "total_value": "sum",   # Total value
+            "inventory_quantity": "sum"  # Total quantity
+        }).reset_index()
+        
+        category_stats.columns = ["category", "product_count", "total_value", "total_quantity"]
+        
+        # Calculate percentage split
+        total_expired_value = category_stats["total_value"].sum()
+        category_split = {}
+        category_details = []
+        
+        for _, row in category_stats.iterrows():
+            percentage = (row["total_value"] / total_expired_value * 100) if total_expired_value > 0 else 0
+            category_split[row["category"]] = round(percentage, 2)
+            
+            category_details.append({
+                "category": row["category"],
+                "product_count": int(row["product_count"]),
+                "total_quantity": int(row["total_quantity"]),
+                "total_value": round(float(row["total_value"]), 2),
+                "percentage_of_total": round(percentage, 2)
+            })
+        
+        # Sort category details by total value descending
+        category_details.sort(key=lambda x: x["total_value"], reverse=True)
+        
+        response = ExpiredProductsResponse(
+            total_expired_products=len(expired_df),
+            total_expired_value=round(float(total_expired_value), 2),
+            category_split=category_split,
+            category_details=category_details
+        )
+        
+        logger.info(f"Successfully fetched expired products data: {len(expired_df)} products")
+        return response
+        
+    except Exception as e:
+        logger.error(f"Error fetching expired products: {e}")
+        raise HTTPException(status_code=500, detail=f"Error fetching expired products: {str(e)}")
+
 @app.post("/refresh_data")
 def refresh_data():
     """Refresh data from Supabase"""
@@ -383,6 +477,281 @@ def refresh_data():
     except Exception as e:
         logger.error(f"Error refreshing data: {e}")
         raise HTTPException(status_code=500, detail=f"Error refreshing data: {str(e)}")
+
+@app.post("/transactions", response_model=TransactionResponse)
+def create_transaction(transaction: TransactionCreate, use_dynamic_pricing: bool = True):
+    """
+    Create a new transaction - automatically updates inventory and revenue via database trigger
+    
+    Args:
+        transaction: Transaction details (user_id, product_id, quantity)
+        use_dynamic_pricing: If True, uses dynamic pricing engine (default: True)
+    """
+    try:
+        logger.info(f"Creating transaction for user {transaction.user_id}, product {transaction.product_id}, dynamic_pricing={use_dynamic_pricing}")
+        
+        # Get product details
+        product_response = supabase.table('products').select("*").eq('product_id', transaction.product_id).execute()
+        if not product_response.data:
+            raise HTTPException(status_code=404, detail=f"Product {transaction.product_id} not found")
+        
+        product = product_response.data[0]
+        
+        # Check inventory
+        if product['inventory_quantity'] < transaction.quantity:
+            raise HTTPException(status_code=400, detail=f"Insufficient inventory. Available: {product['inventory_quantity']}")
+        
+        # Get user details
+        user_response = supabase.table('users').select("*").eq('user_id', transaction.user_id).execute()
+        if not user_response.data:
+            raise HTTPException(status_code=404, detail=f"User {transaction.user_id} not found")
+        
+        user = user_response.data[0]
+        
+        # Calculate pricing
+        if use_dynamic_pricing:
+            # Use dynamic pricing engine
+            product_df = pd.DataFrame([product])
+            
+            # Add necessary fields for dynamic pricing calculation
+            current_date = pd.Timestamp.now()
+            product_df['expiry_date'] = pd.to_datetime(product_df['expiry_date'])
+            product_df['days_until_expiry'] = (product_df['expiry_date'] - current_date).dt.days
+            
+            # Get sales metrics for this product
+            product_sales = transactions_df[transactions_df['product_id'] == transaction.product_id]
+            if len(product_sales) > 0:
+                sales_velocity = len(product_sales) / 30  # Approximate daily velocity
+                avg_engagement = product_sales['user_engaged_with_deal'].mean()
+            else:
+                sales_velocity = 0
+                avg_engagement = 0
+            
+            product_df['sales_velocity'] = sales_velocity
+            product_df['avg_user_engagement'] = avg_engagement
+            product_df['is_dead_stock_risk'] = system.products_df[
+                system.products_df['product_id'] == transaction.product_id
+            ]['is_dead_stock_risk'].values[0] if transaction.product_id in system.products_df['product_id'].values else 0
+            
+            # Calculate dynamic discount
+            discount_info = system.pricing_engine.calculate_dynamic_discount(product_df.iloc[0])
+            discount_percent = float(discount_info['recommended_discount'])
+            
+            logger.info(f"Dynamic pricing: current={discount_info['current_discount']}%, "
+                       f"recommended={discount_percent}%, urgency={discount_info['urgency_score']:.2f}, "
+                       f"reason={discount_info['reasoning']}")
+        else:
+            # Use static discount
+            discount_percent = float(product['current_discount_percent'])
+        
+        price_per_unit = float(product['price_mrp']) * (1 - discount_percent / 100)
+        total_price = price_per_unit * transaction.quantity
+        
+        # Calculate days to expiry
+        current_date = pd.Timestamp.now()
+        expiry_date = pd.to_datetime(product['expiry_date'])
+        days_to_expiry = (expiry_date - current_date).days
+        
+        # Create transaction
+        transaction_data = {
+            'user_id': transaction.user_id,
+            'product_id': transaction.product_id,
+            'purchase_date': current_date.strftime('%Y-%m-%d'),
+            'quantity': transaction.quantity,
+            'price_paid_per_unit': round(price_per_unit, 2),
+            'total_price_paid': round(total_price, 2),
+            'discount_percent': discount_percent,
+            'product_diet_type': product['diet_type'],
+            'user_diet_type': user['diet_type'],
+            'days_to_expiry_at_purchase': days_to_expiry,
+            'user_engaged_with_deal': 1 if discount_percent > 0 else 0
+        }
+        
+        # Insert transaction (trigger will update inventory and revenue)
+        transaction_response = supabase.table('transactions').insert(transaction_data).execute()
+        
+        if transaction_response.data:
+            created_transaction = transaction_response.data[0]
+            
+            # If using dynamic pricing, optionally update the product's current discount
+            if use_dynamic_pricing and discount_percent != float(product['current_discount_percent']):
+                # Update the product's discount for future transactions
+                supabase.table('products').update({
+                    'current_discount_percent': discount_percent
+                }).eq('product_id', transaction.product_id).execute()
+            
+            # Refresh data to get updated inventory
+            refresh_data()
+            
+            pricing_method = "dynamic" if use_dynamic_pricing else "static"
+            return TransactionResponse(
+                transaction_id=created_transaction['transaction_id'],
+                user_id=created_transaction['user_id'],
+                product_id=created_transaction['product_id'],
+                quantity=created_transaction['quantity'],
+                price_paid_per_unit=created_transaction['price_paid_per_unit'],
+                total_price_paid=created_transaction['total_price_paid'],
+                discount_percent=created_transaction['discount_percent'],
+                message=f"Transaction created successfully with {pricing_method} pricing. Inventory and revenue updated automatically."
+            )
+        else:
+            raise HTTPException(status_code=500, detail="Failed to create transaction")
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating transaction: {e}")
+        raise HTTPException(status_code=500, detail=f"Error creating transaction: {str(e)}")
+
+@app.get("/dynamic_pricing/{product_id}")
+def get_dynamic_pricing(product_id: str):
+    """Get dynamic pricing recommendation for a specific product"""
+    if system is None:
+        raise HTTPException(status_code=500, detail="Model not loaded.")
+    
+    try:
+        # Get product from all_products_df to include expired ones
+        product_df = system.all_products_df[system.all_products_df['product_id'] == product_id]
+        
+        if product_df.empty:
+            raise HTTPException(status_code=404, detail=f"Product {product_id} not found")
+        
+        product = product_df.iloc[0]
+        
+        # Calculate days until expiry
+        current_date = pd.Timestamp.now()
+        product['days_until_expiry'] = (pd.to_datetime(product['expiry_date']) - current_date).days
+        
+        # Add sales metrics
+        product_sales = system.transactions_df[system.transactions_df['product_id'] == product_id]
+        if len(product_sales) > 0:
+            product['sales_velocity'] = len(product_sales) / 30
+            product['avg_user_engagement'] = product_sales['user_engaged_with_deal'].mean()
+        else:
+            product['sales_velocity'] = 0
+            product['avg_user_engagement'] = 0
+        
+        # Check if it's a dead stock risk
+        product['is_dead_stock_risk'] = calculate_dead_stock_risk_dynamic(product, system.threshold_calculator)
+        
+        # Calculate dynamic pricing
+        urgency_score = system.pricing_engine.calculate_dynamic_urgency_score(product)
+        discount_info = system.pricing_engine.calculate_dynamic_discount(product)
+        
+        return {
+            "product_id": product_id,
+            "product_name": product['name'],
+            "days_until_expiry": int(product['days_until_expiry']),
+            "current_discount": float(product['current_discount_percent']),
+            "recommended_discount": discount_info['recommended_discount'],
+            "discount_increase": discount_info['discount_increase'],
+            "urgency_score": urgency_score,
+            "reasoning": discount_info['reasoning'],
+            "current_price": float(product['price_mrp']) * (1 - float(product['current_discount_percent'])/100),
+            "recommended_price": float(product['price_mrp']) * (1 - discount_info['recommended_discount']/100),
+            "savings": float(product['price_mrp']) * discount_info['discount_increase']/100,
+            "is_dead_stock_risk": bool(product['is_dead_stock_risk'])
+        }
+        
+    except Exception as e:
+        logger.error(f"Error calculating dynamic pricing: {e}")
+        raise HTTPException(status_code=500, detail=f"Error calculating dynamic pricing: {str(e)}")
+
+@app.get("/inventory_analytics")
+def get_inventory_analytics(category: Optional[str] = None, min_profit_margin: Optional[float] = None):
+    """
+    Get inventory analytics from the database view
+    Shows profitability metrics: initial investment, revenue, gross profit, profit margin
+    """
+    try:
+        # Query the inventory_analytics view
+        query = supabase.table('inventory_analytics').select("*")
+        
+        # Apply filters if provided
+        if category:
+            query = query.eq('category', category)
+        
+        if min_profit_margin is not None:
+            query = query.gte('profit_margin', min_profit_margin)
+        
+        response = query.execute()
+        
+        if response.data:
+            # Calculate summary statistics
+            df = pd.DataFrame(response.data)
+            
+            summary = {
+                "total_initial_investment": float(df['initial_investment'].sum()),
+                "total_revenue_generated": float(df['revenue_generated'].sum()),
+                "total_gross_profit": float(df['gross_profit'].sum()),
+                "average_profit_margin": float(df['profit_margin'].mean()),
+                "total_units_sold": int(df['units_sold'].sum()),
+                "products_analyzed": len(df),
+                "products": response.data
+            }
+            
+            return summary
+        else:
+            return {
+                "total_initial_investment": 0,
+                "total_revenue_generated": 0,
+                "total_gross_profit": 0,
+                "average_profit_margin": 0,
+                "total_units_sold": 0,
+                "products_analyzed": 0,
+                "products": []
+            }
+            
+    except Exception as e:
+        logger.error(f"Error fetching inventory analytics: {e}")
+        # Fallback to manual calculation if view doesn't exist
+        try:
+            products_df = system.products_df.copy()
+            
+            if category:
+                products_df = products_df[products_df['category'] == category]
+            
+            # Manual calculation
+            analytics = []
+            for _, product in products_df.iterrows():
+                if 'initial_inventory_quantity' in product and product.get('initial_inventory_quantity'):
+                    units_sold = product.get('initial_inventory_quantity', 0) - product.get('inventory_quantity', 0)
+                    gross_profit = product.get('revenue_generated', 0) - (product.get('cost_price', 0) * units_sold)
+                    profit_margin = (gross_profit / product.get('revenue_generated', 1) * 100) if product.get('revenue_generated', 0) > 0 else 0
+                    
+                    if min_profit_margin is None or profit_margin >= min_profit_margin:
+                        analytics.append({
+                            'product_id': product['product_id'],
+                            'name': product['name'],
+                            'category': product['category'],
+                            'initial_inventory_quantity': product.get('initial_inventory_quantity', 0),
+                            'current_inventory': product.get('inventory_quantity', 0),
+                            'units_sold': units_sold,
+                            'cost_price': product.get('cost_price', 0),
+                            'price_mrp': product.get('price_mrp', 0),
+                            'initial_investment': product.get('total_cost', 0),
+                            'revenue_generated': product.get('revenue_generated', 0),
+                            'gross_profit': gross_profit,
+                            'profit_margin': profit_margin,
+                            'days_until_expiry': product.get('days_until_expiry', 0),
+                            'current_discount_percent': product.get('current_discount_percent', 0)
+                        })
+            
+            df = pd.DataFrame(analytics) if analytics else pd.DataFrame()
+            
+            return {
+                "total_initial_investment": float(df['initial_investment'].sum()) if not df.empty else 0,
+                "total_revenue_generated": float(df['revenue_generated'].sum()) if not df.empty else 0,
+                "total_gross_profit": float(df['gross_profit'].sum()) if not df.empty else 0,
+                "average_profit_margin": float(df['profit_margin'].mean()) if not df.empty else 0,
+                "total_units_sold": int(df['units_sold'].sum()) if not df.empty else 0,
+                "products_analyzed": len(df),
+                "products": analytics
+            }
+            
+        except Exception as fallback_error:
+            logger.error(f"Error in fallback calculation: {fallback_error}")
+            raise HTTPException(status_code=500, detail="Error calculating inventory analytics")
 
 if __name__ == "__main__":
     import uvicorn
