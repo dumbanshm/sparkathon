@@ -163,7 +163,8 @@ class DynamicPricingEngine:
         current_discount = product_row.get('current_discount_percent', 0)
         if current_discount > 0:
             # Check if current discount is working
-            avg_engagement = product_row.get('avg_user_engagement', 0)
+            # Handle different column names from enriched view
+            avg_engagement = product_row.get('avg_user_engagement', product_row.get('deal_engagement_rate', 0))
             if avg_engagement < 0.3:  # Low engagement despite discount
                 discount_multiplier = 1.3
             else:
@@ -407,42 +408,62 @@ class UnifiedRecommendationSystem:
         if not pd.api.types.is_datetime64_any_dtype(self.transactions_df['purchase_date']):
             self.transactions_df['purchase_date'] = pd.to_datetime(self.transactions_df['purchase_date'])
 
-        # Add days until expiry for each product
-        self.products_df['days_until_expiry'] = (self.products_df['expiry_date'] - current_date).dt.days
-        self.products_df['total_shelf_life'] = (self.products_df['expiry_date'] - self.products_df['packaging_date']).dt.days
-        self.products_df['shelf_life_remaining_pct'] = self.products_df['days_until_expiry'] / self.products_df['total_shelf_life'] * 100
+        # Check if we're using enriched view (which has pre-calculated metrics)
+        using_enriched_view = 'total_quantity_sold' in self.products_df.columns
+        
+        if not using_enriched_view:
+            # Add days until expiry for each product
+            self.products_df['days_until_expiry'] = (self.products_df['expiry_date'] - current_date).dt.days
+            self.products_df['total_shelf_life'] = (self.products_df['expiry_date'] - self.products_df['packaging_date']).dt.days
+            self.products_df['shelf_life_remaining_pct'] = self.products_df['days_until_expiry'] / self.products_df['total_shelf_life'] * 100
 
+            # Calculate sales metrics for each product
+            sales_metrics = self.transactions_df.groupby('product_id').agg({
+                'quantity': ['sum', 'mean', 'count'],
+                'purchase_date': ['min', 'max'],
+                'discount_percent': 'mean',
+                'user_engaged_with_deal': 'mean'
+            }).reset_index()
+
+            # Flatten column names
+            sales_metrics.columns = ['product_id', 'total_quantity_sold', 'avg_quantity_per_sale', 
+                                    'number_of_sales', 'first_sale_date', 'last_sale_date',
+                                    'avg_discount_given', 'avg_user_engagement']
+            
+            # Calculate days since last sale
+            sales_metrics['days_since_last_sale'] = (current_date - sales_metrics['last_sale_date']).dt.days
+
+            # Calculate sales velocity (units sold per day)
+            sales_metrics['days_on_market'] = (sales_metrics['last_sale_date'] - sales_metrics['first_sale_date']).dt.days + 1
+            sales_metrics['sales_velocity'] = sales_metrics['total_quantity_sold'] / sales_metrics['days_on_market']
+
+            # Merge sales metrics with products
+            self.products_df = self.products_df.merge(sales_metrics, on='product_id', how='left')
+        else:
+            # Using enriched view - map column names if needed
+            if 'transaction_count' in self.products_df.columns and 'number_of_sales' not in self.products_df.columns:
+                self.products_df['number_of_sales'] = self.products_df['transaction_count']
+            if 'avg_discount_taken' in self.products_df.columns and 'avg_discount_given' not in self.products_df.columns:
+                self.products_df['avg_discount_given'] = self.products_df['avg_discount_taken']
+            if 'deal_engagement_rate' in self.products_df.columns and 'avg_user_engagement' not in self.products_df.columns:
+                self.products_df['avg_user_engagement'] = self.products_df['deal_engagement_rate']
+            
+            # Calculate days since last sale if not present
+            if 'days_since_last_sale' not in self.products_df.columns and 'last_sale_date' in self.products_df.columns:
+                self.products_df['days_since_last_sale'] = (current_date - pd.to_datetime(self.products_df['last_sale_date'])).dt.days
+        
         # Remove already expired products
         self.products_df = self.products_df[self.products_df['days_until_expiry'] > 0].copy()
 
-        # Calculate sales metrics for each product
-        sales_metrics = self.transactions_df.groupby('product_id').agg({
-            'quantity': ['sum', 'mean', 'count'],
-            'purchase_date': ['min', 'max'],
-            'discount_percent': 'mean',
-            'user_engaged_with_deal': 'mean'
-        }).reset_index()
-
-        # Flatten column names
-        sales_metrics.columns = ['product_id', 'total_quantity_sold', 'avg_quantity_per_sale', 
-                                'number_of_sales', 'first_sale_date', 'last_sale_date',
-                                'avg_discount_given', 'avg_user_engagement']
-        
-        # Calculate days since last sale
-        sales_metrics['days_since_last_sale'] = (current_date - sales_metrics['last_sale_date']).dt.days
-
-        # Calculate sales velocity (units sold per day)
-        sales_metrics['days_on_market'] = (sales_metrics['last_sale_date'] - sales_metrics['first_sale_date']).dt.days + 1
-        sales_metrics['sales_velocity'] = sales_metrics['total_quantity_sold'] / sales_metrics['days_on_market']
-
-        # Merge sales metrics with products
-        self.products_df = self.products_df.merge(sales_metrics, on='product_id', how='left')
-
         # Fill NaN values for products with no sales
-        self.products_df['total_quantity_sold'].fillna(0, inplace=True)
-        self.products_df['number_of_sales'].fillna(0, inplace=True)
-        self.products_df['sales_velocity'].fillna(0, inplace=True)
-        self.products_df['days_since_last_sale'].fillna(999, inplace=True)
+        if 'total_quantity_sold' in self.products_df.columns:
+            self.products_df['total_quantity_sold'].fillna(0, inplace=True)
+        if 'number_of_sales' in self.products_df.columns:
+            self.products_df['number_of_sales'].fillna(0, inplace=True)
+        if 'sales_velocity' in self.products_df.columns:
+            self.products_df['sales_velocity'].fillna(0, inplace=True)
+        if 'days_since_last_sale' in self.products_df.columns:
+            self.products_df['days_since_last_sale'].fillna(999, inplace=True)
         
         # Use inventory_quantity directly from products (no need to calculate)
         if 'inventory_quantity' not in self.products_df.columns:
@@ -577,7 +598,8 @@ class UnifiedRecommendationSystem:
             # If the product is not in the filtered set, pick the first available for similarity (fallback)
             product_idx = 0
         else:
-            product_idx = filtered_row.index[0]
+            # Get positional index, not DataFrame index
+            product_idx = self.products_df.index.get_loc(filtered_row.index[0])
         sim_scores = list(enumerate(self.content_similarity_matrix[product_idx]))
         sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
         similar_products = []

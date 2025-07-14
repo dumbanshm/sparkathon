@@ -6,7 +6,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 import pandas as pd
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from supabase import create_client, Client
 
 # Import the existing UnifiedRecommendationSystem
@@ -153,6 +153,43 @@ class ExpiredProductsResponse(BaseModel):
     category_split: dict
     category_details: List[dict]
 
+class WeeklyInventoryData(BaseModel):
+    week_start: str
+    week_end: str
+    week_number: int
+    total_inventory: float  # Can be qty or cost
+    sold_inventory: float  # Can be qty or cost
+    alive_products_count: int
+    metric_type: str  # "qty" or "cost"
+
+class WeeklyInventoryResponse(BaseModel):
+    weeks: List[WeeklyInventoryData]
+    summary: dict
+    metric_type: str
+
+class PaginatedProductsResponse(BaseModel):
+    products: List[Product]
+    total_items: int
+    total_pages: int
+    current_page: int
+    page_size: int
+    has_next: bool
+    has_previous: bool
+
+class WeeklyExpiredData(BaseModel):
+    week_start: str
+    week_end: str
+    week_number: int
+    expired_count: int
+    expired_value: float
+    expired_by_category: dict
+    metric_type: str  # "qty" or "cost"
+
+class WeeklyExpiredResponse(BaseModel):
+    weeks: List[WeeklyExpiredData]
+    summary: dict
+    metric_type: str
+
 @app.get("/", response_model=ApiResponse)
 def root():
     return ApiResponse(
@@ -280,21 +317,24 @@ def get_categories():
         logger.error(f"Error fetching categories: {e}")
         raise HTTPException(status_code=500, detail=f"Error fetching categories: {str(e)}")
 
-@app.get("/products", response_model=List[Product])
+@app.get("/products", response_model=PaginatedProductsResponse)
 def get_products(
     category: Optional[str] = Query(None, description="Filter by category"),
     diet_type: Optional[str] = Query(None, description="Filter by diet type"),
     min_discount: Optional[float] = Query(None, ge=0, le=100, description="Minimum discount percentage"),
-    max_days_until_expiry: Optional[int] = Query(None, ge=0, description="Maximum days until expiry")
+    max_days_until_expiry: Optional[int] = Query(None, ge=0, description="Maximum days until expiry"),
+    page: int = Query(1, ge=1, description="Page number"),
+    page_size: int = Query(20, ge=1, le=100, description="Number of items per page")
 ):
-    """Get all products with optional filters"""
+    """Get products with optional filters and pagination support"""
     if system is None:
         raise HTTPException(status_code=500, detail="Model not loaded.")
     
     try:
         logger.info("Fetching products with filters: " + 
                    f"category={category}, diet_type={diet_type}, " +
-                   f"min_discount={min_discount}, max_days_until_expiry={max_days_until_expiry}")
+                   f"min_discount={min_discount}, max_days_until_expiry={max_days_until_expiry}, " +
+                   f"page={page}, page_size={page_size}")
         
         # Start with all products
         df = system.products_df.copy()
@@ -357,7 +397,27 @@ def get_products(
         # Sort by product_id for consistent ordering
         products_sorted = sorted(products, key=lambda x: x.product_id)
         
-        return products_sorted
+        # Calculate pagination
+        total_items = len(products_sorted)
+        total_pages = (total_items + page_size - 1) // page_size  # Ceiling division
+        
+        # Calculate start and end indices for the current page
+        start_idx = (page - 1) * page_size
+        end_idx = min(start_idx + page_size, total_items)
+        
+        # Get the products for the current page
+        paginated_products = products_sorted[start_idx:end_idx] if start_idx < total_items else []
+        
+        # Return paginated response
+        return PaginatedProductsResponse(
+            products=paginated_products,
+            total_items=total_items,
+            total_pages=total_pages,
+            current_page=page,
+            page_size=page_size,
+            has_next=page < total_pages,
+            has_previous=page > 1
+        )
         
     except Exception as e:
         logger.error(f"Error fetching products: {e}")
@@ -752,6 +812,222 @@ def get_inventory_analytics(category: Optional[str] = None, min_profit_margin: O
         except Exception as fallback_error:
             logger.error(f"Error in fallback calculation: {fallback_error}")
             raise HTTPException(status_code=500, detail="Error calculating inventory analytics")
+
+@app.get("/weekly_inventory", response_model=WeeklyInventoryResponse)
+def get_weekly_inventory(
+    weeks_back: int = Query(6, ge=1, le=52, description="Number of weeks to look back"),
+    metric_type: str = Query("qty", regex="^(qty|cost)$", description="Metric type: 'qty' for quantity, 'cost' for monetary value")
+):
+    """
+    Get weekly inventory analytics for the past N weeks.
+    Shows total inventory and sold amounts for products that were alive during each week.
+    A product is considered 'alive' during a week if it was packaged before/during the week
+    and expires after/during the week.
+    Metrics can be shown in quantity (qty) or cost value.
+    """
+    try:
+        # Get current date and calculate week boundaries
+        today = datetime.now().date()
+        current_week_start = today - timedelta(days=today.weekday())  # Monday of current week
+        
+        weekly_data = []
+        
+        for week_offset in range(weeks_back):
+            # Calculate week boundaries
+            week_end = current_week_start - timedelta(days=7 * week_offset)
+            week_start = week_end - timedelta(days=6)
+            
+            # Filter products that were "alive" during this week
+            # Alive = packaged before/during week AND expires after/during week
+            alive_products = products_df[
+                (pd.to_datetime(products_df['packaging_date']).dt.date <= week_end) &
+                (pd.to_datetime(products_df['expiry_date']).dt.date >= week_start)
+            ].copy()
+            
+            # Calculate based on metric type
+            if metric_type == "qty":
+                # Calculate total inventory quantity
+                total_inventory = float(alive_products['inventory_quantity'].sum())
+                
+                # Calculate sold quantity from transactions
+                week_transactions = transactions_df[
+                    (pd.to_datetime(transactions_df['purchase_date']).dt.date >= week_start) &
+                    (pd.to_datetime(transactions_df['purchase_date']).dt.date <= week_end) &
+                    (transactions_df['product_id'].isin(alive_products['product_id']))
+                ]
+                
+                sold_inventory = float(week_transactions['quantity'].sum())
+            else:  # metric_type == "cost"
+                # Calculate total inventory value (quantity * cost_price)
+                alive_products['inventory_value'] = alive_products['inventory_quantity'] * alive_products.get('cost_price', alive_products['price_mrp'] * 0.45)
+                total_inventory = float(alive_products['inventory_value'].sum())
+                
+                # Calculate sold value from transactions
+                week_transactions = transactions_df[
+                    (pd.to_datetime(transactions_df['purchase_date']).dt.date >= week_start) &
+                    (pd.to_datetime(transactions_df['purchase_date']).dt.date <= week_end) &
+                    (transactions_df['product_id'].isin(alive_products['product_id']))
+                ]
+                
+                if not week_transactions.empty:
+                    # Merge with products to get cost price
+                    week_transactions_with_cost = week_transactions.merge(
+                        products_df[['product_id', 'cost_price', 'price_mrp']], 
+                        on='product_id', 
+                        how='left'
+                    )
+                    # Use cost_price if available, otherwise estimate at 45% of MRP
+                    week_transactions_with_cost['unit_cost'] = week_transactions_with_cost.apply(
+                        lambda x: x['cost_price'] if pd.notna(x['cost_price']) else x['price_mrp'] * 0.45, axis=1
+                    )
+                    week_transactions_with_cost['total_cost'] = week_transactions_with_cost['quantity'] * week_transactions_with_cost['unit_cost']
+                    sold_inventory = float(week_transactions_with_cost['total_cost'].sum())
+                else:
+                    sold_inventory = 0.0
+            
+            weekly_data.append(WeeklyInventoryData(
+                week_start=str(week_start),
+                week_end=str(week_end),
+                week_number=week_offset + 1,
+                total_inventory=round(total_inventory, 2),
+                sold_inventory=round(sold_inventory, 2),
+                alive_products_count=len(alive_products),
+                metric_type=metric_type
+            ))
+        
+        # Calculate summary statistics
+        total_sold = sum(week.sold_inventory for week in weekly_data)
+        avg_weekly_sales = total_sold / weeks_back if weeks_back > 0 else 0
+        
+        # Current week inventory
+        current_alive_products = products_df[
+            (pd.to_datetime(products_df['packaging_date']).dt.date <= today) &
+            (pd.to_datetime(products_df['expiry_date']).dt.date >= today)
+        ]
+        
+        if metric_type == "qty":
+            current_inventory = float(current_alive_products['inventory_quantity'].sum())
+            unit_label = "units"
+        else:  # cost
+            current_alive_products['inventory_value'] = current_alive_products['inventory_quantity'] * current_alive_products.get('cost_price', current_alive_products['price_mrp'] * 0.45)
+            current_inventory = float(current_alive_products['inventory_value'].sum())
+            unit_label = "₹"
+        
+        summary = {
+            "total_sold_past_n_weeks": round(total_sold, 2),
+            "average_weekly_sales": round(avg_weekly_sales, 2),
+            "current_total_inventory": round(current_inventory, 2),
+            "weeks_analyzed": weeks_back,
+            "metric_type": metric_type,
+            "unit_label": unit_label
+        }
+        
+        return WeeklyInventoryResponse(
+            weeks=weekly_data,
+            summary=summary,
+            metric_type=metric_type
+        )
+        
+    except Exception as e:
+        logger.error(f"Error calculating weekly inventory: {e}")
+        raise HTTPException(status_code=500, detail=f"Error calculating weekly inventory: {str(e)}")
+
+@app.get("/weekly_expired", response_model=WeeklyExpiredResponse)
+def get_weekly_expired(
+    weeks_back: int = Query(6, ge=1, le=52, description="Number of weeks to look back"),
+    metric_type: str = Query("qty", regex="^(qty|cost)$", description="Metric type: 'qty' for quantity, 'cost' for monetary value")
+):
+    """
+    Get weekly expired products analytics for the past N weeks.
+    Shows the number of products that expired during each week.
+    When metric_type is 'cost', category breakdown shows value instead of count.
+    """
+    try:
+        # Get current date and calculate week boundaries
+        today = datetime.now().date()
+        current_week_start = today - timedelta(days=today.weekday())  # Monday of current week
+        
+        weekly_data = []
+        
+        for week_offset in range(weeks_back):
+            # Calculate week boundaries
+            week_end = current_week_start - timedelta(days=7 * week_offset)
+            week_start = week_end - timedelta(days=6)
+            
+            # Filter products that expired during this week
+            expired_products = products_df[
+                (pd.to_datetime(products_df['expiry_date']).dt.date >= week_start) &
+                (pd.to_datetime(products_df['expiry_date']).dt.date <= week_end)
+            ].copy()
+            
+            # Calculate expired value (using inventory quantity * price_mrp)
+            expired_products['expired_value'] = expired_products['inventory_quantity'] * expired_products['price_mrp']
+            total_expired_value = float(expired_products['expired_value'].sum())
+            
+            # Group by category based on metric type
+            if metric_type == "qty":
+                category_breakdown = expired_products['category'].value_counts().to_dict()
+            else:  # cost
+                # Calculate cost value per product (using cost_price if available)
+                expired_products['cost_value'] = expired_products.apply(
+                    lambda x: x['inventory_quantity'] * (x['cost_price'] if pd.notna(x.get('cost_price', None)) else x['price_mrp'] * 0.45),
+                    axis=1
+                )
+                # Group by category and sum cost values
+                category_breakdown = expired_products.groupby('category')['cost_value'].sum().round(2).to_dict()
+            
+            weekly_data.append(WeeklyExpiredData(
+                week_start=str(week_start),
+                week_end=str(week_end),
+                week_number=week_offset + 1,
+                expired_count=len(expired_products),
+                expired_value=round(total_expired_value, 2),
+                expired_by_category=category_breakdown,
+                metric_type=metric_type
+            ))
+        
+        # Calculate summary statistics
+        total_expired = sum(week.expired_count for week in weekly_data)
+        total_value = sum(week.expired_value for week in weekly_data)
+        avg_weekly_expired = total_expired / weeks_back if weeks_back > 0 else 0
+        avg_weekly_value = total_value / weeks_back if weeks_back > 0 else 0
+        
+        # Get all categories that had expirations
+        all_categories = set()
+        for week in weekly_data:
+            all_categories.update(week.expired_by_category.keys())
+        
+        # Calculate category totals across all weeks
+        category_totals = {}
+        for category in all_categories:
+            category_totals[category] = sum(
+                week.expired_by_category.get(category, 0) for week in weekly_data
+            )
+        
+        # Round category totals if they're costs
+        if metric_type == "cost":
+            category_totals = {k: round(v, 2) for k, v in category_totals.items()}
+        
+        summary = {
+            "total_expired_past_n_weeks": total_expired,
+            "total_expired_value": round(total_value, 2),
+            "average_weekly_expired": round(avg_weekly_expired, 2),
+            "average_weekly_expired_value": round(avg_weekly_value, 2),
+            "weeks_analyzed": weeks_back,
+            "category_totals": category_totals,
+            "metric_type": metric_type,
+            "unit_label": "units" if metric_type == "qty" else "₹"
+        }
+        
+        return WeeklyExpiredResponse(
+            weeks=weekly_data,
+            summary=summary,
+            metric_type=metric_type
+        )
+        
+    except Exception as e:
+        logger.error(f"Error calculating weekly expired products: {e}")
+        raise HTTPException(status_code=500, detail=f"Error calculating weekly expired products: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

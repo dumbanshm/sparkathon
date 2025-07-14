@@ -1,27 +1,4 @@
-#!/usr/bin/env python3
-"""
-Script to drop and recreate all Supabase tables fresh.
-WARNING: This will DELETE ALL DATA in the existing tables!
-"""
 
-import os
-import sys
-from supabase import create_client, Client
-import logging
-from datetime import datetime
-
-# Set up logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-
-# Supabase configuration
-SUPABASE_URL = os.getenv("SUPABASE_URL", "https://bwysarrweyooqtjkowzp.supabase.co")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3eXNhcnJ3ZXlvb3F0amtvd3pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNTIzODEsImV4cCI6MjA2NzkyODM4MX0.cfOrT6MXZ9XHAjYC0K1rri1C4-jGmBbE9q0RQLpR3d8")
-
-def generate_sql_script():
-    """Generate the complete SQL script to recreate all tables"""
-    
-    sql_script = """
 -- WARNING: This script will DROP and RECREATE all tables, deleting all existing data!
 -- Make sure you have a backup before running this script.
 
@@ -182,7 +159,7 @@ SELECT
             ROUND(((p.revenue_generated - ((p.initial_inventory_quantity - p.inventory_quantity) * p.cost_price)) / p.revenue_generated * 100)::numeric, 1)
         ELSE 0 
     END as profit_margin,
-    (p.expiry_date - CURRENT_DATE) as days_until_expiry,
+    DATE_PART('day', p.expiry_date - CURRENT_DATE)::integer as days_until_expiry,
     p.current_discount_percent,
     p.expiry_date,
     p.created_at,
@@ -228,47 +205,3 @@ GRANT ALL ON ALL TABLES IN SCHEMA public TO anon;
 GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO anon;
 
-"""
-    return sql_script
-
-def main():
-    """Main function to generate and display the SQL script"""
-    
-    print("\n" + "="*80)
-    print("SUPABASE TABLE RECREATION SCRIPT")
-    print("="*80)
-    print("\nWARNING: This script will DROP ALL EXISTING TABLES AND DATA!")
-    print("Make sure you have a backup before running this in Supabase SQL Editor.")
-    print("\n" + "="*80 + "\n")
-    
-    # Confirm with user
-    confirm = input("Do you want to generate the SQL script? (yes/no): ").lower()
-    if confirm != 'yes':
-        print("Operation cancelled.")
-        return
-    
-    # Generate SQL script
-    sql_script = generate_sql_script()
-    
-    # Save to file
-    script_filename = f"recreate_tables_{datetime.now().strftime('%Y%m%d_%H%M%S')}.sql"
-    with open(script_filename, 'w') as f:
-        f.write(sql_script)
-    
-    print(f"\nSQL script saved to: {script_filename}")
-    print("\nTo recreate tables:")
-    print("1. Go to your Supabase project dashboard")
-    print("2. Navigate to SQL Editor")
-    print("3. Copy and paste the contents of the generated SQL file")
-    print("4. Review the script carefully")
-    print("5. Click 'Run' to execute")
-    print("\nAfter recreating tables, run the faker script to populate with fresh data.")
-    
-    # Also display the script
-    print("\n" + "="*80)
-    print("SQL SCRIPT:")
-    print("="*80)
-    print(sql_script)
-
-if __name__ == "__main__":
-    main() 

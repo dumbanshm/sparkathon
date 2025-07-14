@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 # Supabase configuration
 SUPABASE_URL = os.getenv("SUPABASE_URL", "https://bwysarrweyooqtjkowzp.supabase.co")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3eXNhcnJ3ZXlvb3F0amtvd3pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNTIzODEsImV4cCI6MjA2NzkyODM4MX0.cfOrT6MXZ9XHAjYC0K1Z4gxhjFXBGDhJayHMzTRK9mE")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3eXNhcnJ3ZXlvb3F0amtvd3pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNTIzODEsImV4cCI6MjA2NzkyODM4MX0.cfOrT6MXZ9XHAjYC0K1rri1C4-jGmBbE9q0RQLpR3d8")
 
 # Initialize Faker
 fake = Faker()
@@ -307,6 +307,8 @@ class SupabaseFaker:
         
         attempts = 0
         max_attempts = NUM_TRANSACTIONS * 3  # Allow more attempts to reach target
+        skipped_date_issues = 0
+        skipped_diet_issues = 0
         
         while len(transactions) < NUM_TRANSACTIONS and attempts < max_attempts:
             attempts += 1
@@ -319,21 +321,32 @@ class SupabaseFaker:
             allowed_products = self.filter_products_for_user(list(product_lookup.values()), user)
             
             if not allowed_products:
+                skipped_diet_issues += 1
                 continue  # Skip if no compatible products
             
             # Select a product from allowed products
             product = random.choice(allowed_products)
             
-            # Generate purchase date (last 60 days)
-            purchase_date = fake.date_between(start_date='-60d', end_date='today')
+            # Parse product dates
+            packaging_date = datetime.fromisoformat(product['packaging_date']).date()
+            expiry_date = datetime.fromisoformat(product['expiry_date']).date()
+            today = date.today()
+            
+            # Determine valid purchase date range
+            # Purchase must be between packaging date and min(expiry date, today)
+            earliest_purchase = packaging_date
+            latest_purchase = min(expiry_date, today)
+            
+            # Skip if no valid purchase window (product not yet packaged or already expired)
+            if earliest_purchase > latest_purchase:
+                skipped_date_issues += 1
+                continue
+            
+            # Generate purchase date within valid range
+            purchase_date = fake.date_between(start_date=earliest_purchase, end_date=latest_purchase)
             
             # Calculate days to expiry at purchase
-            expiry_date = datetime.fromisoformat(product['expiry_date']).date()
             days_to_expiry = (expiry_date - purchase_date).days
-            
-            # Skip if product was already expired at purchase time
-            if days_to_expiry <= 0:
-                continue
             
             # Quantity (higher for non-perishables)
             if product['category'] in ['Dairy', 'Meat', 'Vegetables', 'Fruits']:
@@ -359,7 +372,7 @@ class SupabaseFaker:
             
             transaction = {
                 'user_id': user_id,
-                'product_id': product_id,
+                'product_id': product['product_id'],
                 'purchase_date': purchase_date.isoformat(),
                 'quantity': quantity,
                 'price_paid_per_unit': price_paid_per_unit,
@@ -373,6 +386,10 @@ class SupabaseFaker:
             transactions.append(transaction)
         
         logger.info(f"Generated {len(transactions)} valid transactions after {attempts} attempts")
+        if skipped_diet_issues > 0:
+            logger.info(f"  - Skipped {skipped_diet_issues} due to diet/allergy incompatibility")
+        if skipped_date_issues > 0:
+            logger.info(f"  - Skipped {skipped_date_issues} due to invalid date ranges")
         return transactions
     
     def insert_data(self, table_name: str, data: List[Dict], batch_size: int = 100):
